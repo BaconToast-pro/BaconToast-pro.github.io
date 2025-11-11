@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="128" height="128" viewBox="0 0 128 128"
+     xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc">
+    <title id="title">Cartoon Toast Icon v4</title>
+    <desc id="desc">A cute cartoon toast with wider rounded top like a mushroom head</desc>
+
+    <defs>
+        <filter id="shadow" x="-50%" y="-50%" width="200%" height="200%">
+            <feOffset dx="0" dy="2" in="SourceAlpha" result="offset"/>
+            <feGaussianBlur stdDeviation="2" in="offset" result="blur"/>
+            <feColorMatrix in="blur" type="matrix"
+                           values="0 0 0 0 0
+                0 0 0 0 0
+                0 0 0 0 0
+                0 0 0 0.25 0"/>
+            <feBlend in="SourceGraphic" in2="blur" mode="normal"/>
+        </filter>
+    </defs>
+
+    <g filter="url(#shadow)">
+        <!-- 外皮（上宽下窄，左右圆角外扩） -->
+        <path d="
+      M20,50
+      C20,28 32,12 64,12
+      C96,12 108,28 108,50
+      L108,104
+      C108,112 98,118 86,118
+      L42,118
+      C30,118 20,112 20,104
+      Z"
+              fill="#D99A5A" stroke="#B37336" stroke-width="3" stroke-linejoin="round"/>
+
+        <!-- 吐司内部 -->
+        <path d="
+      M26,54
+      C26,34 38,20 64,20
+      C90,20 102,34 102,54
+      L102,100
+      C102,106 96,110 88,110
+      L40,110
+      C32,110 26,106 26,100
+      Z"
+              fill="#F7E1B8" stroke="none"/>
+
+        <!-- 脸部 -->
+        <!-- 眼睛 -->
+        <circle cx="50" cy="72" r="4" fill="#2b2b2b"/>
+        <circle cx="78" cy="72" r="4" fill="#2b2b2b"/>
+        <!-- 高光 -->
+        <circle cx="49" cy="71" r="1.2" fill="#fff" opacity="0.9"/>
+        <circle cx="77" cy="71" r="1.2" fill="#fff" opacity="0.9"/>
+
+        <!-- 嘴巴 -->
+        <path d="M52 82 Q64 92 76 82" stroke="#2b2b2b" stroke-width="3"
+              stroke-linecap="round" fill="none"/>
+
+        <!-- 腮红 -->
+        <ellipse cx="44" cy="78" rx="5" ry="2.8" fill="#f1a0a0" opacity="0.8"/>
+        <ellipse cx="84" cy="78" rx="5" ry="2.8" fill="#f1a0a0" opacity="0.8"/>
+    </g>
+</svg>
