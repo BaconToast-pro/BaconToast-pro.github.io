@@ -123,7 +123,7 @@
     
     <!--- Seo Part-->
     
-    <link rel="canonical" href="https://BaconToast-pro.github.io/archives/2025/"/>
+    <link rel="canonical" href="https://BaconToast-pro.github.io/2025/11/14/compiler/parser/"/>
     <meta name="robots" content="index,follow">
     <meta name="googlebot" content="index,follow">
     <meta name="revisit-after" content="1 days">
@@ -132,14 +132,17 @@
     
         
         <meta name="description" content="Hexo Theme Redefine, Redefine Your Hexo Journey.">
-<meta property="og:type" content="website">
-<meta property="og:title" content="Hexo">
-<meta property="og:url" content="https://bacontoast-pro.github.io/archives/2025/index.html">
+<meta property="og:type" content="article">
+<meta property="og:title" content="编译技术语法分析设计文档">
+<meta property="og:url" content="https://bacontoast-pro.github.io/2025/11/14/compiler/parser/index.html">
 <meta property="og:site_name" content="Hexo">
 <meta property="og:description" content="Hexo Theme Redefine, Redefine Your Hexo Journey.">
 <meta property="og:locale" content="en_US">
 <meta property="og:image" content="https://bacontoast-pro.github.io/images/redefine-og.webp">
+<meta property="article:published_time" content="2025-11-14T14:41:54.406Z">
+<meta property="article:modified_time" content="2025-11-14T14:53:55.420Z">
 <meta property="article:author" content="BaconToast">
+<meta property="article:tag" content="Compiler">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https://bacontoast-pro.github.io/images/redefine-og.webp">
     
@@ -153,7 +156,7 @@
     
     <title>
         
-            Archive: 2025 | BaconToast&#39;s Shop
+            编译技术语法分析设计文档 | BaconToast&#39;s Shop
         
     </title>
 
@@ -423,7 +426,7 @@
 
                             <li class="navbar-item">
                                 <!-- Menu -->
-                                <a class="active"
+                                <a class=""
                                    href="/archives"
                                         >
                                     <i class="fa-regular fa-archive fa-fw"></i>
@@ -527,7 +530,7 @@
 
                     <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
                         
-                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full active"
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
                            href="/archives"
                         >
                             <span>
@@ -651,59 +654,314 @@
 			
 
 			<div class="main-content">
-				<div class="archive-container shadow-none hover:shadow-none sm:shadow-redefine sm:hover:shadow-redefine-hover">
-	
-<div class="archive-list-container">
+				<div class="post-page-container flex relative justify-between box-border w-full h-full">
+	<div class="article-content-container">
+
+		<div class="article-title relative w-full">
+			
+			
+			
+			<img src="/images/wallhaven-wqery6-light.webp" alt="编译技术语法分析设计文档" class="w-full h-60 sm:h-72 md:h-80 object-cover sm:rounded-t-large dark:brightness-75" />
+			
+			<div class="w-full flex items-center absolute bottom-0 justify-start">
+				<h1 class="article-title-cover text-center mx-6 my-6 text-second-text-color bg-background-color-transparent px-4 py-3 text-3xl sm:text-4xl md:text-5xl font-semibold backdrop-blur-lg rounded-xl border border-border-color ">编译技术语法分析设计文档</h1>
+			</div>
+			
+		</div>
+
+		
+		<div class="article-header flex flex-row gap-2 items-center px-2 sm:px-6 md:px-8">
+			<div class="avatar w-[46px] h-[46px] flex-shrink-0 rounded-medium border border-border-color p-[1px]">
+				<img src="/images/avatar.jpg">
+			</div>
+			<div class="info flex flex-col justify-between">
+				<div class="author flex items-center">
+					<span class="name text-default-text-color text-lg font-semibold">BaconToast</span>
+					
+					<span class="author-label ml-1.5 text-xs px-2 py-0.5 rounded-small text-third-text-color border border-shadow-color-1">Lv1</span>
+					
+				</div>
+				<div class="meta-info">
+					<div class="article-meta-info">
+    <span class="article-date article-meta-item">
+        <i class="fa-regular fa-pen-fancy"></i>&nbsp;
+        <span class="desktop">2025-11-14 22:41:54</span>
+        <span class="mobile">2025-11-14 22:41:54</span>
+        <span class="hover-info">Created</span>
+    </span>
     
-        <section class="archive-item mb-spacing-unit last:mb-0">
-            <div class="archive-item-header flex flex-row items-center mb-2">
-                <span class="archive-year font-semibold text-3xl mr-2">2025</span>
-                <span class="archive-year-post-count text-xs md:text-sm font-bold rounded-small bg-third-background-color py-[2px] px-[10px] border border-border-color">4</span>
-            </div>
-            
-            <ul class="article-list pl-0 md:pl-8 text-lg leading-[1.5]">
+        <span class="article-date article-meta-item">
+            <i class="fa-regular fa-wrench"></i>&nbsp;
+            <span class="desktop">2025-11-14 22:53:55</span>
+            <span class="mobile">2025-11-14 22:53:55</span>
+            <span class="hover-info">Updated</span>
+        </span>
+    
+
+    
+        <span class="article-categories article-meta-item">
+            <i class="fa-regular fa-folders"></i>&nbsp;
+            <ul>
                 
-                    
-                    
-                         <!-- Close the previous LI if not the first item -->
-                        <li class="article-item space-y-2 px-6 pt-10 pb-2 text-xl relative border-l-2 border-border-color" date-is='11-14'>
-                    
-                    <a href="/2025/11/14/compiler/symbol/" class="block w-fit">
-                        <span class="article-title my-0.5 text-2xl">编译技术语义分析设计文档</span>
-                    </a>
-                    
                 
-                    
-                    
-                    <a href="/2025/11/14/compiler/parser/" class="block w-fit">
-                        <span class="article-title my-0.5 text-2xl">编译技术语法分析设计文档</span>
-                    </a>
-                    
-                
-                    
-                    
-                    <a href="/2025/11/14/compiler/lexer/" class="block w-fit">
-                        <span class="article-title my-0.5 text-2xl">编译技术词法分析设计文档</span>
-                    </a>
-                    
-                
-                    
                     
                         
-                            </li>
-                         <!-- Close the previous LI if not the first item -->
-                        <li class="article-item space-y-2 px-6 pt-10 pb-2 text-xl relative border-l-2 border-border-color" date-is='11-11'>
+                        <li>
+                            <a href="/categories/Compiler/">Compiler</a>&nbsp;
+                        </li>
                     
-                    <a href="/2025/11/11/hello-world/" class="block w-fit">
-                        <span class="article-title my-0.5 text-2xl">可能是第一篇文字</span>
-                    </a>
                     
                 
-                </li> <!-- Ensure the last item is properly closed -->
             </ul>
-        </section>
+        </span>
+    
+    
+        <span class="article-tags article-meta-item">
+            <i class="fa-regular fa-tags"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/tags/Compiler/">Compiler</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+
+    
+    
+    
+    
+        <span class="article-pv article-meta-item">
+            <i class="fa-regular fa-eye"></i>&nbsp;<span id="busuanzi_value_page_pv"></span>
+        </span>
     
 </div>
+
+				</div>
+			</div>
+		</div>
+		
+
+		
+
+
+		<div class="article-content markdown-body px-2 sm:px-6 md:px-8 pb-8">
+			<h2 id="语法分析设计"><a href="#语法分析设计" class="headerlink" title="语法分析设计"></a>语法分析设计</h2><h3 id="编码前的设计"><a href="#编码前的设计" class="headerlink" title="编码前的设计"></a>编码前的设计</h3><h4 id="需求分析"><a href="#需求分析" class="headerlink" title="需求分析"></a>需求分析</h4><p>读取词法分析构建的 TokenList，分析其语法成分并将结果输出至 <code>parser.txt</code>。如果存在错误则将错误信息输出至 <code>error.txt</code>。</p>
+<p>文法见“2025编译技术实验文法定义及相关说明.pdf”。</p>
+<p>错误类别码见下表。</p>
+<p><strong>语法分析错误类型</strong></p>
+<table>
+<thead>
+<tr>
+<th align="left"><strong>错误类型</strong></th>
+<th align="left"><strong>类别码</strong></th>
+<th align="left"><strong>解释</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">缺少分号</td>
+<td align="left">i</td>
+<td align="left">Stmt, ConstDecl 及 VarDecl 中的 ‘;’</td>
+</tr>
+<tr>
+<td align="left">缺少右小括号 ‘)’</td>
+<td align="left">j</td>
+<td align="left">函数调用 ( UnaryExp )、函数定义 ( FuncDef, MainFuncDef )、Stmt 及 PrimaryExp 中的 ‘)’</td>
+</tr>
+<tr>
+<td align="left">缺少右中括号 ‘]’</td>
+<td align="left">k</td>
+<td align="left">数组定义 ( ConstDef, VarDef, FuncFParam ) 和使用 ( LVal ) 中的 ‘]’</td>
+</tr>
+</tbody></table>
+<h4 id="文件组织"><a href="#文件组织" class="headerlink" title="文件组织"></a>文件组织</h4><p>新建目录 <code>src\frontend\parser</code>，该部分实现语法分析部分的“主函数”。其中包含一个类：</p>
+<ul>
+<li><strong>Parser</strong>：该模块“主函数”，定义抽象语法树根节点。</li>
+</ul>
+<p>新建目录 <code>src\frontend\ast</code>，该部分定义抽象语法树的所有节点。其中的类过多，主要类为：</p>
+<ul>
+<li><strong>Node</strong>：节点类，是所有其他节点的父类，内含 ArrayList 存储其孩子节点。</li>
+<li><strong>SyntaxType</strong>：枚举类，枚举所有节点类型。</li>
+</ul>
+<h4 id="总体思路"><a href="#总体思路" class="headerlink" title="总体思路"></a>总体思路</h4><p>实现带回溯的递归下降子程序法，该法的优点在于强大的面向对象能力，无需人为构建抽象语法树，仅需遵循文法定义。其中有几个实现关键：</p>
+<ul>
+<li><strong>int pointer</strong>：指针，每个节点类都有，指向当前读取的 TokenList 的位置。</li>
+<li><strong>boolean fake</strong>：作废标记，如果当前节点被认为是错误的，将其作废。</li>
+<li><strong>void save()</strong>：存档，即记录当前指针，然后进入新的节点中去移动指针。</li>
+<li><strong>void load()</strong>：读档，即回到上一次存档的地方，这一操作是在作废完成后的回溯操作。</li>
+</ul>
+<p>作废-读档机制实现了在树形遍历中寻找唯一成功路径的方法，通过不断试错、递归、回溯最终能够找到答案。因此回溯法是文法添加友好的，不需要大范围修改和对文法进行化简。</p>
+<h3 id="编码完成之后的修改"><a href="#编码完成之后的修改" class="headerlink" title="编码完成之后的修改"></a>编码完成之后的修改</h3><h4 id="TokenStream-类"><a href="#TokenStream-类" class="headerlink" title="TokenStream 类"></a>TokenStream 类</h4><p>新建类 <code>src\frontend\lexer\TokenStream.java</code>，该类实现了指针在 TokenList 中的移动。</p>
+<h4 id="TokenNode-类"><a href="#TokenNode-类" class="headerlink" title="TokenNode 类"></a>TokenNode 类</h4><p>位于目录 <code>src\frontend\ast</code>，继承于 Node 类，用于定义终结符的节点。</p>
+<h4 id="消除左递归"><a href="#消除左递归" class="headerlink" title="消除左递归"></a>消除左递归</h4><p>节点类别中多个表达式节点的初始文法定义含有左递归，以 AddExp 为例：</p>
+<div class="code-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">AddExp → MulExp | AddExp (&#x27;+&#x27; | &#x27;−&#x27;) MulExp</span><br></pre></td></tr></table></figure></div>
+
+<p>对 MulExp 作废后，进入第二条分支，此时再次进入 AddExp，将导致无穷递归。因此需要消除左递归：</p>
+<div class="code-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">AddExp → MulExp &#123; (&#x27;+&#x27; | &#x27;−&#x27;) MulExp &#125;</span><br></pre></td></tr></table></figure></div>
+
+<p>下面这条文法虽和上面等价（句子相同）并且可以被回溯法正确处理，但仍存在 bug：构建的语法树结构不同。考虑这样的结构：<code>MulExp + MulExp - MulExp</code>：</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/compiler/parser.png"
+                      alt="parser"
+                ></p>
+<p>正确文法构建的语法树如左图，化简后的文法构建的语法树如右图。想不到更好的方法，于是人工将右边的树转为左边。</p>
+<h4 id="不可避免的预读"><a href="#不可避免的预读" class="headerlink" title="不可避免的预读"></a>不可避免的预读</h4><p>回溯法仍然无法避免部分预读，如 <code>Ident</code> 和 <code>Ident[]</code>，前者是标识符叶节点，后者是数组，如果提前敲定将会把后面的中括号视为错误。</p>
+<p>又如，<code>UnaryExp → PrimaryExp | Ident &#39;(&#39; [FuncRParams] &#39;)&#39; | UnaryOp UnaryExp</code>，其中 PrimaryExp 与 Ident 存在重合，如果提前确定为 PrimaryExp 将会导致后续小括号读取视为错误。</p>
+<p>还有，<code>Stmt → LVal &#39;=&#39; Exp &#39;;&#39; | [Exp] &#39;;&#39; | ...</code>，其中 LVal 可能是 Exp。</p>
+<p>暂时未发现较好的避免方法，唯有多测试。</p>
+<h4 id="parse-方法总结"><a href="#parse-方法总结" class="headerlink" title="parse 方法总结"></a>parse 方法总结</h4><p>所有节点类中都有 <code>void parse()</code> 用于解析当前节点，如果成功则将子树添加到自己名下，如果失败则作废自己并返回。针对 EBNF 则有以下总结：</p>
+<ol>
+<li><code>|</code>，该结点有多种可能，需要在最开始进行存档，每一个可能失败后读档，最后一个可能失败后作废并返回。以 <code>Decl → ConstDecl | VarDecl</code> 为例：</li>
+</ol>
+<div class="code-container" data-rel="Java"><figure class="iseeu highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Override</span>  </span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">parse</span><span class="params">()</span> &#123;  </span><br><span class="line">    save();  </span><br><span class="line">    <span class="comment">// ConstDecl  </span></span><br><span class="line">    <span class="type">ConstDecl</span> <span class="variable">constDecl</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">ConstDecl</span>();  </span><br><span class="line">    constDecl.parse();  </span><br><span class="line">    <span class="keyword">if</span> (constDecl.isFake()) &#123;  </span><br><span class="line">        load();  </span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;  </span><br><span class="line">        <span class="built_in">this</span>.addNode(constDecl);  </span><br><span class="line">        <span class="keyword">return</span>;  </span><br><span class="line">    &#125;  </span><br><span class="line">    <span class="comment">// VarDecl  </span></span><br><span class="line">    <span class="type">VarDecl</span> <span class="variable">varDecl</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">VarDecl</span>();  </span><br><span class="line">    varDecl.parse();  </span><br><span class="line">    <span class="keyword">if</span> (varDecl.isFake()) &#123;  </span><br><span class="line">        fake();  </span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;  </span><br><span class="line">        <span class="built_in">this</span>.addNode(varDecl);  </span><br><span class="line">    &#125;  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<ol start="2">
+<li><code>[...]</code>，方括号内包含可选项，出现 0 次或 1 次，需要在括号内内容开始读取前存档，失败则读档，成功则加入语法树。以 <code>VarDecl → [ &#39;static&#39; ] BType ...</code> 为例：</li>
+</ol>
+<div class="code-container" data-rel="Java"><figure class="iseeu highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Override</span>  </span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">parse</span><span class="params">()</span> &#123;  </span><br><span class="line">    <span class="comment">// &quot;static&quot;  </span></span><br><span class="line">    save();  </span><br><span class="line">    <span class="keyword">if</span> (curTokenTypeIs(TokenType.STATICTK)) &#123;  </span><br><span class="line">        addTokenNode();  </span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;  </span><br><span class="line">        load();  </span><br><span class="line">    &#125;  </span><br><span class="line">    <span class="comment">// BType  </span></span><br><span class="line">    <span class="type">BType</span> <span class="variable">bType</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">BType</span>();  </span><br><span class="line">    bType.parse();  </span><br><span class="line">    <span class="keyword">if</span> (bType.isFake()) &#123;  </span><br><span class="line">        fake();  </span><br><span class="line">        <span class="keyword">return</span>;  </span><br><span class="line">    &#125;  </span><br><span class="line">    addNode(bType);  </span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<ol start="3">
+<li><code>{...}</code>，花括号内重复 0 次或多次，需要设置循环，每次循环开始时存档，读取失败则读档并退出循环，读取成功则加入语法树并继续循环。以 <code>Block → &#39;{&#39; { BlockItem } &#39;}&#39;</code> 为例：</li>
+</ol>
+<div class="code-container" data-rel="Java"><figure class="iseeu highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Override</span>  </span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">parse</span><span class="params">()</span> &#123;  </span><br><span class="line">    <span class="comment">// &quot;&#123;&quot;  </span></span><br><span class="line">    <span class="keyword">if</span> (curTokenTypeIs(TokenType.LBRACE)) &#123;  </span><br><span class="line">        addTokenNode();  </span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;  </span><br><span class="line">        fake();  </span><br><span class="line">        <span class="keyword">return</span>;  </span><br><span class="line">    &#125;  </span><br><span class="line">    <span class="comment">// BlockItem  </span></span><br><span class="line">    <span class="keyword">while</span> (<span class="literal">true</span>) &#123;  </span><br><span class="line">        save();  </span><br><span class="line">        <span class="type">BlockItem</span> <span class="variable">blockItem</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">BlockItem</span>();  </span><br><span class="line">        blockItem.parse();  </span><br><span class="line">        <span class="keyword">if</span> (blockItem.isFake()) &#123;  </span><br><span class="line">            load();  </span><br><span class="line">            <span class="keyword">break</span>;  </span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;  </span><br><span class="line">            addNode(blockItem);  </span><br><span class="line">        &#125;  </span><br><span class="line">    &#125;  </span><br><span class="line">    <span class="comment">// &quot;&#125;&quot;  </span></span><br><span class="line">    <span class="keyword">if</span> (curTokenTypeIs(TokenType.RBRACE)) &#123;  </span><br><span class="line">        addTokenNode();  </span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;  </span><br><span class="line">        fake();  </span><br><span class="line">        <span class="keyword">return</span>;  </span><br><span class="line">    &#125;  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+		</div>
+
+		
+		<div class="post-copyright-info w-full my-8 px-2 sm:px-6 md:px-8">
+			<div class="article-copyright-info-container">
+    <ul>
+        <li><strong>Title:</strong> 编译技术语法分析设计文档</li>
+        <li><strong>Author:</strong> BaconToast</li>
+        <li><strong>Created at
+                :</strong> 2025-11-14 22:41:54</li>
+        
+            <li>
+                <strong>Updated at
+                    :</strong> 2025-11-14 22:53:55
+            </li>
+        
+        <li>
+            <strong>Link:</strong> https://bacontoast-pro.github.io/2025/11/14/compiler/parser/
+        </li>
+        <li>
+            <strong>
+                License:
+            </strong>
+            
+
+            
+                This work is licensed under <a class="license" target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0">CC BY-NC-SA 4.0</a>.
+            
+        </li>
+    </ul>
+</div>
+
+		</div>
+		
+
+		
+		<ul class="post-tags-box text-lg mt-1.5 flex-wrap justify-center flex md:hidden">
+			
+			<li class="tag-item mx-0.5">
+				<a href="/tags/Compiler/">#Compiler</a>&nbsp;
+			</li>
+			
+		</ul>
+		
+
+		
+
+		
+		<div class="article-nav my-8 flex justify-between items-center px-2 sm:px-6 md:px-8">
+			
+			<div class="article-prev border-border-color shadow-redefine-flat shadow-shadow-color-2 rounded-medium px-4 py-2 hover:shadow-redefine-flat-hover hover:shadow-shadow-color-2">
+				<a class="prev" rel="prev" href="/2025/11/14/compiler/symbol/">
+					<span class="left arrow-icon flex justify-center items-center">
+						<i class="fa-solid fa-chevron-left"></i>
+					</span>
+					<span class="title flex justify-center items-center">
+						<span class="post-nav-title-item truncate max-w-48">编译技术语义分析设计文档</span>
+						<span class="post-nav-item">Prev posts</span>
+					</span>
+				</a>
+			</div>
+			
+			
+			<div class="article-next border-border-color shadow-redefine-flat shadow-shadow-color-2 rounded-medium px-4 py-2 hover:shadow-redefine-flat-hover hover:shadow-shadow-color-2">
+				<a class="next" rel="next" href="/2025/11/14/compiler/lexer/">
+					<span class="title flex justify-center items-center">
+						<span class="post-nav-title-item truncate max-w-48">编译技术词法分析设计文档</span>
+						<span class="post-nav-item">Next posts</span>
+					</span>
+					<span class="right arrow-icon flex justify-center items-center">
+						<i class="fa-solid fa-chevron-right"></i>
+					</span>
+				</a>
+			</div>
+			
+		</div>
+		
+
+
+		
+		<div class="comment-container px-2 sm:px-6 md:px-8 pb-8">
+			<div class="comments-container mt-10 w-full ">
+    <div id="comment-anchor" class="w-full h-2.5"></div>
+    <div class="comment-area-title w-full my-1.5 md:my-2.5 text-xl md:text-3xl font-bold">
+        Comments
+    </div>
+    
+
+        
+            
+    <div id="waline"></div>
+    <script type="module" data-swup-reload-script>
+      import { init } from '/js/libs/waline.mjs';
+
+      function loadWaline() {
+        init({
+          el: '#waline',
+          serverURL: 'https://example.example.com',
+          dark: 'body[class~="dark-mode"]',
+          reaction: false,
+          requiredMeta: ['nick', 'mail'],
+          emoji: [],
+                    lang: 'zh-CN',
+        });
+      }
+
+      if (typeof swup !== 'undefined') {
+        loadWaline();
+      } else {
+        window.addEventListener('DOMContentLoaded', loadWaline);
+      }
+    </script>
+
+
+
+        
+    
+</div>
+
+		</div>
+		
+	</div>
+
+	
+	<div class="toc-content-container">
+		<div class="post-toc-wrap">
+	<div class="post-toc">
+		<div class="toc-title">On this page</div>
+		<div class="page-title">编译技术语法分析设计文档</div>
+		<ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AF%AD%E6%B3%95%E5%88%86%E6%9E%90%E8%AE%BE%E8%AE%A1"><span class="nav-text">语法分析设计</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BC%96%E7%A0%81%E5%89%8D%E7%9A%84%E8%AE%BE%E8%AE%A1"><span class="nav-text">编码前的设计</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BC%96%E7%A0%81%E5%AE%8C%E6%88%90%E4%B9%8B%E5%90%8E%E7%9A%84%E4%BF%AE%E6%94%B9"><span class="nav-text">编码完成之后的修改</span></a></li></ol></li></ol>
+
+	</div>
+</div>
+	</div>
+	
 </div>
 			</div>
 
@@ -782,6 +1040,26 @@
 		</div>
 	</div>
 
+	
+	<div class="post-tools">
+		<div class="post-tools-container">
+	<ul class="article-tools-list">
+		<!-- TOC aside toggle -->
+		
+		<li class="right-bottom-tools page-aside-toggle">
+			<i class="fa-regular fa-outdent"></i>
+		</li>
+		
+
+		<!-- go comment -->
+		
+		<li class="go-comment">
+			<i class="fa-regular fa-comments"></i>
+		</li>
+		
+	</ul>
+</div>
+	</div>
 	
 
 	<div class="right-side-tools-container">
@@ -864,6 +1142,7 @@
         containers: ["#swup"],
     });
 </script>
+
 
 
 
