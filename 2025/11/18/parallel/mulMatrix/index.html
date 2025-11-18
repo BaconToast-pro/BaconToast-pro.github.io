@@ -1,0 +1,1234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="keywords" content="Hexo Theme Redefine">
+    
+    <meta name="author" content="BaconToast">
+    
+    <!-- Completely eliminate flash of wrong theme -->
+    <script>
+        (function() {
+            const THEME_KEY = "REDEFINE-THEME-STATUS";
+            const DARK = "dark", LIGHT = "light";
+            
+            // Get preferred theme
+            function getTheme() {
+                try {
+                    const saved = localStorage.getItem(THEME_KEY);
+                    if (saved) {
+                        const { isDark } = JSON.parse(saved);
+                        return isDark ? DARK : LIGHT;
+                    }
+                } catch (e) {}
+                
+                return matchMedia("(prefers-color-scheme: dark)").matches ? DARK : LIGHT;
+            }
+            
+            // Apply theme to document
+            function applyTheme(theme) {
+                const isDark = theme === DARK;
+                const root = document.documentElement;
+                
+                // Set data attribute for CSS variables
+                root.setAttribute("data-theme", theme);
+                
+                // Set classes for compatibility
+                root.classList.add(theme);
+                root.classList.remove(isDark ? LIGHT : DARK);
+                root.style.colorScheme = theme;
+            }
+            
+            // Initial application
+            const theme = getTheme();
+            applyTheme(theme);
+            
+            // Listen for system preference changes
+            matchMedia("(prefers-color-scheme: dark)").addEventListener("change", ({ matches }) => {
+                // Only update if using system preference (no localStorage entry)
+                if (!localStorage.getItem(THEME_KEY)) {
+                    applyTheme(matches ? DARK : LIGHT);
+                }
+            });
+            
+            // Set body classes once DOM is ready
+            if (document.readyState !== "loading") {
+                document.body.classList.add(theme + "-mode");
+            } else {
+                document.addEventListener("DOMContentLoaded", () => {
+                    document.body.classList.add(theme + "-mode");
+                    document.body.classList.remove((theme === DARK ? LIGHT : DARK) + "-mode");
+                });
+            }
+        })();
+    </script>
+    
+    <!-- Critical CSS to prevent flash -->
+    <style>
+        :root[data-theme="dark"] {
+            --background-color: #202124;
+            --background-color-transparent: rgba(32, 33, 36, 0.6);
+            --second-background-color: #2d2e32;
+            --third-background-color: #34353a;
+            --third-background-color-transparent: rgba(32, 33, 36, 0.6);
+            --primary-color: #0066CC;
+            --first-text-color: #ffffff;
+            --second-text-color: #eeeeee;
+            --third-text-color: #bebec6;
+            --fourth-text-color: #999999;
+            --default-text-color: #bebec6;
+            --invert-text-color: #373D3F;
+            --border-color: rgba(255, 255, 255, 0.08);
+            --selection-color: #0066CC;
+            --shadow-color-1: rgba(255, 255, 255, 0.08);
+            --shadow-color-2: rgba(255, 255, 255, 0.05);
+        }
+        
+        :root[data-theme="light"] {
+            --background-color: #fff;
+            --background-color-transparent: rgba(255, 255, 255, 0.6);
+            --second-background-color: #f8f8f8;
+            --third-background-color: #f2f2f2;
+            --third-background-color-transparent: rgba(241, 241, 241, 0.6);
+            --primary-color: #0066CC;
+            --first-text-color: #16171a;
+            --second-text-color: #2f3037;
+            --third-text-color: #5e5e5e;
+            --fourth-text-color: #eeeeee;
+            --default-text-color: #373D3F;
+            --invert-text-color: #bebec6;
+            --border-color: rgba(0, 0, 0, 0.08);
+            --selection-color: #0066CC;
+            --shadow-color-1: rgba(0, 0, 0, 0.08);
+            --shadow-color-2: rgba(0, 0, 0, 0.05);
+        }
+        
+        body {
+            background-color: var(--background-color);
+            color: var(--default-text-color);
+        }
+        
+        /* Apply body classes as soon as DOM is ready */
+        :root[data-theme="dark"] body {
+            background-color: var(--background-color);
+            color: var(--default-text-color);
+        }
+    </style>
+    
+    <!-- preconnect -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    
+    <!--- Seo Part-->
+    
+    <link rel="canonical" href="https://BaconToast-pro.github.io/2025/11/18/parallel/mulmatrix/"/>
+    <meta name="robots" content="index,follow">
+    <meta name="googlebot" content="index,follow">
+    <meta name="revisit-after" content="1 days">
+    
+    
+    
+        
+        <meta name="description" content="Hexo Theme Redefine, Redefine Your Hexo Journey.">
+<meta property="og:type" content="article">
+<meta property="og:title" content="矩阵相乘的并行计算">
+<meta property="og:url" content="https://bacontoast-pro.github.io/2025/11/18/parallel/mulMatrix/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="Hexo Theme Redefine, Redefine Your Hexo Journey.">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://bacontoast-pro.github.io/images/redefine-og.webp">
+<meta property="article:published_time" content="2025-11-18T02:43:21.676Z">
+<meta property="article:modified_time" content="2025-11-18T02:55:55.597Z">
+<meta property="article:author" content="BaconToast">
+<meta property="article:tag" content="C">
+<meta property="article:tag" content="MPI">
+<meta property="article:tag" content="Parallel">
+<meta property="article:tag" content="pthread">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://bacontoast-pro.github.io/images/redefine-og.webp">
+    
+    
+    <!--- Icon Part-->
+    <link rel="icon" type="image/png" href="/images/public/toast.svg" sizes="192x192">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/public/toast.svg">
+    <meta name="theme-color" content="#A31F34">
+    <link rel="shortcut icon" href="/images/public/toast.svg">
+    <!--- Page Info-->
+    
+    <title>
+        
+            矩阵相乘的并行计算 | BaconToast&#39;s Shop
+        
+    </title>
+
+    
+<link rel="stylesheet" href="/fonts/Chillax/chillax.css">
+
+
+    <!--- Inject Part-->
+    
+
+    
+<link rel="stylesheet" href="/css/style.css">
+
+
+    
+        
+<link rel="stylesheet" href="/css/build/tailwind.css">
+
+    
+
+    
+<link rel="stylesheet" href="/fonts/GeistMono/geist-mono.css">
+
+    
+<link rel="stylesheet" href="/fonts/Geist/geist.css">
+
+    <!--- Font Part-->
+    
+    
+    
+    
+    
+    
+        
+<script src="/js/build/libs/anime.min.js"></script>
+
+    
+
+    <script id="hexo-configurations">
+    window.config = {"hostname":"bacontoast-pro.github.io","root":"/","language":"en"};
+    window.theme = {"articles":{"style":{"font_size":"16px","line_height":1.5,"image_border_radius":"14px","image_alignment":"center","image_caption":false,"link_icon":true,"delete_mask":false,"title_alignment":"left","headings_top_spacing":{"h1":"3.2rem","h2":"2.4rem","h3":"1.9rem","h4":"1.6rem","h5":"1.4rem","h6":"1.3rem"}},"word_count":{"enable":true,"count":true,"min2read":true},"author_label":{"enable":true,"auto":false,"list":[]},"code_block":{"copy":true,"style":"mac","highlight_theme":{"light":"github","dark":"vs2015"},"font":{"enable":false,"family":null,"url":null}},"toc":{"enable":true,"max_depth":3,"number":false,"expand":true,"init_open":true},"copyright":{"enable":true,"default":"cc_by_nc_sa"},"lazyload":true,"pangu_js":false,"recommendation":{"enable":false,"title":"推荐阅读","limit":3,"mobile_limit":2,"placeholder":"/images/wallhaven-wqery6-light.webp","skip_dirs":[]}},"colors":{"primary":"#A31F34","secondary":null,"default_mode":"light"},"global":{"fonts":{"chinese":{"enable":false,"family":null,"url":null},"english":{"enable":false,"family":null,"url":null},"title":{"enable":false,"family":null,"url":null}},"content_max_width":"1000px","sidebar_width":"210px","hover":{"shadow":true,"scale":true},"scroll_progress":{"bar":false,"percentage":true},"website_counter":{"url":"https://cn.vercount.one/js","enable":true,"site_pv":true,"site_uv":true,"post_pv":true},"single_page":true,"preloader":{"enable":true,"custom_message":null},"side_tools":{"gear_rotation":true,"auto_expand":true},"open_graph":{"enable":true,"image":"/images/redefine-og.webp","description":"Hexo Theme Redefine, Redefine Your Hexo Journey."},"google_analytics":{"enable":false,"id":null}},"home_banner":{"enable":true,"style":"fixed","image":{"light":"/images/wallhaven-wqery6-light.webp","dark":"/images/wallhaven-wqery6-dark.webp"},"title":"BaconToast Blog","subtitle":{"text":["欢迎来到BaconToast小商店~","We can be the light upon the day."],"hitokoto":{"enable":false,"show_author":false,"api":"https://v1.hitokoto.cn"},"typing_speed":100,"backing_speed":80,"starting_delay":500,"backing_delay":1500,"loop":true,"smart_backspace":true},"text_color":{"light":"#fff","dark":"#d1d1b6"},"text_style":{"title_size":"2.8rem","subtitle_size":"1.5rem","line_height":1.2},"custom_font":{"enable":false,"family":null,"url":null},"social_links":{"enable":true,"style":"default","links":{"github":"https://github.com/BaconToast-pro","instagram":null,"zhihu":null,"twitter":null,"email":"zhouzq@buaa.edu.cn"},"qrs":{"weixin":"images/public/wechat.jpg"}}},"plugins":{"feed":{"enable":false},"aplayer":{"enable":false,"type":"fixed","audios":[{"name":null,"artist":null,"url":null,"cover":null,"lrc":null}]},"mermaid":{"enable":false,"version":"11.4.1"}},"version":"2.8.5","navbar":{"auto_hide":true,"color":{"left":"#f78736","right":"#367df7","transparency":35},"width":{"home":"1200px","pages":"1000px"},"links":{"Home":{"path":"/","icon":"fa-regular fa-house"},"Archives":{"path":"/archives","icon":"fa-regular fa-archive"},"Friends":{"icon":"fa-solid fa-link","path":"/links/"},"About":{"icon":"fa-regular fa-user","submenus":{"Github":"https://github.com/BaconToast-pro","Friends":"/links/"}}},"search":{"enable":false,"preload":true}},"page_templates":{"friends_column":2,"tags_style":"blur"},"home":{"sidebar":{"enable":true,"position":"left","first_item":"menu","announcement":"~o(^_^)o~","show_on_mobile":true,"links":{"Archives":{"path":"/archives","icon":"fa-regular fa-archive"},"Tags":{"path":"/tags","icon":"fa-regular fa-tags"},"Categories":{"path":"/categories","icon":"fa-regular fa-folder"}}},"article_date_format":"auto","excerpt_length":200,"categories":{"enable":true,"limit":3},"tags":{"enable":true,"limit":3}},"footerStart":"2025/11/11 17:20:00"};
+    window.lang_ago = {"second":"%s seconds ago","minute":"%s minutes ago","hour":"%s hours ago","day":"%s days ago","week":"%s weeks ago","month":"%s months ago","year":"%s years ago"};
+    window.data = {"masonry":true};
+  </script>
+    
+    <!--- Fontawesome Part-->
+    
+<link rel="stylesheet" href="/fontawesome/fontawesome.min.css">
+
+    
+<link rel="stylesheet" href="/fontawesome/brands.min.css">
+
+    
+<link rel="stylesheet" href="/fontawesome/solid.min.css">
+
+    
+<link rel="stylesheet" href="/fontawesome/regular.min.css">
+
+    
+    
+    
+    
+<meta name="generator" content="Hexo 8.1.1"></head>
+
+
+
+<body>
+	<div class="progress-bar-container">
+	
+
+	
+	<span class="pjax-progress-bar"></span>
+	<!--        <span class="swup-progress-icon">-->
+	<!--            <i class="fa-solid fa-circle-notch fa-spin"></i>-->
+	<!--        </span>-->
+	
+</div>
+
+<style>
+    :root {
+        --preloader-background-color: #fff;
+        --preloader-text-color: #000;
+    }
+
+    @media (prefers-color-scheme: dark) {
+        :root {
+            --preloader-background-color: #202124;
+            --preloader-text-color: #fff;
+        }
+    }
+
+    @media (prefers-color-scheme: light) {
+        :root {
+            --preloader-background-color: #fff;
+            --preloader-text-color: #000;
+        }
+    }
+
+    @media (max-width: 600px) {
+        .ml13 {
+            font-size: 2.6rem !important; /* Adjust this value as needed */
+        }
+    }
+
+    .preloader {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem; /* Tailwind 'gap-4' is 1rem */
+        align-items: center;
+        justify-content: center;
+        position: fixed;
+        padding: 12px;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh; /* 'h-screen' is 100% of the viewport height */
+        background-color: var(--preloader-background-color);
+        z-index: 1100; /* 'z-[1100]' sets the z-index */
+        transition: opacity 0.2s ease-in-out;
+    }
+
+    .ml13 {
+        font-size: 3.2rem;
+        /* text-transform: uppercase; */
+        color: var(--preloader-text-color);
+        letter-spacing: -1px;
+        font-weight: 500;
+        font-family: 'Chillax-Variable', sans-serif;
+        text-align: center;
+    }
+
+    .ml13 .word {
+        display: inline-flex;
+        flex-wrap: wrap;
+        white-space: nowrap;
+    }
+
+    .ml13 .letter {
+        display: inline-block;
+        line-height: 1em;
+    }
+</style>
+
+<div class="preloader">
+    <h2 class="ml13">
+        BaconToast&#39;s Shop
+    </h2>
+    <script>
+        var textWrapper = document.querySelector('.ml13');
+        // Split text into words
+        var words = textWrapper.textContent.trim().split(' ');
+
+        // Clear the existing content
+        textWrapper.innerHTML = '';
+
+        // Wrap each word and its letters in spans
+        words.forEach(function(word) {
+            var wordSpan = document.createElement('span');
+            wordSpan.classList.add('word');
+            wordSpan.innerHTML = word.replace(/\S/g, "<span class='letter'>$&</span>");
+            textWrapper.appendChild(wordSpan);
+            textWrapper.appendChild(document.createTextNode(' ')); // Add space between words
+        });
+
+        var animation = anime.timeline({ loop: true })
+            .add({
+                targets: '.ml13 .letter',
+                translateY: [20, 0],
+                translateZ: 0,
+                opacity: [0, 1],
+                filter: ['blur(5px)', 'blur(0px)'],
+                easing: "easeOutExpo",
+                duration: 1200,
+                delay: (el, i) => 300 + 20 * i,
+            })
+            .add({
+                targets: '.ml13 .letter',
+                translateY: [0, -20],
+                opacity: [1, 0],
+                filter: ['blur(0px)', 'blur(5px)'],
+                easing: "easeInExpo",
+                duration: 1000,
+                delay: (el, i) => 15 * i,
+                complete: function() {
+                    hidePreloader();
+                }
+            }, '-=700');
+
+
+        let themeStatus = JSON.parse(localStorage.getItem('REDEFINE-THEME-STATUS'))?.isDark;
+
+        // If the theme status is not found in local storage, check the preferred color scheme
+        if (themeStatus === undefined || themeStatus === null) {
+            if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                themeStatus = 'dark';
+            } else {
+                themeStatus = 'light';
+            }
+        }
+
+        // Now you can use the themeStatus variable in your code
+        if (themeStatus) {
+            document.documentElement.style.setProperty('--preloader-background-color', '#202124');
+            document.documentElement.style.setProperty('--preloader-text-color', '#fff');
+        } else {
+            document.documentElement.style.setProperty('--preloader-background-color', '#fff');
+            document.documentElement.style.setProperty('--preloader-text-color', '#000');
+        }
+
+        window.addEventListener('load', function () {
+            setTimeout(hidePreloader, 5000); // Call hidePreloader after 5000 milliseconds if not already called by animation
+        });
+
+        function hidePreloader() {
+            var preloader = document.querySelector('.preloader');
+            preloader.style.opacity = '0';
+            setTimeout(function () {
+                preloader.style.display = 'none';
+            }, 200);
+        }
+    </script>
+</div>
+
+<main class="page-container" id="swup">
+
+	
+
+	<div class="main-content-container flex flex-col justify-between min-h-dvh">
+		<div class="main-content-header">
+			<header class="navbar-container px-6 md:px-12">
+    <div class="navbar-content transition-navbar ">
+        <div class="left">
+            
+            <a class="logo-title" href="/">
+                
+                BaconToast&#39;s Shop
+                
+            </a>
+        </div>
+
+        <div class="right">
+            <!-- PC -->
+            <div class="desktop">
+                <ul class="navbar-list">
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/"
+                                        >
+                                    <i class="fa-regular fa-house fa-fw"></i>
+                                    HOME
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/archives"
+                                        >
+                                    <i class="fa-regular fa-archive fa-fw"></i>
+                                    ARCHIVES
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/links/"
+                                        >
+                                    <i class="fa-solid fa-link fa-fw"></i>
+                                    FRIENDS
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class="has-dropdown"
+                                   href="#"
+                                        onClick=&#34;return false;&#34;>
+                                    <i class="fa-regular fa-user fa-fw"></i>
+                                    ABOUT
+                                    <i class="fa-solid fa-chevron-down fa-fw"></i>
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                                    <ul class="sub-menu">
+                                        
+                                            <li>
+                                                <a target="_blank" rel="noopener" href="https://github.com/BaconToast-pro">
+                                                    GITHUB
+                                                </a>
+                                            </li>
+                                        
+                                            <li>
+                                                <a href="/links/">
+                                                    FRIENDS
+                                                </a>
+                                            </li>
+                                        
+                                    </ul>
+                                
+                            </li>
+                    
+                    
+                </ul>
+            </div>
+            <!-- Mobile -->
+            <div class="mobile">
+                
+                <div class="icon-item navbar-bar">
+                    <div class="navbar-bar-middle"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mobile sheet -->
+    <div class="navbar-drawer h-dvh w-full absolute top-0 left-0 bg-background-color flex flex-col justify-between">
+        <ul class="drawer-navbar-list flex flex-col px-4 justify-center items-start">
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/"
+                        >
+                            <span>
+                                HOME
+                            </span>
+                            
+                                <i class="fa-regular fa-house fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/archives"
+                        >
+                            <span>
+                                ARCHIVES
+                            </span>
+                            
+                                <i class="fa-regular fa-archive fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/links/"
+                        >
+                            <span>
+                                FRIENDS
+                            </span>
+                            
+                                <i class="fa-solid fa-link fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+                
+                    
+
+                    <li class="drawer-navbar-item-sub text-base my-1.5 flex flex-col w-full">
+                        
+                        <div class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary cursor-pointer text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                             navbar-data-toggle="submenu-About"
+                        >
+                            <span>
+                                ABOUT
+                            </span>
+                            
+                                <i class="fa-solid fa-chevron-right fa-sm fa-fw transition-all"></i>
+                            
+                        </div>
+                        
+
+                        
+                            <div class="flex-col items-start px-2 py-2 hidden" data-target="submenu-About">
+                                
+                                    <div class="drawer-navbar-item text-base flex flex-col justify-center items-start hover:underline active:underline hover:underline-offset-1 rounded-3xl">
+                                        <a class=" text-third-text-color text-xl"
+                                           target="_blank" rel="noopener" href="https://github.com/BaconToast-pro">GITHUB</a>
+                                    </div>
+                                
+                                    <div class="drawer-navbar-item text-base flex flex-col justify-center items-start hover:underline active:underline hover:underline-offset-1 rounded-3xl">
+                                        <a class=" text-third-text-color text-xl"
+                                           href="/links/">FRIENDS</a>
+                                    </div>
+                                
+                            </div>
+                        
+                    </li>
+            
+
+            
+            
+                
+                    
+                    
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full active"
+                           href="/tags"
+                        >
+                            <span>Tags</span>
+                            <i class="fa-regular fa-tags fa-sm fa-fw"></i>
+                        </a>
+                    </li>
+                
+                    
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full active"
+                           href="/categories"
+                        >
+                            <span>Categories</span>
+                            <i class="fa-regular fa-folder fa-sm fa-fw"></i>
+                        </a>
+                    </li>
+                
+            
+        </ul>
+
+        <div class="statistics flex justify-around my-2.5">
+    <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/tags">
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">6</div>
+        <div class="label text-third-text-color text-sm">Tags</div>
+    </a>
+    <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/categories">
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">2</div>
+        <div class="label text-third-text-color text-sm">Categories</div>
+    </a>
+    <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/archives">
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">5</div>
+        <div class="label text-third-text-color text-sm">Posts</div>
+    </a>
+</div>
+    </div>
+
+    <div class="window-mask"></div>
+
+</header>
+
+
+		</div>
+
+		<div class="main-content-body transition-fade-up">
+			
+
+			<div class="main-content">
+				<div class="post-page-container flex relative justify-between box-border w-full h-full">
+	<div class="article-content-container">
+
+		<div class="article-title relative w-full">
+			
+			
+			
+			<img src="/images/public/lotus.jpg" alt="矩阵相乘的并行计算" class="w-full h-60 sm:h-72 md:h-80 object-cover sm:rounded-t-large dark:brightness-75" />
+			
+			<div class="w-full flex items-center absolute bottom-0 justify-start">
+				<h1 class="article-title-cover text-center mx-6 my-6 text-second-text-color bg-background-color-transparent px-4 py-3 text-3xl sm:text-4xl md:text-5xl font-semibold backdrop-blur-lg rounded-xl border border-border-color ">矩阵相乘的并行计算</h1>
+			</div>
+			
+		</div>
+
+		
+		<div class="article-header flex flex-row gap-2 items-center px-2 sm:px-6 md:px-8">
+			<div class="avatar w-[46px] h-[46px] flex-shrink-0 rounded-medium border border-border-color p-[1px]">
+				<img src="/images/public/avatar.jpg">
+			</div>
+			<div class="info flex flex-col justify-between">
+				<div class="author flex items-center">
+					<span class="name text-default-text-color text-lg font-semibold">BaconToast</span>
+					
+					<span class="author-label ml-1.5 text-xs px-2 py-0.5 rounded-small text-third-text-color border border-shadow-color-1">Lv1</span>
+					
+				</div>
+				<div class="meta-info">
+					<div class="article-meta-info">
+    <span class="article-date article-meta-item">
+        <i class="fa-regular fa-pen-fancy"></i>&nbsp;
+        <span class="desktop">2025-11-18 10:43:21</span>
+        <span class="mobile">2025-11-18 10:43:21</span>
+        <span class="hover-info">Created</span>
+    </span>
+    
+        <span class="article-date article-meta-item">
+            <i class="fa-regular fa-wrench"></i>&nbsp;
+            <span class="desktop">2025-11-18 10:55:55</span>
+            <span class="mobile">2025-11-18 10:55:55</span>
+            <span class="hover-info">Updated</span>
+        </span>
+    
+
+    
+        <span class="article-categories article-meta-item">
+            <i class="fa-regular fa-folders"></i>&nbsp;
+            <ul>
+                
+                
+                    
+                        
+                        <li>
+                            <a href="/categories/Parallel/">Parallel</a>&nbsp;
+                        </li>
+                    
+                    
+                
+            </ul>
+        </span>
+    
+    
+        <span class="article-tags article-meta-item">
+            <i class="fa-regular fa-tags"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/tags/Parallel/">Parallel</a>&nbsp;
+                    </li>
+                
+                    <li>
+                        | <a href="/tags/MPI/">MPI</a>&nbsp;
+                    </li>
+                
+                    <li>
+                        | <a href="/tags/pthread/">pthread</a>&nbsp;
+                    </li>
+                
+                    <li>
+                        | <a href="/tags/C/">C</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+
+    
+    
+    
+    
+        <span class="article-pv article-meta-item">
+            <i class="fa-regular fa-eye"></i>&nbsp;<span id="busuanzi_value_page_pv"></span>
+        </span>
+    
+</div>
+
+				</div>
+			</div>
+		</div>
+		
+
+		
+
+
+		<div class="article-content markdown-body px-2 sm:px-6 md:px-8 pb-8">
+			<blockquote>
+<p>最终提交的程序作业 ID：<strong>11195683</strong></p>
+</blockquote>
+<h2 id="一、辅助程序使用"><a href="#一、辅助程序使用" class="headerlink" title="一、辅助程序使用"></a>一、辅助程序使用</h2><h3 id="1-矩阵生成程序"><a href="#1-矩阵生成程序" class="headerlink" title="1. 矩阵生成程序"></a>1. 矩阵生成程序</h3><p><code>matrixgen.cxx</code> 是一个C++文件，编译命令：</p>
+<div class="code-container" data-rel="Bash"><figure class="iseeu highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">g++ -o matrixgen matrixgen.cxx</span><br></pre></td></tr></table></figure></div>
+
+<p>运行命令：</p>
+<div class="code-container" data-rel="Bash"><figure class="iseeu highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./matrixgen 5 4 matrix.dat</span><br></pre></td></tr></table></figure></div>
+
+<p>生成一个行数5、列数4的矩阵，存至文件 <code>matrix.dat</code>。</p>
+<h3 id="2-矩阵输出程序"><a href="#2-矩阵输出程序" class="headerlink" title="2. 矩阵输出程序"></a>2. 矩阵输出程序</h3><p><code>print.cxx</code> 也是一个C++程序，编译同上。</p>
+<p>运行：</p>
+<div class="code-container" data-rel="Bash"><figure class="iseeu highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./print matrix.dat</span><br></pre></td></tr></table></figure></div>
+
+<p>输出结果如下：</p>
+<div class="code-container" data-rel="Text"><figure class="iseeu highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">       ---- matrix.dat: 5*4 Matrix -----</span><br><span class="line">0.0308  0.2374  0.2902  0.1330  </span><br><span class="line">0.9789  0.1510  0.5571  0.3774  </span><br><span class="line">0.6537  0.6411  0.0840  0.4454  </span><br><span class="line">0.6113  0.0884  0.3083  0.3465  </span><br><span class="line">0.8908  0.1426  0.1449  0.1984</span><br></pre></td></tr></table></figure></div>
+
+<blockquote>
+<p>Vim调整tab宽度：<code>:set tabstop=4</code>，感觉对OS实验有用，之前一直是缩进八格，很丑。<br>还有缩进相关，都可以调，原来都没开 <code>:set smartindent</code>。</p>
+</blockquote>
+<h2 id="二、源程序-bug-修复"><a href="#二、源程序-bug-修复" class="headerlink" title="二、源程序 bug 修复"></a>二、源程序 bug 修复</h2><h3 id="1-分配矩阵-A-的每一行处理错误"><a href="#1-分配矩阵-A-的每一行处理错误" class="headerlink" title="1. 分配矩阵 A 的每一行处理错误"></a>1. 分配矩阵 A 的每一行处理错误</h3><p><strong>错误代码</strong>：</p>
+<div class="code-container" data-rel="C"><figure class="iseeu highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (!myid) &#123;  </span><br><span class="line">    j = (numprocs - <span class="number">1</span>) &lt; M ? (numprocs - <span class="number">1</span>) : M;  </span><br><span class="line">    <span class="keyword">for</span> (i = <span class="number">1</span>; i &lt;= j; i++) &#123;  </span><br><span class="line">        MPI_Send(A[i<span class="number">-1</span>], N, MPI_FLOAT, i, <span class="number">99</span>, MPI_COMM_WORLD);  </span><br><span class="line">    &#125;  </span><br><span class="line">    numsend = j;  </span><br><span class="line">  </span><br><span class="line">    <span class="keyword">for</span> (i = <span class="number">1</span>; i &lt;= M; i++) &#123;  </span><br><span class="line">        sender = (i - <span class="number">1</span>) % (numprocs - <span class="number">1</span>) + <span class="number">1</span>;  </span><br><span class="line">        MPI_Recv(C[i<span class="number">-1</span>], P, MPI_FLOAT, sender, <span class="number">100</span>, MPI_COMM_WORLD, &amp;status);  </span><br><span class="line">        <span class="keyword">if</span> (numsend &lt; M) &#123;  </span><br><span class="line">            MPI_Send(A[i<span class="number">-1</span>], N, MPI_FLOAT, sender, <span class="number">99</span>, MPI_COMM_WORLD); <span class="comment">// error  </span></span><br><span class="line">            numsend++;  </span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;  </span><br><span class="line">            MPI_Send(&amp;j, <span class="number">0</span>, MPI_INT, sender, <span class="number">0</span>, MPI_COMM_WORLD);  </span><br><span class="line">        &#125;  </span><br><span class="line">    &#125;  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<p>这一段代码实现了0号进程分发矩阵A的每一行，<code>j = (numprocs - 1) &lt; M ? (numprocs - 1) : M;</code> 判断处理器数和A的行数的关系，如果处理器够多就都分发了，如果不够先发一部分。</p>
+<p><code>numsend = j;</code> 此处记录了已分发的行数量。接下来的循环中判断是否还有未分发的（<code>if (numsend &lt; M)</code>），接下来的send语句存在bug：</p>
+<div class="code-container" data-rel="C"><figure class="iseeu highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">MPI_Send(A[i<span class="number">-1</span>], N, MPI_FLOAT, sender, <span class="number">99</span>, MPI_COMM_WORLD);</span><br></pre></td></tr></table></figure></div>
+
+<p><code>A[i-1]</code> 的 <code>i</code> 是从1到M，显然不对，应该改成 <code>numsend</code>，和下面的自增也配合对了。<strong>但是这仍然是错的：</strong></p>
+<p>这种修改方式保证了所有行都能被分发，解决了浅层问题，但又存在新的bug：接收端 <code>MPI_Recv(C[i-1], P, MPI_FLOAT, sender, 100, MPI_COMM_WORLD, &amp;status);</code> 是按照进程 ID 进行填充矩阵 C 行的，而多出来的那些行会被随机进程获取并计算，<strong>并没有记录行序号信息</strong>。</p>
+<p>修改思路是使用 tag 传递行号信息。</p>
+<p><strong>正确代码</strong>：</p>
+<div class="code-container" data-rel="C"><figure class="iseeu highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (!myid) &#123;  </span><br><span class="line">    j = (numprocs - <span class="number">1</span>) &lt; M ? (numprocs - <span class="number">1</span>) : M;  </span><br><span class="line">    <span class="keyword">for</span> (i = <span class="number">1</span>; i &lt;= j; i++) &#123;  </span><br><span class="line">	    <span class="comment">/** fix bug: i as tag **/</span></span><br><span class="line">        MPI_Send(A[i<span class="number">-1</span>], N, MPI_FLOAT, i, i, MPI_COMM_WORLD);  </span><br><span class="line">    &#125;  </span><br><span class="line">    numsend = j;  </span><br><span class="line">  </span><br><span class="line">    <span class="keyword">for</span> (i = <span class="number">1</span>; i &lt;= M; i++) &#123;  </span><br><span class="line">	    <span class="type">float</span> result[P]; <span class="comment">// 临时接收结果</span></span><br><span class="line">        MPI_Recv(result, P, MPI_FLOAT, MPI_ANY_SOURCE, MPI_ANY_TAG, MPI_COMM_WORLD, &amp;status);  </span><br><span class="line">        <span class="comment">// 获取发送者和行号tag</span></span><br><span class="line">        sender = status.MPI_SOURCE; </span><br><span class="line">        <span class="type">int</span> index = status.MPI_TAG - <span class="number">1</span>;</span><br><span class="line">        <span class="comment">// 结果存入正确的行</span></span><br><span class="line">        <span class="keyword">for</span> (k = <span class="number">0</span>; k &lt; P; k++) &#123; </span><br><span class="line">	        C[index][k] = result[k];</span><br><span class="line">	    &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">if</span> (numsend &lt; M) &#123;  </span><br><span class="line">	        <span class="comment">/** fix bug: numsend as tag **/</span></span><br><span class="line">            MPI_Send(A[numsend], N, MPI_FLOAT, sender, numsend + <span class="number">1</span>, MPI_COMM_WORLD); <span class="comment">// error  </span></span><br><span class="line">            numsend++;  </span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;  </span><br><span class="line">            MPI_Send(&amp;j, <span class="number">0</span>, MPI_INT, sender, <span class="number">0</span>, MPI_COMM_WORLD);  </span><br><span class="line">        &#125;  </span><br><span class="line">    &#125;  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<h3 id="2-从属进程数大于矩阵-A-行数时死锁"><a href="#2-从属进程数大于矩阵-A-行数时死锁" class="headerlink" title="2. 从属进程数大于矩阵 A 行数时死锁"></a>2. 从属进程数大于矩阵 A 行数时死锁</h3><p><strong>错误代码</strong>：</p>
+<div class="code-container" data-rel="C"><figure class="iseeu highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (!myid) &#123;  </span><br><span class="line">    j = (numprocs - <span class="number">1</span>) &lt; M ? (numprocs - <span class="number">1</span>) : M;  </span><br><span class="line">    <span class="keyword">for</span> (i = <span class="number">1</span>; i &lt;= j; i++) &#123;  </span><br><span class="line">        MPI_Send(A[i<span class="number">-1</span>], N, MPI_FLOAT, i, <span class="number">99</span>, MPI_COMM_WORLD);  </span><br><span class="line">    &#125;  </span><br><span class="line">    numsend = j;</span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">&#125; <span class="keyword">else</span> &#123;  </span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">    <span class="keyword">while</span> (<span class="number">1</span>) &#123;  </span><br><span class="line">        MPI_Recv(A_row, N, MPI_FLOAT, <span class="number">0</span>, MPI_ANY_TAG, MPI_COMM_WORLD, &amp;status);  </span><br><span class="line">        <span class="keyword">if</span> (status.MPI_TAG == <span class="number">0</span>) &#123;  </span><br><span class="line">		    <span class="keyword">break</span>;  </span><br><span class="line">		&#125;</span><br><span class="line">		<span class="comment">// ...</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<p>0号进程（主进程）给 <code>j</code> 个从属进程发送数据，此处 <code>j</code> 取从属进程数量和矩阵 A 行数的较小值。因此考虑一种情况：当从属进程数大于 A 矩阵行数时。所有行都会被分发，<strong>但会有一些从属进程未收到任务</strong>。</p>
+<p>在 <code>else</code> 块中，所有从属进程都进行阻塞接收，前 M 个从属进程成功接收，但剩下的从属进程并未被分配数据，也会进行阻塞等待，因此死锁了。</p>
+<p><strong>正确代码</strong>：</p>
+<div class="code-container" data-rel="C"><figure class="iseeu highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (!myid) &#123;  </span><br><span class="line">    j = (numprocs - <span class="number">1</span>) &lt; M ? (numprocs - <span class="number">1</span>) : M;  </span><br><span class="line">    <span class="keyword">for</span> (i = <span class="number">1</span>; i &lt;= j; i++) &#123;  </span><br><span class="line">        MPI_Send(A[i<span class="number">-1</span>], N, MPI_FLOAT, i, <span class="number">99</span>, MPI_COMM_WORLD);  </span><br><span class="line">    &#125;</span><br><span class="line">    numsend = j;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">/** fix bug **/</span></span><br><span class="line">	<span class="keyword">for</span> (i = j + <span class="number">1</span>; i &lt; numprocs; i++) &#123;  </span><br><span class="line">	    MPI_Send(&amp;j, <span class="number">0</span>, MPI_INT, i, <span class="number">0</span>, MPI_COMM_WORLD);  </span><br><span class="line">	&#125;</span><br><span class="line">	<span class="comment">/** fix bug **/</span>  </span><br><span class="line">	</span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">&#125; <span class="keyword">else</span> &#123;  </span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">    <span class="keyword">while</span> (<span class="number">1</span>) &#123;  </span><br><span class="line">        MPI_Recv(A_row, N, MPI_FLOAT, <span class="number">0</span>, MPI_ANY_TAG, MPI_COMM_WORLD, &amp;status);  </span><br><span class="line">        <span class="keyword">if</span> (status.MPI_TAG == <span class="number">0</span>) &#123;  </span><br><span class="line">		    <span class="keyword">break</span>;  </span><br><span class="line">		&#125;</span><br><span class="line">		<span class="comment">// ...</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<p>主进程逻辑中新增给其他未发送数据的从属进程发送 <code>tag</code> 为 0 的信号，解除阻塞等待，并提醒它直接退出循环。</p>
+<h3 id="3-严格的接收顺序导致性能下降"><a href="#3-严格的接收顺序导致性能下降" class="headerlink" title="3. 严格的接收顺序导致性能下降"></a>3. 严格的接收顺序导致性能下降</h3><p>这不是一个bug，但是一个可以优化的地方：</p>
+<div class="code-container" data-rel="C"><figure class="iseeu highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (!myid) &#123;  </span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">  </span><br><span class="line">    <span class="keyword">for</span> (i = <span class="number">1</span>; i &lt;= M; i++) &#123;  </span><br><span class="line">        sender = (i - <span class="number">1</span>) % (numprocs - <span class="number">1</span>) + <span class="number">1</span>;  </span><br><span class="line">        MPI_Recv(C[i<span class="number">-1</span>], P, MPI_FLOAT, sender, <span class="number">100</span>, MPI_COMM_WORLD, &amp;status); </span><br><span class="line">        </span><br><span class="line">        <span class="comment">// ...</span></span><br><span class="line">    &#125;  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<p>主进程按照严格的顺序计算 <code>sender</code>，顺序接收从进程的计算结果。但是如果后面的进程先计算结束，后面进程的 send 就要一直等待前面进程。将 <code>sender</code> 改为 <code>MPI_ANY_SOURCE</code> 可以达到优化的目的。</p>
+<h2 id="三、代码注释"><a href="#三、代码注释" class="headerlink" title="三、代码注释"></a>三、代码注释</h2><p>这里是修改了 bug 的完整代码和 50% 注释，并且输入接入了随机矩阵生成程序：</p>
+<div class="code-container" data-rel="C"><figure class="iseeu highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br><span class="line">196</span><br><span class="line">197</span><br><span class="line">198</span><br><span class="line">199</span><br><span class="line">200</span><br><span class="line">201</span><br><span class="line">202</span><br><span class="line">203</span><br><span class="line">204</span><br><span class="line">205</span><br><span class="line">206</span><br><span class="line">207</span><br><span class="line">208</span><br><span class="line">209</span><br><span class="line">210</span><br><span class="line">211</span><br><span class="line">212</span><br><span class="line">213</span><br><span class="line">214</span><br><span class="line">215</span><br><span class="line">216</span><br><span class="line">217</span><br><span class="line">218</span><br><span class="line">219</span><br><span class="line">220</span><br><span class="line">221</span><br><span class="line">222</span><br><span class="line">223</span><br><span class="line">224</span><br><span class="line">225</span><br><span class="line">226</span><br><span class="line">227</span><br><span class="line">228</span><br><span class="line">229</span><br><span class="line">230</span><br><span class="line">231</span><br><span class="line">232</span><br><span class="line">233</span><br><span class="line">234</span><br><span class="line">235</span><br><span class="line">236</span><br><span class="line">237</span><br><span class="line">238</span><br><span class="line">239</span><br><span class="line">240</span><br><span class="line">241</span><br><span class="line">242</span><br><span class="line">243</span><br><span class="line">244</span><br><span class="line">245</span><br><span class="line">246</span><br><span class="line">247</span><br><span class="line">248</span><br><span class="line">249</span><br><span class="line">250</span><br><span class="line">251</span><br><span class="line">252</span><br><span class="line">253</span><br><span class="line">254</span><br><span class="line">255</span><br><span class="line">256</span><br><span class="line">257</span><br><span class="line">258</span><br><span class="line">259</span><br><span class="line">260</span><br><span class="line">261</span><br><span class="line">262</span><br><span class="line">263</span><br><span class="line">264</span><br><span class="line">265</span><br><span class="line">266</span><br><span class="line">267</span><br><span class="line">268</span><br><span class="line">269</span><br><span class="line">270</span><br><span class="line">271</span><br><span class="line">272</span><br><span class="line">273</span><br><span class="line">274</span><br><span class="line">275</span><br><span class="line">276</span><br><span class="line">277</span><br><span class="line">278</span><br><span class="line">279</span><br><span class="line">280</span><br><span class="line">281</span><br><span class="line">282</span><br><span class="line">283</span><br><span class="line">284</span><br><span class="line">285</span><br><span class="line">286</span><br><span class="line">287</span><br><span class="line">288</span><br><span class="line">289</span><br><span class="line">290</span><br><span class="line">291</span><br><span class="line">292</span><br><span class="line">293</span><br><span class="line">294</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span> <span class="comment">// 引入标准输入输出库，用于文件操作和打印信息</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;mpi.h&gt;</span> <span class="comment">// 引入MPI（消息传递接口）库，用于多进程并行计算</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;sys/sysinfo.h&gt;</span> <span class="comment">// 引入系统信息库，用于获取CPU核心数</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;pthread.h&gt;</span> <span class="comment">// 引入Pthreads库，用于在单个进程内进行多线程并行</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdlib.h&gt;</span> <span class="comment">// 引入标准库，用于内存分配(malloc)、退出(exit)等</span></span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 定义一个结构体，用于向每个线程传递参数</span></span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">threadArg</span> &#123;</span></span><br><span class="line">    <span class="type">int</span> tid;            <span class="comment">// 线程的ID (0, 1, 2, ...)</span></span><br><span class="line">    <span class="type">float</span>* B;           <span class="comment">// 指向完整的矩阵B的指针，所有线程共享</span></span><br><span class="line">    <span class="type">int</span> N_dim;          <span class="comment">// 矩阵A的列数 / 矩阵B的行数</span></span><br><span class="line">    <span class="type">int</span> P_dim;          <span class="comment">// 矩阵B的列数 / 结果矩阵C的列数</span></span><br><span class="line">    <span class="type">float</span>* A_row;       <span class="comment">// 指向当前正在处理的矩阵A的某一行的指针</span></span><br><span class="line">    <span class="type">float</span>* C_row;       <span class="comment">// 指向用于存放计算结果的C的某一行的指针</span></span><br><span class="line">    <span class="type">int</span> numthreads;     <span class="comment">// 当前工作进程中创建的线程总数</span></span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 全局变量，用于存放所有线程的参数结构体数组</span></span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">threadArg</span>* <span class="title">targs</span>;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * @brief 线程工作函数</span></span><br><span class="line"><span class="comment"> *        每个线程执行这个函数，计算结果行向量(C_row)的一部分。</span></span><br><span class="line"><span class="comment"> * @param arg 传入的参数，是一个指向threadArg结构体的指针</span></span><br><span class="line"><span class="comment"> * @return void* NULL</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="type">void</span>* <span class="title function_">worker</span><span class="params">(<span class="type">void</span>* arg)</span> &#123;</span><br><span class="line">    <span class="type">int</span> i, j;</span><br><span class="line">    <span class="comment">// 将通用的void*参数强制类型转换为我们自定义的结构体指针</span></span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">threadArg</span>* <span class="title">myarg</span> =</span> (<span class="keyword">struct</span> threadArg*)arg;</span><br><span class="line">    <span class="type">int</span> N = myarg-&gt;N_dim; <span class="comment">// 获取矩阵A的列数N</span></span><br><span class="line">    <span class="type">int</span> P = myarg-&gt;P_dim; <span class="comment">// 获取矩阵B的列数P</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 任务分配：采用交叉分配（cyclic distribution）的方式</span></span><br><span class="line">    <span class="comment">// 每个线程负责计算结果行C_row中的第 tid, tid+numthreads, tid+2*numthreads, ... 列</span></span><br><span class="line">    <span class="keyword">for</span> (i = myarg-&gt;tid; i &lt; P; i += myarg-&gt;numthreads) &#123;</span><br><span class="line">        myarg-&gt;C_row[i] = <span class="number">0.0</span>; <span class="comment">// 初始化结果元素为0</span></span><br><span class="line">        <span class="comment">// 计算 C_row[i] = A_row * B_col[i]</span></span><br><span class="line">        <span class="comment">// B矩阵是按列优先存储的（实际上代码中是按行优先，但通过 j*P+i 访问实现列访问）</span></span><br><span class="line">        <span class="keyword">for</span> (j = <span class="number">0</span>; j &lt; N; j++) &#123;</span><br><span class="line">            myarg-&gt;C_row[i] += myarg-&gt;A_row[j] * myarg-&gt;B[j * P + i];</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">NULL</span>; <span class="comment">// 线程函数标准返回</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * @brief 从二进制文件中读取矩阵数据</span></span><br><span class="line"><span class="comment"> * @param filename 文件名</span></span><br><span class="line"><span class="comment"> * @param rows 用于返回矩阵行数的指针</span></span><br><span class="line"><span class="comment"> * @param cols 用于返回矩阵列数的指针</span></span><br><span class="line"><span class="comment"> * @param matrix_ptr 用于返回读取到的矩阵数据的指针的指针</span></span><br><span class="line"><span class="comment"> * @return int 1表示成功，0表示失败</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="type">int</span> <span class="title function_">read_matrix</span><span class="params">(<span class="type">const</span> <span class="type">char</span>* filename, <span class="type">int</span>* rows, <span class="type">int</span>* cols, <span class="type">float</span>** matrix_ptr)</span> &#123;</span><br><span class="line">    FILE* file = fopen(filename, <span class="string">&quot;rb&quot;</span>); <span class="comment">// 以二进制只读模式打开文件</span></span><br><span class="line">    <span class="keyword">if</span> (!file) &#123;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;错误: 无法打开文件 %s\n&quot;</span>, filename);</span><br><span class="line">        <span class="keyword">return</span> <span class="number">0</span>; <span class="comment">// 打开失败返回0</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="type">int</span> m, n; <span class="comment">// 用于临时存储行数和列数</span></span><br><span class="line">    <span class="type">int</span> i;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 从文件头读取行数和列数</span></span><br><span class="line">    fread(&amp;m, <span class="keyword">sizeof</span>(<span class="type">int</span>), <span class="number">1</span>, file);</span><br><span class="line">    fread(&amp;n, <span class="keyword">sizeof</span>(<span class="type">int</span>), <span class="number">1</span>, file);</span><br><span class="line">    *rows = m; <span class="comment">// 通过指针设置外部变量的值</span></span><br><span class="line">    *cols = n;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 文件中存储的是double类型，但程序计算使用float类型</span></span><br><span class="line">    <span class="comment">// 所以先分配一个临时空间读取double数据</span></span><br><span class="line">    <span class="type">double</span>* temp_matrix = (<span class="type">double</span>*)<span class="built_in">malloc</span>(m * n * <span class="keyword">sizeof</span>(<span class="type">double</span>));</span><br><span class="line">    <span class="keyword">if</span> (!temp_matrix) &#123;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;错误: 为double矩阵分配临时内存失败。\n&quot;</span>);</span><br><span class="line">        fclose(file);</span><br><span class="line">        <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 为最终的float矩阵分配内存</span></span><br><span class="line">    *matrix_ptr = (<span class="type">float</span>*)<span class="built_in">malloc</span>(m * n * <span class="keyword">sizeof</span>(<span class="type">float</span>));</span><br><span class="line">    <span class="keyword">if</span> (!(*matrix_ptr)) &#123;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;错误: 为float矩阵分配内存失败。\n&quot;</span>);</span><br><span class="line">        <span class="built_in">free</span>(temp_matrix); <span class="comment">// 释放已分配的临时内存</span></span><br><span class="line">        fclose(file);</span><br><span class="line">        <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 从文件中读取整个矩阵的double数据</span></span><br><span class="line">    fread(temp_matrix, <span class="keyword">sizeof</span>(<span class="type">double</span>), m * n, file);</span><br><span class="line">    fclose(file); <span class="comment">// 关闭文件</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 将double数据转换为float数据</span></span><br><span class="line">    <span class="keyword">for</span> (i = <span class="number">0</span>; i &lt; m * n; i++) &#123;</span><br><span class="line">        (*matrix_ptr)[i] = (<span class="type">float</span>)temp_matrix[i];</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="built_in">free</span>(temp_matrix); <span class="comment">// 释放临时内存</span></span><br><span class="line">    <span class="keyword">return</span> <span class="number">1</span>; <span class="comment">// 成功返回1</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * @brief 主函数</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">(<span class="type">int</span> argc, <span class="type">char</span> *argv[])</span> &#123;</span><br><span class="line">    <span class="type">int</span> myid, numprocs; <span class="comment">// myid: 当前进程的ID(rank), numprocs: 总进程数</span></span><br><span class="line">    MPI_Status status;  <span class="comment">// MPI状态变量，用于接收消息时获取额外信息（如来源、标签）</span></span><br><span class="line">    <span class="type">int</span> i, j, k, numsend, sender; <span class="comment">// 循环变量和临时变量</span></span><br><span class="line">    <span class="type">int</span> numthreads;     <span class="comment">// 线程数</span></span><br><span class="line"></span><br><span class="line">    <span class="type">int</span> M, N, P; <span class="comment">// 矩阵维度: A(M x N), B(N x P), C(M x P)</span></span><br><span class="line"></span><br><span class="line">    <span class="type">float</span> *A = <span class="literal">NULL</span>, *B = <span class="literal">NULL</span>, *C = <span class="literal">NULL</span>; <span class="comment">// 指向矩阵A, B, C的指针</span></span><br><span class="line"></span><br><span class="line">    <span class="type">pthread_t</span>* tids;    <span class="comment">// 指向线程ID数组的指针</span></span><br><span class="line">    <span class="type">float</span> *A_row, *C_row; <span class="comment">// 工作进程中用于存储A的一行和计算C的一行的缓冲区</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 初始化MPI环境</span></span><br><span class="line">    MPI_Init(&amp;argc, &amp;argv);</span><br><span class="line">    MPI_Comm_rank(MPI_COMM_WORLD, &amp;myid); <span class="comment">// 获取当前进程的ID</span></span><br><span class="line">    MPI_Comm_size(MPI_COMM_WORLD, &amp;numprocs); <span class="comment">// 获取总进程数</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// ================= 主进程 (rank 0) 的工作 =================</span></span><br><span class="line">    <span class="keyword">if</span> (myid == <span class="number">0</span>) &#123;</span><br><span class="line">        <span class="type">const</span> <span class="type">char</span>* filename_A = <span class="string">&quot;matrix_A.dat&quot;</span>; <span class="comment">// 矩阵A的文件名</span></span><br><span class="line">        <span class="type">const</span> <span class="type">char</span>* filename_B = <span class="string">&quot;matrix_B.dat&quot;</span>; <span class="comment">// 矩阵B的文件名</span></span><br><span class="line"></span><br><span class="line">        <span class="type">int</span> N_A, N_B; <span class="comment">// 用于存储从文件中读取的矩阵维度以进行检查</span></span><br><span class="line">        <span class="comment">// 读取矩阵A</span></span><br><span class="line">        <span class="keyword">if</span> (!read_matrix(filename_A, &amp;M, &amp;N_A, &amp;A)) &#123;</span><br><span class="line">            MPI_Abort(MPI_COMM_WORLD, <span class="number">1</span>); <span class="comment">// 如果失败，中止所有MPI进程</span></span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// 读取矩阵B</span></span><br><span class="line">        <span class="keyword">if</span> (!read_matrix(filename_B, &amp;N_B, &amp;P, &amp;B)) &#123;</span><br><span class="line">            <span class="built_in">free</span>(A); <span class="comment">// 释放已分配的内存</span></span><br><span class="line">            MPI_Abort(MPI_COMM_WORLD, <span class="number">1</span>);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 检查矩阵维度是否匹配 (A的列数必须等于B的行数)</span></span><br><span class="line">        <span class="keyword">if</span> (N_A != N_B) &#123;</span><br><span class="line">            <span class="built_in">printf</span>(<span class="string">&quot;错误: 矩阵维度不匹配. A是 %dx%d, B是 %dx%d.\n&quot;</span>, M, N_A, N_B, P);</span><br><span class="line">            <span class="built_in">free</span>(A);</span><br><span class="line">            <span class="built_in">free</span>(B);</span><br><span class="line">            MPI_Abort(MPI_COMM_WORLD, <span class="number">1</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        N = N_A; <span class="comment">// 确定维度N</span></span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;矩阵A: %d x %d, 矩阵B: %d x %d\n&quot;</span>, M, N, N, P);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 为结果矩阵C分配内存</span></span><br><span class="line">        C = (<span class="type">float</span>*)<span class="built_in">malloc</span>(M * P * <span class="keyword">sizeof</span>(<span class="type">float</span>));</span><br><span class="line">        <span class="keyword">if</span> (!C) &#123;</span><br><span class="line">            <span class="built_in">printf</span>(<span class="string">&quot;错误: 为结果矩阵C分配内存失败。\n&quot;</span>);</span><br><span class="line">            <span class="built_in">free</span>(A); <span class="built_in">free</span>(B);</span><br><span class="line">            MPI_Abort(MPI_COMM_WORLD, <span class="number">1</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 将矩阵维度(M, N, P)从主进程广播给所有其他进程</span></span><br><span class="line">    <span class="type">int</span> dims[<span class="number">3</span>]; <span class="comment">// 创建一个数组来存放维度信息</span></span><br><span class="line">    <span class="keyword">if</span> (myid == <span class="number">0</span>) &#123;</span><br><span class="line">        dims[<span class="number">0</span>] = M;</span><br><span class="line">        dims[<span class="number">1</span>] = N;</span><br><span class="line">        dims[<span class="number">2</span>] = P;</span><br><span class="line">    &#125;</span><br><span class="line">    MPI_Bcast(dims, <span class="number">3</span>, MPI_INT, <span class="number">0</span>, MPI_COMM_WORLD);</span><br><span class="line">    <span class="comment">// 其他进程接收广播的维度信息</span></span><br><span class="line">    <span class="keyword">if</span> (myid != <span class="number">0</span>) &#123;</span><br><span class="line">        M = dims[<span class="number">0</span>];</span><br><span class="line">        N = dims[<span class="number">1</span>];</span><br><span class="line">        P = dims[<span class="number">2</span>];</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 对于非主进程，需要为矩阵B分配内存</span></span><br><span class="line">    <span class="keyword">if</span> (myid != <span class="number">0</span>) &#123;</span><br><span class="line">        B = (<span class="type">float</span>*)<span class="built_in">malloc</span>(N * P * <span class="keyword">sizeof</span>(<span class="type">float</span>));</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 主进程将完整的矩阵B广播给所有其他进程</span></span><br><span class="line">    MPI_Bcast(B, N * P, MPI_FLOAT, <span class="number">0</span>, MPI_COMM_WORLD);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// ================= 任务分发和计算 =================</span></span><br><span class="line">    <span class="keyword">if</span> (!myid) &#123; <span class="comment">// 主进程 (myid == 0)</span></span><br><span class="line">        <span class="comment">// 初始任务分发：给每个工作进程（或直到任务分发完）发送A的一行</span></span><br><span class="line">        <span class="comment">// j是实际需要初始分发任务的进程数，不能超过总进程数-1，也不能超过总行数M</span></span><br><span class="line">        j = (numprocs - <span class="number">1</span>) &lt; M ? (numprocs - <span class="number">1</span>) : M;</span><br><span class="line">        <span class="keyword">for</span> (i = <span class="number">1</span>; i &lt;= j; i++) &#123;</span><br><span class="line">            <span class="comment">// 发送A的第(i-1)行给进程i</span></span><br><span class="line">            <span class="comment">// MPI_Send(数据指针, 数量, 数据类型, 目标进程ID, 消息标签, 通信域)</span></span><br><span class="line">            <span class="comment">// 这里的消息标签(tag)很关键，我们用它来标记这是A的哪一行（从1开始计数）</span></span><br><span class="line">            MPI_Send(A + (i<span class="number">-1</span>)*N, N, MPI_FLOAT, i, i, MPI_COMM_WORLD);</span><br><span class="line">        &#125;</span><br><span class="line">        numsend = j; <span class="comment">// 记录已经发送了多少行</span></span><br><span class="line"></span><br><span class="line">        <span class="comment">// 如果工作进程数比初始任务还多，给它们发送一个“无工作”的初始消息（可选，但这里实现是等待接收后再动态分配）</span></span><br><span class="line">        <span class="comment">// 这段代码实际是发送一个无效任务来“启动”多余的进程，但更好的做法是直接进入主循环</span></span><br><span class="line">        <span class="keyword">for</span> (i = j + <span class="number">1</span>; i &lt; numprocs; i++) &#123;</span><br><span class="line">            <span class="comment">// tag=0 表示这是一个结束信号，但在这里用作一个“空”任务的启动信号</span></span><br><span class="line">            MPI_Send(A, N, MPI_FLOAT, i, <span class="number">0</span>, MPI_COMM_WORLD);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 主循环：接收已完成的结果，并发送新任务</span></span><br><span class="line">        <span class="keyword">for</span> (i = <span class="number">1</span>; i &lt;= M; i++) &#123;</span><br><span class="line">            <span class="type">float</span> result[P]; <span class="comment">// 接收结果的缓冲区</span></span><br><span class="line">            <span class="comment">// 接收任何一个工作进程发回的结果</span></span><br><span class="line">            <span class="comment">// MPI_ANY_SOURCE 表示可以接收来自任何进程的消息</span></span><br><span class="line">            <span class="comment">// MPI_ANY_TAG 表示可以接收任何标签的消息</span></span><br><span class="line">            MPI_Recv(result, P, MPI_FLOAT, MPI_ANY_SOURCE, MPI_ANY_TAG, MPI_COMM_WORLD, &amp;status);</span><br><span class="line">            sender = status.MPI_SOURCE; <span class="comment">// 从status中获取是哪个进程发来的</span></span><br><span class="line">            <span class="type">int</span> index = status.MPI_TAG - <span class="number">1</span>; <span class="comment">// 从tag中获取这是A的哪一行计算的结果（之前发送时tag=行号+1）</span></span><br><span class="line"></span><br><span class="line">            <span class="comment">// 将收到的结果存入C矩阵的正确位置</span></span><br><span class="line">            <span class="keyword">if</span> (index &gt;= <span class="number">0</span> &amp;&amp; index &lt; M) &#123;</span><br><span class="line">                 <span class="keyword">for</span> (k = <span class="number">0</span>; k &lt; P; k++) &#123;</span><br><span class="line">                    C[index*P + k] = result[k];</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="comment">// 动态任务分配：如果还有未计算的行，就发送给刚刚完成任务的那个进程</span></span><br><span class="line">            <span class="keyword">if</span> (numsend &lt; M) &#123;</span><br><span class="line">                MPI_Send(A + numsend*N, N, MPI_FLOAT, sender, numsend + <span class="number">1</span>, MPI_COMM_WORLD);</span><br><span class="line">                numsend++; <span class="comment">// 已发送行数加一</span></span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                <span class="comment">// 如果所有行都已分发完毕，就给这个空闲的进程发送一个结束信号 (tag=0)</span></span><br><span class="line">                MPI_Send(A, N, MPI_FLOAT, sender, <span class="number">0</span>, MPI_COMM_WORLD);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123; <span class="comment">// 工作进程 (myid != 0)</span></span><br><span class="line">        numthreads = get_nprocs(); <span class="comment">// 获取当前机器的CPU核心数，作为线程数</span></span><br><span class="line">        tids = (<span class="type">pthread_t</span>*)<span class="built_in">malloc</span>(numthreads * <span class="keyword">sizeof</span>(<span class="type">pthread_t</span>)); <span class="comment">// 分配线程ID数组</span></span><br><span class="line"></span><br><span class="line">        A_row = (<span class="type">float</span>*)<span class="built_in">malloc</span>(N * <span class="keyword">sizeof</span>(<span class="type">float</span>)); <span class="comment">// 分配接收A一行的缓冲区</span></span><br><span class="line">        C_row = (<span class="type">float</span>*)<span class="built_in">malloc</span>(P * <span class="keyword">sizeof</span>(<span class="type">float</span>)); <span class="comment">// 分配存放计算结果C一行的缓冲区</span></span><br><span class="line">        targs = (<span class="keyword">struct</span> threadArg*)<span class="built_in">malloc</span>(numthreads * <span class="keyword">sizeof</span>(<span class="keyword">struct</span> threadArg)); <span class="comment">// 分配线程参数数组</span></span><br><span class="line"></span><br><span class="line">        <span class="comment">// 初始化所有线程的参数</span></span><br><span class="line">        <span class="comment">// 除了tid不同，其他很多参数是所有线程共享的</span></span><br><span class="line">        <span class="keyword">for</span> (i = <span class="number">0</span>; i &lt; numthreads; i++) &#123;</span><br><span class="line">            targs[i].tid = i;</span><br><span class="line">            targs[i].B = B;</span><br><span class="line">            targs[i].N_dim = N;</span><br><span class="line">            targs[i].P_dim = P;</span><br><span class="line">            targs[i].A_row = A_row;</span><br><span class="line">            targs[i].C_row = C_row;</span><br><span class="line">            targs[i].numthreads = numthreads;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 工作进程主循环：不断接收任务直到收到结束信号</span></span><br><span class="line">        <span class="keyword">while</span> (<span class="number">1</span>) &#123;</span><br><span class="line">            <span class="comment">// 接收主进程发来的A的一行</span></span><br><span class="line">            MPI_Recv(A_row, N, MPI_FLOAT, <span class="number">0</span>, MPI_ANY_TAG, MPI_COMM_WORLD, &amp;status);</span><br><span class="line">            <span class="comment">// 检查消息标签，如果为0，则表示所有任务已完成，跳出循环</span></span><br><span class="line">            <span class="keyword">if</span> (status.MPI_TAG == <span class="number">0</span>) &#123;</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="type">int</span> index_tag = status.MPI_TAG; <span class="comment">// 保存这个标签，完成计算后要用同样的标签发回去</span></span><br><span class="line"></span><br><span class="line">            <span class="comment">// 创建多个线程来并行计算 C_row = A_row * B</span></span><br><span class="line">            <span class="keyword">for</span> (i = <span class="number">0</span>; i &lt; numthreads; i++) &#123;</span><br><span class="line">                pthread_create(&amp;tids[i], <span class="literal">NULL</span>, worker, &amp;targs[i]);</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="comment">// 等待所有线程完成计算</span></span><br><span class="line">            <span class="keyword">for</span> (i = <span class="number">0</span>; i &lt; numthreads; i++) &#123;</span><br><span class="line">                pthread_join(tids[i], <span class="literal">NULL</span>);</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="comment">// 将计算好的结果行C_row发送回主进程</span></span><br><span class="line">            MPI_Send(C_row, P, MPI_FLOAT, <span class="number">0</span>, index_tag, MPI_COMM_WORLD);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 释放工作进程分配的内存</span></span><br><span class="line">        <span class="built_in">free</span>(B); <span class="built_in">free</span>(tids); <span class="built_in">free</span>(A_row); <span class="built_in">free</span>(C_row); <span class="built_in">free</span>(targs);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 同步点：确保所有进程都完成了自己的工作，主进程才开始打印结果</span></span><br><span class="line">    <span class="comment">// 这可以防止主进程在工作进程还未退出时就结束程序</span></span><br><span class="line">    MPI_Barrier(MPI_COMM_WORLD);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// ================= 结果输出和清理 =================</span></span><br><span class="line">    <span class="keyword">if</span> (!myid) &#123; <span class="comment">// 只有主进程打印最终结果</span></span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;结果矩阵 C:\n&quot;</span>);</span><br><span class="line">        <span class="keyword">for</span> (i = <span class="number">0</span>; i &lt; M; i++) &#123;</span><br><span class="line">            <span class="keyword">for</span> (j = <span class="number">0</span>; j &lt; P; j++) &#123;</span><br><span class="line">                <span class="built_in">printf</span>(<span class="string">&quot;%6.2f &quot;</span>, C[i*P + j]); <span class="comment">// 格式化输出</span></span><br><span class="line">            &#125;</span><br><span class="line">            <span class="built_in">printf</span>(<span class="string">&quot;\n&quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 释放主进程分配的内存</span></span><br><span class="line">        <span class="built_in">free</span>(A); <span class="built_in">free</span>(B); <span class="built_in">free</span>(C);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 结束MPI环境，释放所有与MPI相关的资源</span></span><br><span class="line">    MPI_Finalize();</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>; <span class="comment">// 程序正常退出</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<h2 id="四、运行结果"><a href="#四、运行结果" class="headerlink" title="四、运行结果"></a>四、运行结果</h2><div class="code-container" data-rel="Text"><figure class="iseeu highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">[pl23373179@ln02 hw3]$ g++ matrixgen.cxx -o matgen</span><br><span class="line">[pl23373179@ln02 hw3]$ g++ print.cxx -o print</span><br><span class="line">[pl23373179@ln02 hw3]$ ./matgen 5 4 matrix_A.dat</span><br><span class="line">[pl23373179@ln02 hw3]$ ./matgen 4 3 matrix_B.dat</span><br><span class="line">[pl23373179@ln02 hw3]$ ./print matrix_A.dat</span><br><span class="line">       ---- matrix_A.dat: 5*4 Matrix -----</span><br><span class="line">0.8542  0.2758  0.9811  0.3089  </span><br><span class="line">0.8958  0.0017  0.6990  0.3635  </span><br><span class="line">0.2163  0.0449  0.3980  0.8485  </span><br><span class="line">0.9474  0.8159  0.3180  0.1536  </span><br><span class="line">0.6925  0.6190  0.8004  0.7914  </span><br><span class="line">[pl23373179@ln02 hw3]$ ./print matrix_B.dat</span><br><span class="line">       ---- matrix_B.dat: 4*3 Matrix -----</span><br><span class="line">0.8206  0.9126  0.8887  </span><br><span class="line">0.0331  0.8013  0.7295  </span><br><span class="line">0.6622  0.3368  0.2291  </span><br><span class="line">0.0144  0.6393  0.6054  </span><br><span class="line">[pl23373179@ln02 hw3]$ mpicc mulMatrix.c -o mulMatrix</span><br><span class="line">[pl23373179@ln02 hw3]$ sbatch mulMat</span><br><span class="line">Submitted batch job </span><br><span class="line"></span><br><span class="line">[pl23373179@ln02 hw3]$ cat hpc.out</span><br><span class="line">Matrix A: 5 x 4, Matrix B: 4 x 3</span><br><span class="line">Result matrix C:</span><br><span class="line">  1.36   1.53   1.37 </span><br><span class="line">  1.20   1.29   1.18 </span><br><span class="line">  0.45   0.91   0.83 </span><br><span class="line">  1.02   1.72   1.60 </span><br><span class="line">  1.13   1.90   1.73 </span><br></pre></td></tr></table></figure></div>
+
+<h2 id="五、程序流程图"><a href="#五、程序流程图" class="headerlink" title="五、程序流程图"></a>五、程序流程图</h2><p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/parallel/hw3_mulMatrix.png"
+                      alt="hw3_mulMatrix"
+                ></p>
+
+		</div>
+
+		
+		<div class="post-copyright-info w-full my-8 px-2 sm:px-6 md:px-8">
+			<div class="article-copyright-info-container">
+    <ul>
+        <li><strong>Title:</strong> 矩阵相乘的并行计算</li>
+        <li><strong>Author:</strong> BaconToast</li>
+        <li><strong>Created at
+                :</strong> 2025-11-18 10:43:21</li>
+        
+            <li>
+                <strong>Updated at
+                    :</strong> 2025-11-18 10:55:55
+            </li>
+        
+        <li>
+            <strong>Link:</strong> https://bacontoast-pro.github.io/2025/11/18/parallel/mulMatrix/
+        </li>
+        <li>
+            <strong>
+                License:
+            </strong>
+            
+
+            
+                This work is licensed under <a class="license" target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0">CC BY-NC-SA 4.0</a>.
+            
+        </li>
+    </ul>
+</div>
+
+		</div>
+		
+
+		
+		<ul class="post-tags-box text-lg mt-1.5 flex-wrap justify-center flex md:hidden">
+			
+			<li class="tag-item mx-0.5">
+				<a href="/tags/Parallel/">#Parallel</a>&nbsp;
+			</li>
+			
+			<li class="tag-item mx-0.5">
+				<a href="/tags/MPI/">#MPI</a>&nbsp;
+			</li>
+			
+			<li class="tag-item mx-0.5">
+				<a href="/tags/pthread/">#pthread</a>&nbsp;
+			</li>
+			
+			<li class="tag-item mx-0.5">
+				<a href="/tags/C/">#C</a>&nbsp;
+			</li>
+			
+		</ul>
+		
+
+		
+
+		
+		<div class="article-nav my-8 flex justify-between items-center px-2 sm:px-6 md:px-8">
+			
+			
+			<div class="article-next border-border-color shadow-redefine-flat shadow-shadow-color-2 rounded-medium px-4 py-2 hover:shadow-redefine-flat-hover hover:shadow-shadow-color-2">
+				<a class="next" rel="next" href="/2025/11/14/compiler/symbol/">
+					<span class="title flex justify-center items-center">
+						<span class="post-nav-title-item truncate max-w-48">编译技术语义分析设计文档</span>
+						<span class="post-nav-item">Next posts</span>
+					</span>
+					<span class="right arrow-icon flex justify-center items-center">
+						<i class="fa-solid fa-chevron-right"></i>
+					</span>
+				</a>
+			</div>
+			
+		</div>
+		
+
+
+		
+		<div class="comment-container px-2 sm:px-6 md:px-8 pb-8">
+			<div class="comments-container mt-10 w-full ">
+    <div id="comment-anchor" class="w-full h-2.5"></div>
+    <div class="comment-area-title w-full my-1.5 md:my-2.5 text-xl md:text-3xl font-bold">
+        Comments
+    </div>
+    
+
+        
+            
+    <div id="waline"></div>
+    <script type="module" data-swup-reload-script>
+      import { init } from '/js/libs/waline.mjs';
+
+      function loadWaline() {
+        init({
+          el: '#waline',
+          serverURL: 'https://example.example.com',
+          dark: 'body[class~="dark-mode"]',
+          reaction: false,
+          requiredMeta: ['nick', 'mail'],
+          emoji: [],
+                    lang: 'zh-CN',
+        });
+      }
+
+      if (typeof swup !== 'undefined') {
+        loadWaline();
+      } else {
+        window.addEventListener('DOMContentLoaded', loadWaline);
+      }
+    </script>
+
+
+
+        
+    
+</div>
+
+		</div>
+		
+	</div>
+
+	
+	<div class="toc-content-container">
+		<div class="post-toc-wrap">
+	<div class="post-toc">
+		<div class="toc-title">On this page</div>
+		<div class="page-title">矩阵相乘的并行计算</div>
+		<ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80%E3%80%81%E8%BE%85%E5%8A%A9%E7%A8%8B%E5%BA%8F%E4%BD%BF%E7%94%A8"><span class="nav-text">一、辅助程序使用</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-%E7%9F%A9%E9%98%B5%E7%94%9F%E6%88%90%E7%A8%8B%E5%BA%8F"><span class="nav-text">1. 矩阵生成程序</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-%E7%9F%A9%E9%98%B5%E8%BE%93%E5%87%BA%E7%A8%8B%E5%BA%8F"><span class="nav-text">2. 矩阵输出程序</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C%E3%80%81%E6%BA%90%E7%A8%8B%E5%BA%8F-bug-%E4%BF%AE%E5%A4%8D"><span class="nav-text">二、源程序 bug 修复</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-%E5%88%86%E9%85%8D%E7%9F%A9%E9%98%B5-A-%E7%9A%84%E6%AF%8F%E4%B8%80%E8%A1%8C%E5%A4%84%E7%90%86%E9%94%99%E8%AF%AF"><span class="nav-text">1. 分配矩阵 A 的每一行处理错误</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-%E4%BB%8E%E5%B1%9E%E8%BF%9B%E7%A8%8B%E6%95%B0%E5%A4%A7%E4%BA%8E%E7%9F%A9%E9%98%B5-A-%E8%A1%8C%E6%95%B0%E6%97%B6%E6%AD%BB%E9%94%81"><span class="nav-text">2. 从属进程数大于矩阵 A 行数时死锁</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-%E4%B8%A5%E6%A0%BC%E7%9A%84%E6%8E%A5%E6%94%B6%E9%A1%BA%E5%BA%8F%E5%AF%BC%E8%87%B4%E6%80%A7%E8%83%BD%E4%B8%8B%E9%99%8D"><span class="nav-text">3. 严格的接收顺序导致性能下降</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%89%E3%80%81%E4%BB%A3%E7%A0%81%E6%B3%A8%E9%87%8A"><span class="nav-text">三、代码注释</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9B%9B%E3%80%81%E8%BF%90%E8%A1%8C%E7%BB%93%E6%9E%9C"><span class="nav-text">四、运行结果</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%94%E3%80%81%E7%A8%8B%E5%BA%8F%E6%B5%81%E7%A8%8B%E5%9B%BE"><span class="nav-text">五、程序流程图</span></a></li></ol>
+
+	</div>
+</div>
+	</div>
+	
+</div>
+			</div>
+
+			
+		</div>
+
+		<div class="main-content-footer">
+			<footer class="footer mt-5 py-5 h-auto text-base text-third-text-color relative border-t-2 border-t-border-color">
+    <div class="info-container py-3 text-center">
+        
+        <div class="text-center">
+            &copy;
+            
+              <span>2025</span>
+              -
+            
+            2025&nbsp;&nbsp;<i class="fa-solid fa-heart fa-beat" style="--fa-animation-duration: 0.5s; color: #f54545"></i>&nbsp;&nbsp;<a href="/">BaconToast</a>
+            
+                
+                <p class="post-count space-x-0.5">
+                    <span>
+                        5 posts in total
+                    </span>
+                    
+                </p>
+            
+        </div>
+        
+            <script data-swup-reload-script src="https://cn.vercount.one/js"></script>
+            <div class="relative text-center lg:absolute lg:right-[20px] lg:top-1/2 lg:-translate-y-1/2 lg:text-right">
+                
+                    <span id="busuanzi_container_site_uv" class="lg:!block">
+                        <span class="text-sm">VISITOR COUNT</span>
+                        <span id="busuanzi_value_site_uv"></span>
+                    </span>
+                
+                
+                    <span id="busuanzi_container_site_pv" class="lg:!block">
+                        <span class="text-sm">TOTAL PAGE VIEWS</span>
+                        <span id="busuanzi_value_site_pv"></span>
+                    </span>
+                
+            </div>
+        
+        <div class="relative text-center lg:absolute lg:left-[20px] lg:top-1/2 lg:-translate-y-1/2 lg:text-left">
+            <span class="lg:block text-sm">POWERED BY <?xml version="1.0" encoding="utf-8"?><!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"><svg class="relative top-[2px] inline-block align-baseline" version="1.1" id="圖層_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="1rem" height="1rem" viewBox="0 0 512 512" enable-background="new 0 0 512 512" xml:space="preserve"><path fill="#0E83CD" d="M256.4,25.8l-200,115.5L56,371.5l199.6,114.7l200-115.5l0.4-230.2L256.4,25.8z M349,354.6l-18.4,10.7l-18.6-11V275H200v79.6l-18.4,10.7l-18.6-11v-197l18.5-10.6l18.5,10.8V237h112v-79.6l18.5-10.6l18.5,10.8V354.6z"/></svg><a target="_blank" class="text-base" href="https://hexo.io">Hexo</a></span>
+            <span class="text-sm lg:block">THEME&nbsp;<a class="text-base" target="_blank" href="https://github.com/EvanNotFound/hexo-theme-redefine">Redefine v2.8.5</a></span>
+        </div>
+        
+        
+            <div>
+                Blog up for <span class="odometer" id="runtime_days" ></span> days <span class="odometer" id="runtime_hours"></span> hrs <span class="odometer" id="runtime_minutes"></span> Min <span class="odometer" id="runtime_seconds"></span> Sec
+            </div>
+        
+        
+            <script data-swup-reload-script>
+                try {
+                    function odometer_init() {
+                    const elements = document.querySelectorAll('.odometer');
+                    elements.forEach(el => {
+                        new Odometer({
+                            el,
+                            format: '( ddd).dd',
+                            duration: 200
+                        });
+                    });
+                    }
+                    odometer_init();
+                } catch (error) {}
+            </script>
+        
+        
+        
+    </div>  
+</footer>
+		</div>
+	</div>
+
+	
+	<div class="post-tools">
+		<div class="post-tools-container">
+	<ul class="article-tools-list">
+		<!-- TOC aside toggle -->
+		
+		<li class="right-bottom-tools page-aside-toggle">
+			<i class="fa-regular fa-outdent"></i>
+		</li>
+		
+
+		<!-- go comment -->
+		
+		<li class="go-comment">
+			<i class="fa-regular fa-comments"></i>
+		</li>
+		
+	</ul>
+</div>
+	</div>
+	
+
+	<div class="right-side-tools-container">
+		<div class="side-tools-container">
+	<ul class="hidden-tools-list">
+		<li class="right-bottom-tools tool-font-adjust-plus flex justify-center items-center">
+			<i class="fa-regular fa-magnifying-glass-plus"></i>
+		</li>
+
+		<li class="right-bottom-tools tool-font-adjust-minus flex justify-center items-center">
+			<i class="fa-regular fa-magnifying-glass-minus"></i>
+		</li>
+
+		<li class="right-bottom-tools tool-dark-light-toggle flex justify-center items-center">
+			<i class="fa-regular fa-moon"></i>
+		</li>
+
+		<!-- rss -->
+		
+
+		
+
+		<li class="right-bottom-tools tool-scroll-to-bottom flex justify-center items-center">
+			<i class="fa-regular fa-arrow-down"></i>
+		</li>
+	</ul>
+
+	<ul class="visible-tools-list">
+		<li class="right-bottom-tools toggle-tools-list flex justify-center items-center">
+			<i class="fa-regular fa-cog fa-spin"></i>
+		</li>
+		
+		<li class="right-bottom-tools tool-scroll-to-top flex justify-center items-center">
+			<i class="arrow-up fas fa-arrow-up"></i>
+			<span class="percent"></span>
+		</li>
+		
+		
+	</ul>
+</div>
+	</div>
+
+	<div class="image-viewer-container">
+	<img src="">
+</div>
+
+	
+
+</main>
+
+
+
+<script src="/js/build/libs/Swup.min.js"></script>
+
+<script src="/js/build/libs/SwupSlideTheme.min.js"></script>
+
+<script src="/js/build/libs/SwupScriptsPlugin.min.js"></script>
+
+<script src="/js/build/libs/SwupProgressPlugin.min.js"></script>
+
+<script src="/js/build/libs/SwupScrollPlugin.min.js"></script>
+
+<script src="/js/build/libs/SwupPreloadPlugin.min.js"></script>
+
+<script>
+    const swup = new Swup({
+        plugins: [
+            new SwupScriptsPlugin({
+                optin: true,
+            }),
+            new SwupProgressPlugin(),
+            new SwupScrollPlugin({
+                offset: 80,
+            }),
+            new SwupSlideTheme({
+                mainElement: ".main-content-body",
+            }),
+            new SwupPreloadPlugin(),
+        ],
+        containers: ["#swup"],
+    });
+</script>
+
+
+
+
+	
+<script src="/js/build/tools/imageViewer.js" type="module"></script>
+
+<script src="/js/build/utils.js" type="module"></script>
+
+<script src="/js/build/main.js" type="module"></script>
+
+<script src="/js/build/layouts/navbarShrink.js" type="module"></script>
+
+<script src="/js/build/tools/scrollTopBottom.js" type="module"></script>
+
+<script src="/js/build/tools/lightDarkSwitch.js" type="module"></script>
+
+<script src="/js/build/layouts/categoryList.js" type="module"></script>
+
+
+
+
+
+    
+<script src="/js/build/tools/codeBlock.js" type="module"></script>
+
+
+
+
+    
+<script src="/js/build/layouts/lazyload.js" type="module"></script>
+
+
+
+
+    
+<script src="/js/build/tools/runtime.js"></script>
+
+    
+<script src="/js/build/libs/odometer.min.js"></script>
+
+    
+<link rel="stylesheet" href="/assets/odometer-theme-minimal.css">
+
+
+
+
+  
+<script src="/js/build/libs/Typed.min.js"></script>
+
+  
+<script src="/js/build/plugins/typed.js" type="module"></script>
+
+
+
+
+
+
+    
+<script src="/js/build/libs/minimasonry.min.js"></script>
+
+    
+<script src="/js/build/plugins/masonry.js" type="module"></script>
+
+
+
+
+
+
+
+    
+<script src="/js/build/tools/tocToggle.js" type="module" data-swup-reload-script=""></script>
+
+<script src="/js/build/layouts/toc.js" type="module" data-swup-reload-script=""></script>
+
+<script src="/js/build/plugins/tabs.js" type="module" data-swup-reload-script=""></script>
+
+
+
+
+<script src="/js/build/libs/moment-with-locales.min.js" data-swup-reload-script=""></script>
+
+
+<script src="/js/build/layouts/essays.js" type="module" data-swup-reload-script=""></script>
+
+
+
+
+
+    
+<script src="/js/build/layouts/bookmarkNav.js" type="module"></script>
+
+
+	
+</body>
+
+</html>
