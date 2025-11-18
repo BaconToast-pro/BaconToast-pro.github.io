@@ -123,7 +123,7 @@
     
     <!--- Seo Part-->
     
-    <link rel="canonical" href="https://BaconToast-pro.github.io/2025/11/14/compiler/symbol/"/>
+    <link rel="canonical" href="https://BaconToast-pro.github.io/2025/11/18/co/p6/"/>
     <meta name="robots" content="index,follow">
     <meta name="googlebot" content="index,follow">
     <meta name="revisit-after" content="1 days">
@@ -133,17 +133,18 @@
         
         <meta name="description" content="Hexo Theme Redefine, Redefine Your Hexo Journey.">
 <meta property="og:type" content="article">
-<meta property="og:title" content="编译技术：语义分析">
-<meta property="og:url" content="https://bacontoast-pro.github.io/2025/11/14/compiler/symbol/index.html">
+<meta property="og:title" content="P6课下-Verilog搭建流水线CPU-2">
+<meta property="og:url" content="https://bacontoast-pro.github.io/2025/11/18/co/p6/index.html">
 <meta property="og:site_name" content="Hexo">
 <meta property="og:description" content="Hexo Theme Redefine, Redefine Your Hexo Journey.">
 <meta property="og:locale" content="en_US">
 <meta property="og:image" content="https://bacontoast-pro.github.io/images/redefine-og.webp">
-<meta property="article:published_time" content="2025-11-14T14:47:16.794Z">
-<meta property="article:modified_time" content="2025-11-18T03:05:05.904Z">
+<meta property="article:published_time" content="2025-11-18T03:19:21.520Z">
+<meta property="article:modified_time" content="2025-11-18T03:22:00.903Z">
 <meta property="article:author" content="BaconToast">
-<meta property="article:tag" content="Compiler">
-<meta property="article:tag" content="Java">
+<meta property="article:tag" content="CO">
+<meta property="article:tag" content="MIPS">
+<meta property="article:tag" content="Verilog">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https://bacontoast-pro.github.io/images/redefine-og.webp">
     
@@ -157,7 +158,7 @@
     
     <title>
         
-            编译技术：语义分析 | BaconToast&#39;s Shop
+            P6课下-Verilog搭建流水线CPU-2 | BaconToast&#39;s Shop
         
     </title>
 
@@ -662,10 +663,10 @@
 			
 			
 			
-			<img src="/images/public/city.jpg" alt="编译技术：语义分析" class="w-full h-60 sm:h-72 md:h-80 object-cover sm:rounded-t-large dark:brightness-75" />
+			<img src="/images/public/sakura.jpg" alt="P6课下-Verilog搭建流水线CPU-2" class="w-full h-60 sm:h-72 md:h-80 object-cover sm:rounded-t-large dark:brightness-75" />
 			
 			<div class="w-full flex items-center absolute bottom-0 justify-start">
-				<h1 class="article-title-cover text-center mx-6 my-6 text-second-text-color bg-background-color-transparent px-4 py-3 text-3xl sm:text-4xl md:text-5xl font-semibold backdrop-blur-lg rounded-xl border border-border-color ">编译技术：语义分析</h1>
+				<h1 class="article-title-cover text-center mx-6 my-6 text-second-text-color bg-background-color-transparent px-4 py-3 text-3xl sm:text-4xl md:text-5xl font-semibold backdrop-blur-lg rounded-xl border border-border-color ">P6课下-Verilog搭建流水线CPU-2</h1>
 			</div>
 			
 		</div>
@@ -686,15 +687,15 @@
 					<div class="article-meta-info">
     <span class="article-date article-meta-item">
         <i class="fa-regular fa-pen-fancy"></i>&nbsp;
-        <span class="desktop">2025-11-14 22:47:16</span>
-        <span class="mobile">2025-11-14 22:47:16</span>
+        <span class="desktop">2025-11-18 11:19:21</span>
+        <span class="mobile">2025-11-18 11:19:21</span>
         <span class="hover-info">Created</span>
     </span>
     
         <span class="article-date article-meta-item">
             <i class="fa-regular fa-wrench"></i>&nbsp;
-            <span class="desktop">2025-11-18 11:05:05</span>
-            <span class="mobile">2025-11-18 11:05:05</span>
+            <span class="desktop">2025-11-18 11:22</span>
+            <span class="mobile">2025-11-18 11:22</span>
             <span class="hover-info">Updated</span>
         </span>
     
@@ -708,7 +709,7 @@
                     
                         
                         <li>
-                            <a href="/categories/Compiler/">Compiler</a>&nbsp;
+                            <a href="/categories/CO/">CO</a>&nbsp;
                         </li>
                     
                     
@@ -722,11 +723,15 @@
             <ul>
                 
                     <li>
-                        <a href="/tags/Compiler/">Compiler</a>&nbsp;
+                        <a href="/tags/CO/">CO</a>&nbsp;
                     </li>
                 
                     <li>
-                        | <a href="/tags/Java/">Java</a>&nbsp;
+                        | <a href="/tags/Verilog/">Verilog</a>&nbsp;
+                    </li>
+                
+                    <li>
+                        | <a href="/tags/MIPS/">MIPS</a>&nbsp;
                     </li>
                 
             </ul>
@@ -752,240 +757,967 @@
 
 
 		<div class="article-content markdown-body px-2 sm:px-6 md:px-8 pb-8">
-			<h2 id="语义分析设计"><a href="#语义分析设计" class="headerlink" title="语义分析设计"></a>语义分析设计</h2><h3 id="编码前的设计"><a href="#编码前的设计" class="headerlink" title="编码前的设计"></a>编码前的设计</h3><h4 id="需求分析"><a href="#需求分析" class="headerlink" title="需求分析"></a>需求分析</h4><p>读取语法分析构建的 AST，分析其语义构建符号表输出至 <code>symbol.txt</code>。如果存在错误则将错误信息输出至 <code>error.txt</code>。</p>
-<p>符号类型见下表。</p>
-<p><strong>语义分析符号类型</strong></p>
+			<p>五级流水线，支持指令集：</p>
+<div class="code-container" data-rel="Mips"><figure class="iseeu highlight mips"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">add, </span><span class="keyword">sub, </span><span class="keyword">and, </span><span class="keyword">or, </span><span class="keyword">slt, </span><span class="keyword">sltu, </span><span class="keyword">lui</span></span><br><span class="line"><span class="keyword"></span><span class="keyword">addi, </span><span class="keyword">andi, </span><span class="keyword">ori</span></span><br><span class="line"><span class="keyword"></span><span class="keyword">lb, </span><span class="keyword">lh, </span><span class="keyword">lw, </span><span class="keyword">sb, </span><span class="keyword">sh, </span><span class="keyword">sw</span></span><br><span class="line"><span class="keyword"></span><span class="keyword">mult, </span><span class="keyword">multu, </span><span class="keyword">div, </span><span class="keyword">divu, </span><span class="keyword">mfhi, </span><span class="keyword">mflo, </span><span class="keyword">mthi, </span><span class="keyword">mtlo</span></span><br><span class="line"><span class="keyword"></span><span class="keyword">beq, </span><span class="keyword">bne, </span><span class="keyword">jal, </span><span class="keyword">jr</span></span><br></pre></td></tr></table></figure></div>
+<p>不考虑溢出。</p>
+<h2 id="新增指令行为及分类"><a href="#新增指令行为及分类" class="headerlink" title="新增指令行为及分类"></a>新增指令行为及分类</h2><h3 id="R-型指令"><a href="#R-型指令" class="headerlink" title="R 型指令"></a>R 型指令</h3><ul>
+<li>add</li>
+<li>sub</li>
+<li>and：新增与运算行为，其余同 add、sub</li>
+<li>or：或运算，其余同 add、sub</li>
+<li>slt：如果 GPR[rs] &lt; GPR[rt]，则 GPR[rd] 置为 1 ，否则置为 0；<strong>拟实现</strong>：放进 ALU 处理，目的是能将这个整合进 R 指令。</li>
+<li>sltu：无符号版本的 slt；<strong>拟实现</strong>：ALU .</li>
+</ul>
+<h3 id="I-型指令"><a href="#I-型指令" class="headerlink" title="I 型指令"></a>I 型指令</h3><ul>
+<li>lui</li>
+<li>addi：立即数版本的 add，ori 和 add 混合版</li>
+<li>andi：立即数版本的 and</li>
+<li>ori</li>
+</ul>
+<h3 id="访存指令"><a href="#访存指令" class="headerlink" title="访存指令"></a>访存指令</h3><ul>
+<li>lb：用 GPR[rs]+IMM16 计算地址 addr ，取出 Memory[addr] ，addr 最低两位决定截取 Memory[addr] 的哪一部分字节，符号扩展后存入 GPR[rt]；<strong>拟实现</strong>：在 M 级取出 Memory[addr] 后，即刻判断并取出字节，符号扩展，流水到 W 级。在 M 和 W 都可转发。</li>
+<li>lh：部分同 lb ，addr 第二位决定截取 Memory[addr] 的那一部分半字，符号扩展后存入 GPR[rt]</li>
+<li>lw</li>
+<li>sb：将 GPR[rt] 的 [7:0] 存入 Memory[addr] 特定字节位，选择方式同 lb</li>
+<li>sh：将 GPR[rt] 的 [15:0] 存入 Memory[addr] 特定半字位</li>
+<li>sw</li>
+</ul>
+<h3 id="乘除指令"><a href="#乘除指令" class="headerlink" title="乘除指令"></a>乘除指令</h3><ul>
+<li>mult：符号乘，GPR[rs]*GPR[rt] 结果低 32 位存入 LO ，高 32 位存入 HI</li>
+<li>multu：无符号版本的 mult</li>
+<li>div：符号除，GPR[rs]&#x2F;GPR[rt] 存入 LO ，GPR[rs]%GPR[rt] 存入 HI</li>
+<li>divu：无符号版本的 div</li>
+<li>mfhi：将 HI 存入 GPR[rd]</li>
+<li>mflo：将 LO 存入 GPR[rd]</li>
+<li>mthi：将 GPR[rs] 写入 HI</li>
+<li>mtlo：将 GPR[rs] 写入 LO</li>
+</ul>
+<h3 id="J-型指令"><a href="#J-型指令" class="headerlink" title="J 型指令"></a>J 型指令</h3><ul>
+<li>beq</li>
+<li>bne：不相等跳转，改造 beq 即可</li>
+<li>jal</li>
+<li>jr</li>
+</ul>
 <table>
 <thead>
 <tr>
-<th><strong>类型</strong></th>
-<th><strong>类型名称</strong></th>
-<th><strong>类型</strong></th>
-<th><strong>类型名称</strong></th>
-<th><strong>类型</strong></th>
-<th><strong>类型名称</strong></th>
+<th align="center">指令</th>
+<th align="center">op5</th>
+<th align="center">op4</th>
+<th align="center">op3</th>
+<th align="center">op2</th>
+<th align="center">op1</th>
+<th align="center">op0</th>
 </tr>
 </thead>
 <tbody><tr>
-<td>int型常量</td>
-<td>ConstInt</td>
-<td>int型变量</td>
-<td>Int</td>
-<td>void型函数</td>
-<td>VoidFunc</td>
+<td align="center">“special”</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">0</td>
 </tr>
 <tr>
-<td>int型常量数组</td>
-<td>ConstIntArray</td>
-<td>int型变量数组</td>
-<td>IntArray</td>
-<td>int型函数</td>
-<td>IntFunc</td>
+<td align="center">lui</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">1</td>
+<td align="center">1</td>
+<td align="center">1</td>
+<td align="center">1</td>
 </tr>
 <tr>
-<td>int型静态变量</td>
-<td>StaticInt</td>
-<td>int型静态变量数组</td>
-<td>StaticIntArray</td>
-<td></td>
-<td></td>
+<td align="center">addi</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">1</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">0</td>
+</tr>
+<tr>
+<td align="center">andi</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">1</td>
+<td align="center">1</td>
+<td align="center">0</td>
+<td align="center">0</td>
+</tr>
+<tr>
+<td align="center">ori</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">1</td>
+<td align="center">1</td>
+<td align="center">0</td>
+<td align="center">1</td>
+</tr>
+<tr>
+<td align="center">lb</td>
+<td align="center">1</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">0</td>
+</tr>
+<tr>
+<td align="center">lh</td>
+<td align="center">1</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">1</td>
+</tr>
+<tr>
+<td align="center">lw</td>
+<td align="center">1</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">1</td>
+<td align="center">1</td>
+</tr>
+<tr>
+<td align="center">sb</td>
+<td align="center">1</td>
+<td align="center">0</td>
+<td align="center">1</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">0</td>
+</tr>
+<tr>
+<td align="center">sh</td>
+<td align="center">1</td>
+<td align="center">0</td>
+<td align="center">1</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">1</td>
+</tr>
+<tr>
+<td align="center">sw</td>
+<td align="center">1</td>
+<td align="center">0</td>
+<td align="center">1</td>
+<td align="center">0</td>
+<td align="center">1</td>
+<td align="center">1</td>
+</tr>
+<tr>
+<td align="center">beq</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">1</td>
+<td align="center">0</td>
+<td align="center">0</td>
+</tr>
+<tr>
+<td align="center">bne</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">1</td>
+<td align="center">0</td>
+<td align="center">1</td>
+</tr>
+<tr>
+<td align="center">jal</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">1</td>
+<td align="center">1</td>
 </tr>
 </tbody></table>
-<p><strong>语义分析错误类型</strong></p>
 <table>
 <thead>
 <tr>
-<th align="left"><strong>错误类型</strong></th>
-<th align="left"><strong>类别码</strong></th>
-<th align="left"><strong>解释</strong></th>
+<th align="center">指令</th>
+<th align="center">func5</th>
+<th align="center">func4</th>
+<th align="center">func3</th>
+<th align="center">func2</th>
+<th align="center">func1</th>
+<th align="center">func0</th>
 </tr>
 </thead>
 <tbody><tr>
-<td align="left">名字重定义</td>
-<td align="left">b</td>
-<td align="left">函数名或变量名在当前作用域下重定义</td>
+<td align="center">add</td>
+<td align="center">1</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">0</td>
 </tr>
 <tr>
-<td align="left">未定义的名字</td>
-<td align="left">c</td>
-<td align="left">使用了未定义的标识符</td>
+<td align="center">sub</td>
+<td align="center">1</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">1</td>
+<td align="center">0</td>
 </tr>
 <tr>
-<td align="left">函数参数个数不匹配</td>
-<td align="left">d</td>
-<td align="left">函数调用时参数个数与函数定义不同</td>
+<td align="center">and</td>
+<td align="center">1</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">1</td>
+<td align="center">0</td>
+<td align="center">0</td>
 </tr>
 <tr>
-<td align="left">函数参数类型不匹配</td>
-<td align="left">e</td>
-<td align="left">函数调用时参数类型与函数定义不同</td>
+<td align="center">or</td>
+<td align="center">1</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">1</td>
+<td align="center">0</td>
+<td align="center">1</td>
 </tr>
 <tr>
-<td align="left">return语句不匹配</td>
-<td align="left">f</td>
-<td align="left">无返回值的函数存在不匹配的return</td>
+<td align="center">slt</td>
+<td align="center">1</td>
+<td align="center">0</td>
+<td align="center">1</td>
+<td align="center">0</td>
+<td align="center">1</td>
+<td align="center">0</td>
 </tr>
 <tr>
-<td align="left">return语句缺失</td>
-<td align="left">g</td>
-<td align="left">有返回值的函数末尾缺少return</td>
+<td align="center">sltu</td>
+<td align="center">1</td>
+<td align="center">0</td>
+<td align="center">1</td>
+<td align="center">0</td>
+<td align="center">1</td>
+<td align="center">1</td>
 </tr>
 <tr>
-<td align="left">不能改变常量的值</td>
-<td align="left">h</td>
-<td align="left">常量无法被赋值</td>
+<td align="center">mult</td>
+<td align="center">0</td>
+<td align="center">1</td>
+<td align="center">1</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">0</td>
 </tr>
 <tr>
-<td align="left">printf格式字符与表达式个数不匹配</td>
-<td align="left">l</td>
-<td align="left">“%d”的个数与表达式不同</td>
+<td align="center">multu</td>
+<td align="center">0</td>
+<td align="center">1</td>
+<td align="center">1</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">1</td>
 </tr>
 <tr>
-<td align="left">非循环快中使用break和continue语句</td>
-<td align="left">m</td>
-<td align="left">只有for语句块中出现</td>
+<td align="center">div</td>
+<td align="center">0</td>
+<td align="center">1</td>
+<td align="center">1</td>
+<td align="center">0</td>
+<td align="center">1</td>
+<td align="center">0</td>
+</tr>
+<tr>
+<td align="center">divu</td>
+<td align="center">0</td>
+<td align="center">1</td>
+<td align="center">1</td>
+<td align="center">0</td>
+<td align="center">1</td>
+<td align="center">1</td>
+</tr>
+<tr>
+<td align="center">mfhi</td>
+<td align="center">0</td>
+<td align="center">1</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">0</td>
+</tr>
+<tr>
+<td align="center">mflo</td>
+<td align="center">0</td>
+<td align="center">1</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">1</td>
+<td align="center">0</td>
+</tr>
+<tr>
+<td align="center">mthi</td>
+<td align="center">0</td>
+<td align="center">1</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">1</td>
+</tr>
+<tr>
+<td align="center">mtlo</td>
+<td align="center">0</td>
+<td align="center">1</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">1</td>
+<td align="center">1</td>
+</tr>
+<tr>
+<td align="center">jr</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">1</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">0</td>
+</tr>
+<tr>
+<td align="center">nop</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">0</td>
 </tr>
 </tbody></table>
-<h4 id="文件组织"><a href="#文件组织" class="headerlink" title="文件组织"></a>文件组织</h4><p>新建目录 <code>src\midend</code>，其中包含一个类：</p>
-<ul>
-<li><strong>Midend</strong>：该模块为中段“主函数”。</li>
-</ul>
-<p>新建目录 <code>src\midend\symbol</code>，该部分定义符号表，其中包含若干类：</p>
-<ul>
-<li><strong>SymbolType</strong>：枚举类，枚举所有符号类型。</li>
-<li><strong>Symbol</strong>：符号类，定义符号对象，存储标识符和符号类型。</li>
-<li><strong>SymbolTable</strong>：符号表类，记录符号表的作用域序号 <code>depth</code>、父节点 <code>parentTable</code>、子结点 <code>childTables</code>、符号容器 <code>symbolList</code>。</li>
-<li><strong>SymbolManager</strong>：内含静态方法，是该模块的引擎。</li>
-</ul>
-<h4 id="总体思路"><a href="#总体思路" class="headerlink" title="总体思路"></a>总体思路</h4><p><strong>符号表的逻辑结构</strong>：构建一个符号表的树形结构，作用域之间的嵌套和并列关系通过树结构实现，每一个作用域都是一个符号表（及其父节点与递归父节点）。</p>
-<p><strong>抽象语法树的遍历</strong>：对每个 Node 类定义 <code>public void visit()</code> 方法，该方法实现针对该节点子结点的遍历，并以此更新符号表和发现错误。</p>
-<p><strong>符号表的内容填充</strong>：在 SymbolManager 中定义静态方法 <code>public static void addSymbol(TokenNode ident, SymbolType type)</code>，传入标识符节点对象及已识别的符号类型，这样所有 Node 在进行 visit 时都能使用，将符号填入当前符号表。</p>
-<p><strong>当前符号表的切换</strong>：在 SymbolManager 中记录当前符号表 <code>curSymbolTable</code>，并定义切换方法，切换时机在 Node 类 visit 时判断。</p>
-<ul>
-<li><code>public static void sinkDown()</code>：符号表下沉，创建一个新的子符号表，并把当前符号表设为子符号表，<code>depth</code> 加一。</li>
-<li><code>public static void floatUp()</code>：符号表上浮，当前符号表设为父符号表，<code>depth</code> 减一。</li>
-</ul>
-<h3 id="编码完成之后的修改"><a href="#编码完成之后的修改" class="headerlink" title="编码完成之后的修改"></a>编码完成之后的修改</h3><h4 id="FuncSymbol-类"><a href="#FuncSymbol-类" class="headerlink" title="FuncSymbol 类"></a>FuncSymbol 类</h4><p>新建类 <code>src\midend\symbol\FuncSymbol.java</code>，继承于 Symbol 类，表示函数符号，新增参数列表 <code>paramList</code>。</p>
-<h4 id="ValueSymbol-类"><a href="#ValueSymbol-类" class="headerlink" title="ValueSymbol 类"></a>ValueSymbol 类</h4><p>新建类 <code>src\midend\symbol\ValueSymbol.java</code>，继承于 Symbol 类，表示变量符号，新增常量类型判断 <code>isConst</code>。</p>
-<h4 id="符号表切换的时机"><a href="#符号表切换的时机" class="headerlink" title="符号表切换的时机"></a>符号表切换的时机</h4><p>当遇到 Block 节点时，几乎必触发符号表的切换，这也统一了作用域序号的计算：诸如  <code>for (;;) a=1;</code> 、<code>if (a==1) b=0;</code> 这样的并不会新增作用域，思考其原因为此类作用块中不会出现定义语句，因此与符号表构建无关。</p>
-<p>如果遇到 Block 便切换符号表，存在函数定义的冲突，即函数定义的参数列表应属于该作用域，应该在读取参数列表前就进行切换符号表，而再读到 Block 时不进行切换。针对此问题，在 SymbolManager 中定义新方法：</p>
-<ul>
-<li><code>public static void diveInto()</code>：符号表下潜，该方法取代原 <code>sinkDown</code> 方法的无脑下沉逻辑，而给原方法增加一条判断，如果需要，则不进行下沉。</li>
-</ul>
-<p>因此最终统一为：</p>
-<ul>
-<li>在 Block 前后使用 <code>sinkDown</code> 与 <code>floatUp</code>。</li>
-<li>在 FuncFParams 前使用 <code>diveInto</code>。</li>
-</ul>
-<h4 id="节点间的信息传递"><a href="#节点间的信息传递" class="headerlink" title="节点间的信息传递"></a>节点间的信息传递</h4><p>由于错误处理需要大量信息传递，而 visit 方法本身没有参数也没有返回值（为了强迫症好看，并不是所有节点都需要信息传递的），因此节点间的信息传递费了一点心思，最终还是比较像屎山。</p>
-<p>主要有两种思路：</p>
+<h2 id="冒险处理的相似性抽象"><a href="#冒险处理的相似性抽象" class="headerlink" title="冒险处理的相似性抽象"></a>冒险处理的相似性抽象</h2><ol>
+<li>R-计算型 R 指令：add, sub, and, or, slt, sltu</li>
+<li>I-计算型 I 指令：lui, addi, andi, ori</li>
+<li>Load-加载指令：lb, lh, lw</li>
+<li>Store-存储指令：sb, sh, sw</li>
+<li>Md-计算型乘除指令：mult, multu, div, divu</li>
+<li>Mt-存数型乘除指令：mthi, mtlo</li>
+<li>Mf-取数型乘除指令：mfhi, mflo</li>
+<li>Branch-分支指令：beq, bne</li>
+<li>Jump-跳转指令：jal</li>
+<li>Jr-返回指令：jr</li>
+<li>Nop-空指令：nop</li>
+</ol>
+<table>
+<thead>
+<tr>
+<th align="center">指令</th>
+<th align="center">$rs_T_{use}$</th>
+<th align="center">$rt_T_{use}$</th>
+<th align="center">$E_T_{new}$</th>
+<th align="center">$M_T_{new}$</th>
+<th align="center">$W_T_{new}$</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">R</td>
+<td align="center">1</td>
+<td align="center">1</td>
+<td align="center">1</td>
+<td align="center">0</td>
+<td align="center">0</td>
+</tr>
+<tr>
+<td align="center">I</td>
+<td align="center">1</td>
+<td align="center">3</td>
+<td align="center">1</td>
+<td align="center">0</td>
+<td align="center">0</td>
+</tr>
+<tr>
+<td align="center">Load</td>
+<td align="center">1</td>
+<td align="center">3</td>
+<td align="center">2</td>
+<td align="center">1</td>
+<td align="center">0</td>
+</tr>
+<tr>
+<td align="center">Store</td>
+<td align="center">1</td>
+<td align="center">1</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">0</td>
+</tr>
+<tr>
+<td align="center">Md</td>
+<td align="center">1</td>
+<td align="center">1</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">0</td>
+</tr>
+<tr>
+<td align="center">Mt</td>
+<td align="center">1</td>
+<td align="center">3</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">0</td>
+</tr>
+<tr>
+<td align="center">Mf</td>
+<td align="center">3</td>
+<td align="center">3</td>
+<td align="center">1</td>
+<td align="center">0</td>
+<td align="center">0</td>
+</tr>
+<tr>
+<td align="center">Branch</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">0</td>
+</tr>
+<tr>
+<td align="center">Jump</td>
+<td align="center">3</td>
+<td align="center">3</td>
+<td align="center">2</td>
+<td align="center">1</td>
+<td align="center">0</td>
+</tr>
+<tr>
+<td align="center">Jr</td>
+<td align="center">0</td>
+<td align="center">3</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">0</td>
+</tr>
+<tr>
+<td align="center">Nop</td>
+<td align="center">3</td>
+<td align="center">3</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">0</td>
+</tr>
+</tbody></table>
+<h2 id="控制信号"><a href="#控制信号" class="headerlink" title="控制信号"></a>控制信号</h2><h3 id="基础控制信号"><a href="#基础控制信号" class="headerlink" title="基础控制信号"></a>基础控制信号</h3><table>
+<thead>
+<tr>
+<th align="center">指令</th>
+<th align="center">WDSel</th>
+<th align="center">RegWrite</th>
+<th align="center">MemWrite</th>
+<th align="center">PCSel</th>
+<th align="center">ALUCtrl</th>
+<th align="center">ALUSrc</th>
+<th align="center">RegDst</th>
+<th align="center">HILOCtrl</th>
+<th align="center">AOSel</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">add</td>
+<td align="center">01</td>
+<td align="center">1</td>
+<td align="center"></td>
+<td align="center">000</td>
+<td align="center">000</td>
+<td align="center">0</td>
+<td align="center">01</td>
+<td align="center"></td>
+<td align="center">0</td>
+</tr>
+<tr>
+<td align="center">sub</td>
+<td align="center">01</td>
+<td align="center">1</td>
+<td align="center"></td>
+<td align="center">000</td>
+<td align="center">001</td>
+<td align="center">0</td>
+<td align="center">01</td>
+<td align="center"></td>
+<td align="center">0</td>
+</tr>
+<tr>
+<td align="center">and</td>
+<td align="center">01</td>
+<td align="center">1</td>
+<td align="center"></td>
+<td align="center">000</td>
+<td align="center">010</td>
+<td align="center">0</td>
+<td align="center">01</td>
+<td align="center"></td>
+<td align="center">0</td>
+</tr>
+<tr>
+<td align="center">or</td>
+<td align="center">01</td>
+<td align="center">1</td>
+<td align="center"></td>
+<td align="center">000</td>
+<td align="center">011</td>
+<td align="center">0</td>
+<td align="center">01</td>
+<td align="center"></td>
+<td align="center">0</td>
+</tr>
+<tr>
+<td align="center">slt</td>
+<td align="center">01</td>
+<td align="center">1</td>
+<td align="center"></td>
+<td align="center">000</td>
+<td align="center">100</td>
+<td align="center">0</td>
+<td align="center">01</td>
+<td align="center"></td>
+<td align="center">0</td>
+</tr>
+<tr>
+<td align="center">sltu</td>
+<td align="center">01</td>
+<td align="center">1</td>
+<td align="center"></td>
+<td align="center">000</td>
+<td align="center">101</td>
+<td align="center">0</td>
+<td align="center">01</td>
+<td align="center"></td>
+<td align="center">0</td>
+</tr>
+<tr>
+<td align="center">lui</td>
+<td align="center">01</td>
+<td align="center">1</td>
+<td align="center"></td>
+<td align="center">000</td>
+<td align="center">110</td>
+<td align="center">1</td>
+<td align="center">00</td>
+<td align="center"></td>
+<td align="center">0</td>
+</tr>
+<tr>
+<td align="center">addi</td>
+<td align="center">01</td>
+<td align="center">1</td>
+<td align="center"></td>
+<td align="center">000</td>
+<td align="center">000</td>
+<td align="center">1</td>
+<td align="center">00</td>
+<td align="center"></td>
+<td align="center">0</td>
+</tr>
+<tr>
+<td align="center">andi</td>
+<td align="center">01</td>
+<td align="center">1</td>
+<td align="center"></td>
+<td align="center">000</td>
+<td align="center">010</td>
+<td align="center">1</td>
+<td align="center">00</td>
+<td align="center"></td>
+<td align="center">0</td>
+</tr>
+<tr>
+<td align="center">ori</td>
+<td align="center">01</td>
+<td align="center">1</td>
+<td align="center"></td>
+<td align="center">000</td>
+<td align="center">011</td>
+<td align="center">1</td>
+<td align="center">00</td>
+<td align="center"></td>
+<td align="center">0</td>
+</tr>
+<tr>
+<td align="center">lb</td>
+<td align="center">00</td>
+<td align="center">1</td>
+<td align="center"></td>
+<td align="center">000</td>
+<td align="center">000</td>
+<td align="center">1</td>
+<td align="center">00</td>
+<td align="center"></td>
+<td align="center">0</td>
+</tr>
+<tr>
+<td align="center">lh</td>
+<td align="center">00</td>
+<td align="center">1</td>
+<td align="center"></td>
+<td align="center">000</td>
+<td align="center">000</td>
+<td align="center">1</td>
+<td align="center">00</td>
+<td align="center"></td>
+<td align="center">0</td>
+</tr>
+<tr>
+<td align="center">lw</td>
+<td align="center">00</td>
+<td align="center">1</td>
+<td align="center"></td>
+<td align="center">000</td>
+<td align="center">000</td>
+<td align="center">1</td>
+<td align="center">00</td>
+<td align="center"></td>
+<td align="center">0</td>
+</tr>
+<tr>
+<td align="center">sb</td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center">1</td>
+<td align="center">000</td>
+<td align="center">000</td>
+<td align="center">1</td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center">0</td>
+</tr>
+<tr>
+<td align="center">sh</td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center">1</td>
+<td align="center">000</td>
+<td align="center">000</td>
+<td align="center">1</td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center">0</td>
+</tr>
+<tr>
+<td align="center">sw</td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center">1</td>
+<td align="center">000</td>
+<td align="center">000</td>
+<td align="center">1</td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center">0</td>
+</tr>
+<tr>
+<td align="center">mult</td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center">000</td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center">0100</td>
+<td align="center">1</td>
+</tr>
+<tr>
+<td align="center">multu</td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center">000</td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center">0101</td>
+<td align="center">1</td>
+</tr>
+<tr>
+<td align="center">div</td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center">000</td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center">0110</td>
+<td align="center">1</td>
+</tr>
+<tr>
+<td align="center">divu</td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center">000</td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center">0111</td>
+<td align="center">1</td>
+</tr>
+<tr>
+<td align="center">mfhi</td>
+<td align="center">01</td>
+<td align="center">1</td>
+<td align="center"></td>
+<td align="center">000</td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center">01</td>
+<td align="center">0000</td>
+<td align="center">1</td>
+</tr>
+<tr>
+<td align="center">mflo</td>
+<td align="center">01</td>
+<td align="center">1</td>
+<td align="center"></td>
+<td align="center">000</td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center">01</td>
+<td align="center">0001</td>
+<td align="center">1</td>
+</tr>
+<tr>
+<td align="center">mthi</td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center">000</td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center">0010</td>
+<td align="center">1</td>
+</tr>
+<tr>
+<td align="center">mtlo</td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center">000</td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center">0011</td>
+<td align="center">1</td>
+</tr>
+<tr>
+<td align="center">beq</td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center">001</td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">bne</td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center">100</td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">jal</td>
+<td align="center">10</td>
+<td align="center">1</td>
+<td align="center"></td>
+<td align="center">010</td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center">10</td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">jr</td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center">011</td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+</tbody></table>
+<p>最后一列有个 AOSel 信号在 pdf 中显示不出来，是在所有和乘除有关的指令置 1，所有和 ALU 有关的置 0.</p>
+<h3 id="字节使能信号"><a href="#字节使能信号" class="headerlink" title="字节使能信号"></a>字节使能信号</h3><table>
+<thead>
+<tr>
+<th align="center">指令</th>
+<th align="center">地址[1:0]</th>
+<th align="center">m_data_byteen</th>
+<th align="center">ExtOp</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">sb</td>
+<td align="center">00</td>
+<td align="center">0001</td>
+<td align="center">0</td>
+</tr>
+<tr>
+<td align="center">sb</td>
+<td align="center">01</td>
+<td align="center">0010</td>
+<td align="center">0</td>
+</tr>
+<tr>
+<td align="center">sb</td>
+<td align="center">10</td>
+<td align="center">0100</td>
+<td align="center">0</td>
+</tr>
+<tr>
+<td align="center">sb</td>
+<td align="center">11</td>
+<td align="center">1000</td>
+<td align="center">0</td>
+</tr>
+<tr>
+<td align="center">sh</td>
+<td align="center">0X</td>
+<td align="center">0011</td>
+<td align="center">0</td>
+</tr>
+<tr>
+<td align="center">sh</td>
+<td align="center">1X</td>
+<td align="center">1100</td>
+<td align="center">0</td>
+</tr>
+<tr>
+<td align="center">sw</td>
+<td align="center">XX</td>
+<td align="center">1111</td>
+<td align="center">0</td>
+</tr>
+<tr>
+<td align="center">lb</td>
+<td align="center">00</td>
+<td align="center">0001</td>
+<td align="center">1</td>
+</tr>
+<tr>
+<td align="center">lb</td>
+<td align="center">01</td>
+<td align="center">0010</td>
+<td align="center">1</td>
+</tr>
+<tr>
+<td align="center">lb</td>
+<td align="center">10</td>
+<td align="center">0100</td>
+<td align="center">1</td>
+</tr>
+<tr>
+<td align="center">lb</td>
+<td align="center">11</td>
+<td align="center">1000</td>
+<td align="center">1</td>
+</tr>
+<tr>
+<td align="center">lh</td>
+<td align="center">0X</td>
+<td align="center">0011</td>
+<td align="center">1</td>
+</tr>
+<tr>
+<td align="center">lh</td>
+<td align="center">1X</td>
+<td align="center">1100</td>
+<td align="center">1</td>
+</tr>
+<tr>
+<td align="center">lw</td>
+<td align="center">XX</td>
+<td align="center">1111</td>
+<td align="center">1</td>
+</tr>
+</tbody></table>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/co/p6.png"
+                      alt="p6"
+                ></p>
+<h2 id="思考题"><a href="#思考题" class="headerlink" title="思考题"></a>思考题</h2><blockquote>
 <ol>
-<li><strong>SymbolManager 中的“全局变量”</strong>：在其中定义所有 Node 可以读写的全局变量，优点是存取简单，缺点是递归限制。例如：<ol>
-<li><code>private static FuncSymbol curFuncSymbol</code>：当前函数符号，目的是记录当前函数定义的函数类型，以判断是否有正确的 return。因为函数定义不会出现嵌套覆盖，此方法是可行的。</li>
-<li><code>private static TokenNode curFuncIdent</code>：当前函数标识符，目的是记录当前函数调用的函数标识符，以寻找对应的函数定义，定位参数个数不匹配错误，因为同一行只有一个错误，因此嵌套函数调用并不会对其造成影响。</li>
+<li>为什么需要有单独的乘除法部件而不是整合进 ALU？为何需要有独立的 HI、LO 寄存器？</li>
 </ol>
-</li>
-<li><strong>Node 中的属性传递</strong>：在 Node 中定义个性化信息，然后通过父子的链接进行传递，优点是可以处理嵌套递归的信息覆盖问题，缺点是传递繁琐。例如：<ol>
-<li><code>private SymbolType symbolType;</code>：对 Exp 求类型时在一系列 Node 中传递，自底向上确定。</li>
-<li><code>private boolean isReturnStmt;</code>：在 Stmt 中记录是否是 return 语句，便于在其父节点中判断 return 的合法性。</li>
-<li><code>private boolean isForStmt;</code>：在 Stmt 中记录是否是 for 语句块，便于在父节点中判断 break 和 continue 的合法性。</li>
-<li><code>private ArrayList&lt;SymbolType&gt; paramTypeList</code>：在 FuncRParams 中记录实参列表，便于与函数定义的形参列表进行校对。</li>
-</ol>
-</li>
-</ol>
-<p>其余示例不再详细说明，将在下文错误处理部分复盘。</p>
-<h4 id="语法分析错误的纠正"><a href="#语法分析错误的纠正" class="headerlink" title="语法分析错误的纠正"></a>语法分析错误的纠正</h4><p>语法分析中处理了 ijk 类错误，主要是符号缺失，但之前没有对其进行补全，导制语义分析阶段无法正常解析错误。</p>
-<p>在 Node 类中定义新方法：</p>
-<div class="code-container" data-rel="Java"><figure class="iseeu highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title function_">padTokenNode</span><span class="params">(TokenType tokenType)</span> &#123;  </span><br><span class="line">    <span class="built_in">this</span>.addNode(<span class="keyword">new</span> <span class="title class_">TokenNode</span>(<span class="keyword">new</span> <span class="title class_">Token</span>(tokenType, tokenType.toString(), getPrevToken().getLineNumber())));  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
-
-<p>在 parse 时每次 catchError 后调用一次该方法，补全语法树节点。</p>
-<h4 id="错误处理总结"><a href="#错误处理总结" class="headerlink" title="错误处理总结"></a>错误处理总结</h4><ol>
-<li><strong>b 名字重定义</strong>：</li>
-</ol>
-<p>只在当前作用域下判断，内层作用域新定义会覆盖外层作用域。因此以 SymbolTable 为域，定义两个方法：</p>
-<div class="code-container" data-rel="Java"><figure class="iseeu highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> Symbol <span class="title function_">getSymbol</span><span class="params">(String name)</span> &#123;  </span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">this</span>.symbolTable.get(name);  </span><br><span class="line">&#125;  </span><br><span class="line">  </span><br><span class="line"><span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">isRedefine</span><span class="params">(String name)</span> &#123;  </span><br><span class="line">    <span class="keyword">return</span> getSymbol(name) != <span class="literal">null</span>;  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
-
-<p>并在 SymbolManager 给出全局调用方法。每次识别到变量定义和函数定义时调用。</p>
+</blockquote>
+<p>因为乘除法相比于加减法有时间延迟，会有新的控制信号，因此独立出来比较好。单独的 HI、LO 寄存器的存在是较于 Mars 行为以及 MIPS 指令集而言。</p>
+<blockquote>
 <ol start="2">
-<li><strong>c 未定义的名字</strong>：</li>
+<li>真实的流水线 CPU 是如何使用实现乘除法的？请查阅相关资料进行简单说明。</li>
 </ol>
-<p>在当前作用域及其外层作用域递归查找，与 b 类错误有所不同。因此直接在 SymbolManager 中定义递归查找方法：</p>
-<div class="code-container" data-rel="Java"><figure class="iseeu highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> Symbol <span class="title function_">getSymbol</span><span class="params">(String name)</span> &#123;  </span><br><span class="line">    <span class="type">SymbolTable</span> <span class="variable">table</span> <span class="operator">=</span> curSymbolTable;  </span><br><span class="line">    <span class="keyword">while</span> (table != <span class="literal">null</span>) &#123;  </span><br><span class="line">        <span class="type">Symbol</span> <span class="variable">symbol</span> <span class="operator">=</span> table.getSymbol(name);  </span><br><span class="line">        <span class="keyword">if</span> (symbol != <span class="literal">null</span>) &#123;  </span><br><span class="line">            <span class="keyword">return</span> symbol;  </span><br><span class="line">        &#125;  </span><br><span class="line">        table = table.getParentTable();  </span><br><span class="line">    &#125;  </span><br><span class="line">    <span class="keyword">return</span> <span class="literal">null</span>;  </span><br><span class="line">&#125;  </span><br><span class="line">  </span><br><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="type">boolean</span> <span class="title function_">isUndefine</span><span class="params">(String ident)</span> &#123;  </span><br><span class="line">    <span class="keyword">return</span> getSymbol(ident) == <span class="literal">null</span>;  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
-
-<p>每次在识别到 LVal（变量或数组） 和 UnaryExp（函数调用）时调用。</p>
-<ol start="3">
-<li><strong>d 函数参数个数不匹配</strong>：</li>
-</ol>
-<p>识别到 FuncRParams 即函数实参列表时考虑，获取 <code>private FuncSymbol funcSymbol</code> 信息，该信息由父节点识别到 Ident 时填充，表示该函数对应的函数符号，从中可以获取到函数定义的参数信息。</p>
-<div class="code-container" data-rel="Java"><figure class="iseeu highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (paramNum != funcSymbol.getParamList().size()) &#123;  </span><br><span class="line">    ErrorCatcher.catchError(  </span><br><span class="line">            <span class="keyword">new</span> <span class="title class_">Error</span>(ErrorType.UNMATCHING_FUNC_PARAM_NUM, SymbolManager.getCurFuncIdent().getLineNumber()));  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
-
-<ol start="4">
-<li><strong>e 函数参数类型不匹配</strong>：</li>
-</ol>
-<p>识别到 UnaryExp 即函数调用时考虑，首先将紧跟着的 FuncRParams 遍历透彻，此过程顺序：FuncRParams-&gt;Exp-&gt;AddExp-&gt;MulExp-&gt;UnaryExp-&gt;(PrimaryExp&#x2F;函数调用)，且 PrimaryExp-&gt;LVal&#x2F;Number，且LVal-&gt;Ident&#x2F;数组。</p>
-<p>自顶向下中遇到终结符即确定该 Exp 的类型：</p>
+</blockquote>
+<p>乘法器电路：一个 32x32 位的乘法器电路来进行操作，可以是以下两种结构：</p>
 <ul>
-<li>函数调用：类型由对应函数定义的返回值确定，Int 或 Void。</li>
-<li>Number：类型为 Int。</li>
-<li>Ident：类型为除了函数的所有情况。</li>
-<li>数组：类型为除了函数和数组的所有情况。</li>
+<li>Booth 编码：可以优化乘法操作，尤其是处理符号位；</li>
+<li>Wallace 树：一种快速实现多位数乘法的算法结构。<br>除法器电路：包括以下步骤：</li>
+<li>预处理：调整除数与被除数的符号，使之变成正数；</li>
+<li>估算和调整：通过一系列估算和调整来逼近最终的商；</li>
+<li>迭代：重复减去除数的倍数，直到被除数小于除数为止。</li>
 </ul>
-<p>自底向上中不断将属性 <code>private SymbolType symbolType</code> 传递和记录，最终 Exp 会获取到实际的类型。</p>
-<p>在 FuncRParams 中记录 <code>private ArrayList&lt;SymbolType&gt; paramTypeList</code>，该信息传递给父节点 UnaryExp，至此实参类型列表已获取。</p>
-<p>由 <code>FuncSymbol funcSymbol = (FuncSymbol) SymbolManager.getSymbol(ident.getStringValue());</code> 获取到对应的函数定义，由 <code>funcSymbol.getParamList()</code> 获取到形参列表，至此形参类型列表已获取。</p>
-<div class="code-container" data-rel="Java"><figure class="iseeu highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (node1 <span class="keyword">instanceof</span> TokenNode &amp;&amp;  </span><br><span class="line">        ((TokenNode) node1).getTokenType().equals(TokenType.RPARENT)) &#123;  </span><br><span class="line">&#125; <span class="keyword">else</span> <span class="keyword">if</span> (node1 <span class="keyword">instanceof</span> FuncRParams) &#123;  </span><br><span class="line">    <span class="type">FuncRParams</span> <span class="variable">funcRParams</span> <span class="operator">=</span> (FuncRParams) node1;  </span><br><span class="line">    funcRParams.setFuncSymbol(funcSymbol);  </span><br><span class="line">    funcRParams.visit();  </span><br><span class="line">    ArrayList&lt;SymbolType&gt; paramTypeList = funcRParams.getParamTypeList();  </span><br><span class="line">    <span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>;  </span><br><span class="line">    <span class="keyword">for</span> (Symbol symbol : funcSymbol.getParamList()) &#123;  </span><br><span class="line">        <span class="type">SymbolType</span> <span class="variable">fParamType</span> <span class="operator">=</span> symbol.getType();  </span><br><span class="line">        <span class="keyword">if</span> (i &lt; paramTypeList.size() &amp;&amp;  </span><br><span class="line">                !paramTypeList.get(i).paramEquals(fParamType)) &#123;  </span><br><span class="line">            ErrorCatcher.catchError(<span class="keyword">new</span> <span class="title class_">Error</span>(ErrorType.UNMATCHING_FUNC_PARAM_TYPE, ident.getLineNumber()));  </span><br><span class="line">            <span class="keyword">break</span>;  </span><br><span class="line">        &#125;  </span><br><span class="line">        i++;  </span><br><span class="line">    &#125;  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
-
-<p>同时需要注意类型的兼容性，ConstInt、StaticInt、Int 和 IntFunc 的实参应该同属于 Int 的形参，ConstIntArray、StaticIntArray 和 IntArray 的实参应该同属于 IntArray 的形参。</p>
+<blockquote>
+<ol start="3">
+<li>请结合自己的实现分析，你是如何处理 Busy 信号带来的周期阻塞的？</li>
+</ol>
+</blockquote>
+<p>Busy 信号的产生：Start 信号产生后的下一个时钟上升沿产生；<br>Busy 信号的消失：当 cnt 达到 max 的时候消失。<br>Busy 信号带来的阻塞：Busy 和 Start 信号都输入冒险控制模块，只要其中一个为高电平就产生阻塞信号，这个与冒险阻塞是一致的。</p>
+<blockquote>
+<ol start="4">
+<li>请问采用字节使能信号的方式处理写指令有什么好处？（提示：从清晰性、统一性等角度考虑）</li>
+</ol>
+</blockquote>
+<p>直观清晰、统一且便于管理。</p>
+<blockquote>
 <ol start="5">
-<li><strong>f 无返回值的函数存在不匹配的 return 语句</strong>：</li>
+<li>请思考，我们在按字节读和按字节写时，实际从 DM 获得的数据和向 DM 写入的数据是否是一字节？在什么情况下我们按字节读和按字节写的效率会高于按字读和按字写呢？</li>
 </ol>
-<p>只考虑 VoidFunc，当 return 中出现实际的 Exp 时报错，有多少行就报多少个错。</p>
-<p>在 Stmt 中的 return 分支中判断，由 <code>SymbolManager.getCurSymbolTableFuncSymbol()</code> 获取当前所处函数定义类型。</p>
-<div class="code-container" data-rel="Java"><figure class="iseeu highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">else</span> <span class="keyword">if</span> (tokenNode.equals(TokenType.RETURNTK)) &#123;  </span><br><span class="line">    <span class="comment">// Stmt → &#x27;return&#x27; [Exp] &#x27;;&#x27;  </span></span><br><span class="line">    <span class="built_in">this</span>.setReturnStmt();  </span><br><span class="line">    <span class="keyword">if</span> (getNode(<span class="number">1</span>) <span class="keyword">instanceof</span> Exp) &#123;  </span><br><span class="line">        <span class="type">Exp</span> <span class="variable">exp1</span> <span class="operator">=</span> (Exp) getNode(<span class="number">1</span>);  </span><br><span class="line">        exp1.visit();  </span><br><span class="line">        <span class="keyword">if</span> (SymbolManager.getCurSymbolTableFuncSymbol().getType().equals(SymbolType.VOID_FUNC)) &#123;  </span><br><span class="line">            ErrorCatcher.catchError(<span class="keyword">new</span> <span class="title class_">Error</span>(ErrorType.UNMATCHING_RETURN, tokenNode.getLineNumber()));  </span><br><span class="line">        &#125;  </span><br><span class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (getNode(<span class="number">1</span>) <span class="keyword">instanceof</span> TokenNode &amp;&amp;  </span><br><span class="line">            ((TokenNode) getNode(<span class="number">1</span>)).equals(TokenType.SEMICN)) &#123;  </span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure></div>
-
+</blockquote>
+<p>从 DM 获得的数据是一整个字，而写入的时候写入的也是一整个字。<br>当部分数据更新，即只需要修改一个字节的时候，效率更高；或者数据大小不匹配的时候，按字节读更有效率，这样避免了不必要的内存操作。</p>
+<blockquote>
 <ol start="6">
-<li><strong>g 有返回值的函数缺少 return 语句</strong>：</li>
+<li>为了对抗复杂性你采取了哪些抽象和规范手段？这些手段在译码和处理数据冲突的时候有什么样的特点与帮助？</li>
 </ol>
-<p>只考虑 IntFunc，当结束大括号的上一个语句不是正确的 return 时报错。</p>
-<p>在 Block 中判断，使用到属性 <code>private boolean isIntFuncBlock</code>，由父节点的 Ident 判断并提供信息。使用到 Stmt 中的属性 <code>private boolean isReturnStmt</code> 以及 BlockItem 中的属性 <code>private boolean isReturnBlockItem</code>，这些信息从 Stmt 的 return 分支中自底向上传递。</p>
-<div class="code-container" data-rel="Java"><figure class="iseeu highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (<span class="built_in">this</span>.isIntFuncBlock &amp;&amp;  </span><br><span class="line">        (i == <span class="number">1</span> || !((BlockItem) getNode(i - <span class="number">1</span>)).isReturnStmt())) &#123;  </span><br><span class="line">    ErrorCatcher.catchError(  </span><br><span class="line">            <span class="keyword">new</span> <span class="title class_">Error</span>(ErrorType.MISSING_RETURN, ((TokenNode) getNode(i)).getLineNumber()));  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
-
-<p>需要注意 Block 中没有 BlockItem 的情况。</p>
+</blockquote>
+<p>见上表的”冒险处理的相似性抽象“。这样避免了多余的译码，可以更具有普遍性和适配性。</p>
+<blockquote>
 <ol start="7">
-<li><strong>h 不能改变常量的值</strong>：</li>
+<li>在本实验中你遇到了哪些不同指令类型组合产生的冲突？你又是如何解决的？相应的测试样例是什么样的？</li>
 </ol>
-<p>在 Stmt 与 ForStmt 中出现，核心思路是判断 LVal 是不是常量。</p>
-<div class="code-container" data-rel="Java"><figure class="iseeu highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">lVal.visit();  </span><br><span class="line"><span class="keyword">if</span> (lVal.isConst()) &#123;  </span><br><span class="line">    ErrorCatcher.catchError(<span class="keyword">new</span> <span class="title class_">Error</span>(ErrorType.CHANGING_CONST, lVal.getLineNumber()));  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
-
-<p>LVal 中包含信息 <code>private boolean isConst</code>，该信息由 Ident 获取。</p>
-<div class="code-container" data-rel="Java"><figure class="iseeu highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (((ValueSymbol) SymbolManager.getSymbol(ident.getStringValue())).isConst()) &#123;  </span><br><span class="line">    <span class="built_in">this</span>.setConst();  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
-
+</blockquote>
+<p>没有遇到指令之间的冒险冲突，因为这些东西在 P5 已经解决。唯一的冲突是乘除模块的阻塞。</p>
+<blockquote>
 <ol start="8">
-<li><strong>l printf 语句中格式字符与表达式个数不匹配</strong>：</li>
+<li>如果你是手动构造的样例，请说明构造策略，说明你的测试程序如何保证<strong>覆盖</strong>了所有需要测试的情况；如果你是<strong>完全随机</strong>生成的测试样例，请思考完全随机的测试程序有何不足之处；如果你在生成测试样例时采用了<strong>特殊的策略</strong>，比如构造连续数据冒险序列，请你描述一下你使用的策略如何<strong>结合了随机性</strong>达到强测的效果。</li>
 </ol>
-<p>在 Stmt 的 printf 分支中判断，由正则表达式解析 StringConst 中的 <code>%d</code> 出现次数，然后对 Exp 计数并判等。</p>
-<div class="code-container" data-rel="Java"><figure class="iseeu highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">else</span> <span class="keyword">if</span> (tokenNode.equals(TokenType.PRINTFTK)) &#123;  </span><br><span class="line">    <span class="comment">// Stmt → &#x27;printf&#x27;&#x27;(&#x27;StringConst &#123;&#x27;,&#x27;Exp&#125;&#x27;)&#x27;&#x27;;&#x27;  </span></span><br><span class="line">    <span class="type">TokenNode</span> <span class="variable">stringConst</span> <span class="operator">=</span> (TokenNode) getNode(<span class="number">2</span>);  </span><br><span class="line">    <span class="type">int</span> <span class="variable">formatCharNum</span> <span class="operator">=</span> <span class="number">0</span>;  </span><br><span class="line">    <span class="type">String</span> <span class="variable">string</span> <span class="operator">=</span> stringConst.getStringValue();  </span><br><span class="line">    java.util.regex.<span class="type">Pattern</span> <span class="variable">pattern</span> <span class="operator">=</span> java.util.regex.Pattern.compile(<span class="string">&quot;(?&lt;!%)%d&quot;</span>);  </span><br><span class="line">    java.util.regex.<span class="type">Matcher</span> <span class="variable">matcher</span> <span class="operator">=</span> pattern.matcher(string);  </span><br><span class="line">    <span class="keyword">while</span> (matcher.find()) &#123;  </span><br><span class="line">        formatCharNum++;  </span><br><span class="line">    &#125;  </span><br><span class="line">    <span class="type">int</span> <span class="variable">expNum</span> <span class="operator">=</span> <span class="number">0</span>;  </span><br><span class="line">    <span class="keyword">for</span> (Node node1 : nodeList) &#123;  </span><br><span class="line">        <span class="keyword">if</span> (node1 <span class="keyword">instanceof</span> Exp) &#123;  </span><br><span class="line">            <span class="type">Exp</span> <span class="variable">exp</span> <span class="operator">=</span> (Exp) node1;  </span><br><span class="line">            exp.visit();  </span><br><span class="line">            expNum++;  </span><br><span class="line">        &#125;  </span><br><span class="line">    &#125;  </span><br><span class="line">    <span class="keyword">if</span> (formatCharNum != expNum) &#123;  </span><br><span class="line">        ErrorCatcher.catchError(<span class="keyword">new</span> <span class="title class_">Error</span>(ErrorType.UNMATCHING_PRINTF, tokenNode.getLineNumber()));  </span><br><span class="line">    &#125;  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+</blockquote>
+<p>这是一个测 bne 的程序（发现 PCSel 段没有更新导致的 bug）：</p>
+<div class="code-container" data-rel="Mips"><figure class="iseeu highlight mips"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">ori </span>$<span class="built_in">t1</span>, <span class="number">4</span></span><br><span class="line"><span class="keyword">ori </span>$<span class="built_in">t2</span>, <span class="number">8</span></span><br><span class="line"><span class="keyword">ori </span>$<span class="built_in">t3</span>, <span class="number">16</span></span><br><span class="line"><span class="keyword">ori </span>$<span class="built_in">t4</span>, <span class="number">16</span></span><br><span class="line"><span class="keyword">bne </span>$<span class="built_in">t1</span>, $<span class="built_in">t2</span>, next</span><br><span class="line"><span class="keyword">nop</span></span><br><span class="line"><span class="keyword"></span><span class="keyword">sw </span>$<span class="built_in">t1</span>, <span class="number">0</span>($<span class="built_in">t1</span>)</span><br><span class="line"><span class="symbol">next:</span></span><br><span class="line"><span class="keyword">sw </span>$<span class="built_in">t2</span>, <span class="number">0</span>($<span class="built_in">t2</span>)</span><br><span class="line"><span class="keyword">add </span>$<span class="built_in">t2</span>, $<span class="built_in">t2</span>, $<span class="built_in">t1</span></span><br><span class="line"><span class="keyword">bne </span>$<span class="built_in">t3</span>, $<span class="built_in">t4</span>, what</span><br><span class="line"><span class="keyword">nop</span></span><br><span class="line"><span class="keyword"></span><span class="keyword">sw </span>$<span class="built_in">t2</span>, <span class="number">0</span>($<span class="built_in">t2</span>)</span><br><span class="line"><span class="symbol">what:</span></span><br><span class="line"><span class="keyword">sw </span>$<span class="built_in">t3</span>, <span class="number">0</span>($<span class="built_in">t3</span>)</span><br></pre></td></tr></table></figure></div>
 
-<ol start="9">
-<li><strong>m 在非循环块中使用 break 和 continue 语句</strong>：</li>
-</ol>
-<p>在 Stmt 的 break 和 continue 分支中判断，判断当前符号表在不在 for 符号表中。</p>
-<div class="code-container" data-rel="Java"><figure class="iseeu highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">else</span> <span class="keyword">if</span> (tokenNode.equals(TokenType.BREAKTK)) &#123;  </span><br><span class="line">    <span class="comment">// Stmt → &#x27;break&#x27; &#x27;;&#x27;  </span></span><br><span class="line">    <span class="keyword">if</span> (!<span class="built_in">this</span>.isForStmt &amp;&amp; !SymbolManager.getCurSymbolTable().inForSymbolTable()) &#123;  </span><br><span class="line">        ErrorCatcher.catchError(<span class="keyword">new</span> <span class="title class_">Error</span>(ErrorType.INVALID_BREAK_OR_CONTINUE, tokenNode.getLineNumber()));  </span><br><span class="line">    &#125;  </span><br><span class="line">&#125; <span class="keyword">else</span> <span class="keyword">if</span> (tokenNode.equals(TokenType.CONTINUETK)) &#123;  </span><br><span class="line">    <span class="comment">// Stmt → &#x27;continue&#x27; &#x27;;&#x27;  </span></span><br><span class="line">    <span class="keyword">if</span> (!<span class="built_in">this</span>.isForStmt &amp;&amp; !SymbolManager.getCurSymbolTable().inForSymbolTable()) &#123;  </span><br><span class="line">        ErrorCatcher.catchError(<span class="keyword">new</span> <span class="title class_">Error</span>(ErrorType.INVALID_BREAK_OR_CONTINUE, tokenNode.getLineNumber()));  </span><br><span class="line">    &#125;  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
-
-<p>由于存在嵌套，虽然可能处于 if 块，但若 if 块被 for 块包围也算正确，所以需要向上递归查找 for 符号表。SymbolTable 中：</p>
-<div class="code-container" data-rel="Java"><figure class="iseeu highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">inForSymbolTable</span><span class="params">()</span> &#123;  </span><br><span class="line">    <span class="type">SymbolTable</span> <span class="variable">symbolTable</span> <span class="operator">=</span> <span class="built_in">this</span>;  </span><br><span class="line">    <span class="keyword">while</span> (symbolTable != <span class="literal">null</span>) &#123;  </span><br><span class="line">        <span class="keyword">if</span> (symbolTable.isForSymbolTable()) &#123;  </span><br><span class="line">            <span class="keyword">return</span> <span class="literal">true</span>;  </span><br><span class="line">        &#125;  </span><br><span class="line">        symbolTable = symbolTable.getParentTable();  </span><br><span class="line">    &#125;  </span><br><span class="line">    <span class="keyword">return</span> <span class="literal">false</span>;  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
-
-<p>而是否是 for 符号表的信息在 Block 中设置完成：</p>
-<div class="code-container" data-rel="Java"><figure class="iseeu highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (<span class="built_in">this</span>.isForBlock) &#123;  </span><br><span class="line">    SymbolManager.getCurSymbolTable().setForSymbolTable();  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
-
-<p>注意考虑这种情况：</p>
-<div class="code-container" data-rel="C"><figure class="iseeu highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">()</span> &#123;  </span><br><span class="line">    <span class="keyword">for</span>(;;) <span class="keyword">break</span>;  </span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
-
-<p>错误输出：</p>
-<div class="code-container" data-rel="Text"><figure class="iseeu highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">2 m</span><br></pre></td></tr></table></figure></div>
-
-<p>第一次 AC 的提交未考虑这种 Stmt 直接解析为 break 而不是 Block 的，后来写文档的时候发现漏洞，修改后提交仍然是 AC。</p>
-<p>原思路是以符号表 SymbolTable 为单位进行考察是不是 for 的符号表，但实际上没有 Block 的 for 不会进行建表（因为不计算作用域所以我的实现也没有建表），因此会漏掉这种情况。</p>
+<p>另外我用 C 语言写了一个机器码生成 MIPS 语言的程序，主要是课程平台给出的 testcode 有这种需求……</p>
 
 		</div>
 
@@ -993,18 +1725,18 @@
 		<div class="post-copyright-info w-full my-8 px-2 sm:px-6 md:px-8">
 			<div class="article-copyright-info-container">
     <ul>
-        <li><strong>Title:</strong> 编译技术：语义分析</li>
+        <li><strong>Title:</strong> P6课下-Verilog搭建流水线CPU-2</li>
         <li><strong>Author:</strong> BaconToast</li>
         <li><strong>Created at
-                :</strong> 2025-11-14 22:47:16</li>
+                :</strong> 2025-11-18 11:19:21</li>
         
             <li>
                 <strong>Updated at
-                    :</strong> 2025-11-18 11:05:05
+                    :</strong> 2025-11-18 11:22:00
             </li>
         
         <li>
-            <strong>Link:</strong> https://bacontoast-pro.github.io/2025/11/14/compiler/symbol/
+            <strong>Link:</strong> https://bacontoast-pro.github.io/2025/11/18/co/p6/
         </li>
         <li>
             <strong>
@@ -1026,11 +1758,15 @@
 		<ul class="post-tags-box text-lg mt-1.5 flex-wrap justify-center flex md:hidden">
 			
 			<li class="tag-item mx-0.5">
-				<a href="/tags/Compiler/">#Compiler</a>&nbsp;
+				<a href="/tags/CO/">#CO</a>&nbsp;
 			</li>
 			
 			<li class="tag-item mx-0.5">
-				<a href="/tags/Java/">#Java</a>&nbsp;
+				<a href="/tags/Verilog/">#Verilog</a>&nbsp;
+			</li>
+			
+			<li class="tag-item mx-0.5">
+				<a href="/tags/MIPS/">#MIPS</a>&nbsp;
 			</li>
 			
 		</ul>
@@ -1042,12 +1778,12 @@
 		<div class="article-nav my-8 flex justify-between items-center px-2 sm:px-6 md:px-8">
 			
 			<div class="article-prev border-border-color shadow-redefine-flat shadow-shadow-color-2 rounded-medium px-4 py-2 hover:shadow-redefine-flat-hover hover:shadow-shadow-color-2">
-				<a class="prev" rel="prev" href="/2025/11/18/parallel/mulMatrix/">
+				<a class="prev" rel="prev" href="/2025/11/18/co/p7/">
 					<span class="left arrow-icon flex justify-center items-center">
 						<i class="fa-solid fa-chevron-left"></i>
 					</span>
 					<span class="title flex justify-center items-center">
-						<span class="post-nav-title-item truncate max-w-48">矩阵相乘的并行计算</span>
+						<span class="post-nav-title-item truncate max-w-48">P7课下-MIPS微系统设计</span>
 						<span class="post-nav-item">Prev posts</span>
 					</span>
 				</a>
@@ -1055,9 +1791,9 @@
 			
 			
 			<div class="article-next border-border-color shadow-redefine-flat shadow-shadow-color-2 rounded-medium px-4 py-2 hover:shadow-redefine-flat-hover hover:shadow-shadow-color-2">
-				<a class="next" rel="next" href="/2025/11/14/compiler/parser/">
+				<a class="next" rel="next" href="/2025/11/18/co/p5/">
 					<span class="title flex justify-center items-center">
-						<span class="post-nav-title-item truncate max-w-48">编译技术：语法分析</span>
+						<span class="post-nav-title-item truncate max-w-48">计算机组成CO：P5课下-Verilog搭建流水线CPU-1</span>
 						<span class="post-nav-item">Next posts</span>
 					</span>
 					<span class="right arrow-icon flex justify-center items-center">
@@ -1119,8 +1855,8 @@
 		<div class="post-toc-wrap">
 	<div class="post-toc">
 		<div class="toc-title">On this page</div>
-		<div class="page-title">编译技术：语义分析</div>
-		<ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AF%AD%E4%B9%89%E5%88%86%E6%9E%90%E8%AE%BE%E8%AE%A1"><span class="nav-text">语义分析设计</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BC%96%E7%A0%81%E5%89%8D%E7%9A%84%E8%AE%BE%E8%AE%A1"><span class="nav-text">编码前的设计</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BC%96%E7%A0%81%E5%AE%8C%E6%88%90%E4%B9%8B%E5%90%8E%E7%9A%84%E4%BF%AE%E6%94%B9"><span class="nav-text">编码完成之后的修改</span></a></li></ol></li></ol>
+		<div class="page-title">P6课下-Verilog搭建流水线CPU-2</div>
+		<ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%96%B0%E5%A2%9E%E6%8C%87%E4%BB%A4%E8%A1%8C%E4%B8%BA%E5%8F%8A%E5%88%86%E7%B1%BB"><span class="nav-text">新增指令行为及分类</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#R-%E5%9E%8B%E6%8C%87%E4%BB%A4"><span class="nav-text">R 型指令</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#I-%E5%9E%8B%E6%8C%87%E4%BB%A4"><span class="nav-text">I 型指令</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%AE%BF%E5%AD%98%E6%8C%87%E4%BB%A4"><span class="nav-text">访存指令</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B9%98%E9%99%A4%E6%8C%87%E4%BB%A4"><span class="nav-text">乘除指令</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#J-%E5%9E%8B%E6%8C%87%E4%BB%A4"><span class="nav-text">J 型指令</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%86%92%E9%99%A9%E5%A4%84%E7%90%86%E7%9A%84%E7%9B%B8%E4%BC%BC%E6%80%A7%E6%8A%BD%E8%B1%A1"><span class="nav-text">冒险处理的相似性抽象</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%8E%A7%E5%88%B6%E4%BF%A1%E5%8F%B7"><span class="nav-text">控制信号</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9F%BA%E7%A1%80%E6%8E%A7%E5%88%B6%E4%BF%A1%E5%8F%B7"><span class="nav-text">基础控制信号</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AD%97%E8%8A%82%E4%BD%BF%E8%83%BD%E4%BF%A1%E5%8F%B7"><span class="nav-text">字节使能信号</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%9D%E8%80%83%E9%A2%98"><span class="nav-text">思考题</span></a></li></ol>
 
 	</div>
 </div>

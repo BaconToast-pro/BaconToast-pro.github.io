@@ -1,0 +1,1898 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="keywords" content="Hexo Theme Redefine">
+    
+    <meta name="author" content="BaconToast">
+    
+    <!-- Completely eliminate flash of wrong theme -->
+    <script>
+        (function() {
+            const THEME_KEY = "REDEFINE-THEME-STATUS";
+            const DARK = "dark", LIGHT = "light";
+            
+            // Get preferred theme
+            function getTheme() {
+                try {
+                    const saved = localStorage.getItem(THEME_KEY);
+                    if (saved) {
+                        const { isDark } = JSON.parse(saved);
+                        return isDark ? DARK : LIGHT;
+                    }
+                } catch (e) {}
+                
+                return matchMedia("(prefers-color-scheme: dark)").matches ? DARK : LIGHT;
+            }
+            
+            // Apply theme to document
+            function applyTheme(theme) {
+                const isDark = theme === DARK;
+                const root = document.documentElement;
+                
+                // Set data attribute for CSS variables
+                root.setAttribute("data-theme", theme);
+                
+                // Set classes for compatibility
+                root.classList.add(theme);
+                root.classList.remove(isDark ? LIGHT : DARK);
+                root.style.colorScheme = theme;
+            }
+            
+            // Initial application
+            const theme = getTheme();
+            applyTheme(theme);
+            
+            // Listen for system preference changes
+            matchMedia("(prefers-color-scheme: dark)").addEventListener("change", ({ matches }) => {
+                // Only update if using system preference (no localStorage entry)
+                if (!localStorage.getItem(THEME_KEY)) {
+                    applyTheme(matches ? DARK : LIGHT);
+                }
+            });
+            
+            // Set body classes once DOM is ready
+            if (document.readyState !== "loading") {
+                document.body.classList.add(theme + "-mode");
+            } else {
+                document.addEventListener("DOMContentLoaded", () => {
+                    document.body.classList.add(theme + "-mode");
+                    document.body.classList.remove((theme === DARK ? LIGHT : DARK) + "-mode");
+                });
+            }
+        })();
+    </script>
+    
+    <!-- Critical CSS to prevent flash -->
+    <style>
+        :root[data-theme="dark"] {
+            --background-color: #202124;
+            --background-color-transparent: rgba(32, 33, 36, 0.6);
+            --second-background-color: #2d2e32;
+            --third-background-color: #34353a;
+            --third-background-color-transparent: rgba(32, 33, 36, 0.6);
+            --primary-color: #0066CC;
+            --first-text-color: #ffffff;
+            --second-text-color: #eeeeee;
+            --third-text-color: #bebec6;
+            --fourth-text-color: #999999;
+            --default-text-color: #bebec6;
+            --invert-text-color: #373D3F;
+            --border-color: rgba(255, 255, 255, 0.08);
+            --selection-color: #0066CC;
+            --shadow-color-1: rgba(255, 255, 255, 0.08);
+            --shadow-color-2: rgba(255, 255, 255, 0.05);
+        }
+        
+        :root[data-theme="light"] {
+            --background-color: #fff;
+            --background-color-transparent: rgba(255, 255, 255, 0.6);
+            --second-background-color: #f8f8f8;
+            --third-background-color: #f2f2f2;
+            --third-background-color-transparent: rgba(241, 241, 241, 0.6);
+            --primary-color: #0066CC;
+            --first-text-color: #16171a;
+            --second-text-color: #2f3037;
+            --third-text-color: #5e5e5e;
+            --fourth-text-color: #eeeeee;
+            --default-text-color: #373D3F;
+            --invert-text-color: #bebec6;
+            --border-color: rgba(0, 0, 0, 0.08);
+            --selection-color: #0066CC;
+            --shadow-color-1: rgba(0, 0, 0, 0.08);
+            --shadow-color-2: rgba(0, 0, 0, 0.05);
+        }
+        
+        body {
+            background-color: var(--background-color);
+            color: var(--default-text-color);
+        }
+        
+        /* Apply body classes as soon as DOM is ready */
+        :root[data-theme="dark"] body {
+            background-color: var(--background-color);
+            color: var(--default-text-color);
+        }
+    </style>
+    
+    <!-- preconnect -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    
+    <!--- Seo Part-->
+    
+    <link rel="canonical" href="https://BaconToast-pro.github.io/2025/11/18/co/p4/"/>
+    <meta name="robots" content="index,follow">
+    <meta name="googlebot" content="index,follow">
+    <meta name="revisit-after" content="1 days">
+    
+    
+    
+        
+        <meta name="description" content="Hexo Theme Redefine, Redefine Your Hexo Journey.">
+<meta property="og:type" content="article">
+<meta property="og:title" content="计算机组成CO：P4课下-Verilog搭建单周期CPU">
+<meta property="og:url" content="https://bacontoast-pro.github.io/2025/11/18/co/p4/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="Hexo Theme Redefine, Redefine Your Hexo Journey.">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://bacontoast-pro.github.io/images/redefine-og.webp">
+<meta property="article:published_time" content="2025-11-18T03:15:55.717Z">
+<meta property="article:modified_time" content="2025-11-18T03:22:00.976Z">
+<meta property="article:author" content="BaconToast">
+<meta property="article:tag" content="CO">
+<meta property="article:tag" content="MIPS">
+<meta property="article:tag" content="Verilog">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://bacontoast-pro.github.io/images/redefine-og.webp">
+    
+    
+    <!--- Icon Part-->
+    <link rel="icon" type="image/png" href="/images/public/toast.svg" sizes="192x192">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/public/toast.svg">
+    <meta name="theme-color" content="#A31F34">
+    <link rel="shortcut icon" href="/images/public/toast.svg">
+    <!--- Page Info-->
+    
+    <title>
+        
+            计算机组成CO：P4课下-Verilog搭建单周期CPU | BaconToast&#39;s Shop
+        
+    </title>
+
+    
+<link rel="stylesheet" href="/fonts/Chillax/chillax.css">
+
+
+    <!--- Inject Part-->
+    
+
+    
+<link rel="stylesheet" href="/css/style.css">
+
+
+    
+        
+<link rel="stylesheet" href="/css/build/tailwind.css">
+
+    
+
+    
+<link rel="stylesheet" href="/fonts/GeistMono/geist-mono.css">
+
+    
+<link rel="stylesheet" href="/fonts/Geist/geist.css">
+
+    <!--- Font Part-->
+    
+    
+    
+    
+    
+    
+        
+<script src="/js/build/libs/anime.min.js"></script>
+
+    
+
+    <script id="hexo-configurations">
+    window.config = {"hostname":"bacontoast-pro.github.io","root":"/","language":"en"};
+    window.theme = {"articles":{"style":{"font_size":"16px","line_height":1.5,"image_border_radius":"14px","image_alignment":"center","image_caption":false,"link_icon":true,"delete_mask":false,"title_alignment":"left","headings_top_spacing":{"h1":"3.2rem","h2":"2.4rem","h3":"1.9rem","h4":"1.6rem","h5":"1.4rem","h6":"1.3rem"}},"word_count":{"enable":true,"count":true,"min2read":true},"author_label":{"enable":true,"auto":false,"list":[]},"code_block":{"copy":true,"style":"mac","highlight_theme":{"light":"github","dark":"vs2015"},"font":{"enable":false,"family":null,"url":null}},"toc":{"enable":true,"max_depth":3,"number":false,"expand":true,"init_open":true},"copyright":{"enable":true,"default":"cc_by_nc_sa"},"lazyload":true,"pangu_js":false,"recommendation":{"enable":false,"title":"推荐阅读","limit":3,"mobile_limit":2,"placeholder":"/images/wallhaven-wqery6-light.webp","skip_dirs":[]}},"colors":{"primary":"#A31F34","secondary":null,"default_mode":"light"},"global":{"fonts":{"chinese":{"enable":false,"family":null,"url":null},"english":{"enable":false,"family":null,"url":null},"title":{"enable":false,"family":null,"url":null}},"content_max_width":"1000px","sidebar_width":"210px","hover":{"shadow":true,"scale":true},"scroll_progress":{"bar":false,"percentage":true},"website_counter":{"url":"https://cn.vercount.one/js","enable":true,"site_pv":true,"site_uv":true,"post_pv":true},"single_page":true,"preloader":{"enable":true,"custom_message":null},"side_tools":{"gear_rotation":true,"auto_expand":true},"open_graph":{"enable":true,"image":"/images/redefine-og.webp","description":"Hexo Theme Redefine, Redefine Your Hexo Journey."},"google_analytics":{"enable":false,"id":null}},"home_banner":{"enable":true,"style":"fixed","image":{"light":"/images/wallhaven-wqery6-light.webp","dark":"/images/wallhaven-wqery6-dark.webp"},"title":"BaconToast Blog","subtitle":{"text":["欢迎来到BaconToast小商店~","We can be the light upon the day."],"hitokoto":{"enable":false,"show_author":false,"api":"https://v1.hitokoto.cn"},"typing_speed":100,"backing_speed":80,"starting_delay":500,"backing_delay":1500,"loop":true,"smart_backspace":true},"text_color":{"light":"#fff","dark":"#d1d1b6"},"text_style":{"title_size":"2.8rem","subtitle_size":"1.5rem","line_height":1.2},"custom_font":{"enable":false,"family":null,"url":null},"social_links":{"enable":true,"style":"default","links":{"github":"https://github.com/BaconToast-pro","instagram":null,"zhihu":null,"twitter":null,"email":"zhouzq@buaa.edu.cn"},"qrs":{"weixin":"images/public/wechat.jpg"}}},"plugins":{"feed":{"enable":false},"aplayer":{"enable":false,"type":"fixed","audios":[{"name":null,"artist":null,"url":null,"cover":null,"lrc":null}]},"mermaid":{"enable":false,"version":"11.4.1"}},"version":"2.8.5","navbar":{"auto_hide":true,"color":{"left":"#f78736","right":"#367df7","transparency":35},"width":{"home":"1200px","pages":"1000px"},"links":{"Home":{"path":"/","icon":"fa-regular fa-house"},"Archives":{"path":"/archives","icon":"fa-regular fa-archive"},"Friends":{"icon":"fa-solid fa-link","path":"/links/"},"About":{"icon":"fa-regular fa-user","submenus":{"Github":"https://github.com/BaconToast-pro","Friends":"/links/"}}},"search":{"enable":false,"preload":true}},"page_templates":{"friends_column":2,"tags_style":"blur"},"home":{"sidebar":{"enable":true,"position":"left","first_item":"menu","announcement":"~o(^_^)o~","show_on_mobile":true,"links":{"Archives":{"path":"/archives","icon":"fa-regular fa-archive"},"Tags":{"path":"/tags","icon":"fa-regular fa-tags"},"Categories":{"path":"/categories","icon":"fa-regular fa-folder"}}},"article_date_format":"auto","excerpt_length":200,"categories":{"enable":true,"limit":3},"tags":{"enable":true,"limit":3}},"footerStart":"2025/11/11 17:20:00"};
+    window.lang_ago = {"second":"%s seconds ago","minute":"%s minutes ago","hour":"%s hours ago","day":"%s days ago","week":"%s weeks ago","month":"%s months ago","year":"%s years ago"};
+    window.data = {"masonry":true};
+  </script>
+    
+    <!--- Fontawesome Part-->
+    
+<link rel="stylesheet" href="/fontawesome/fontawesome.min.css">
+
+    
+<link rel="stylesheet" href="/fontawesome/brands.min.css">
+
+    
+<link rel="stylesheet" href="/fontawesome/solid.min.css">
+
+    
+<link rel="stylesheet" href="/fontawesome/regular.min.css">
+
+    
+    
+    
+    
+<meta name="generator" content="Hexo 8.1.1"></head>
+
+
+
+<body>
+	<div class="progress-bar-container">
+	
+
+	
+	<span class="pjax-progress-bar"></span>
+	<!--        <span class="swup-progress-icon">-->
+	<!--            <i class="fa-solid fa-circle-notch fa-spin"></i>-->
+	<!--        </span>-->
+	
+</div>
+
+<style>
+    :root {
+        --preloader-background-color: #fff;
+        --preloader-text-color: #000;
+    }
+
+    @media (prefers-color-scheme: dark) {
+        :root {
+            --preloader-background-color: #202124;
+            --preloader-text-color: #fff;
+        }
+    }
+
+    @media (prefers-color-scheme: light) {
+        :root {
+            --preloader-background-color: #fff;
+            --preloader-text-color: #000;
+        }
+    }
+
+    @media (max-width: 600px) {
+        .ml13 {
+            font-size: 2.6rem !important; /* Adjust this value as needed */
+        }
+    }
+
+    .preloader {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem; /* Tailwind 'gap-4' is 1rem */
+        align-items: center;
+        justify-content: center;
+        position: fixed;
+        padding: 12px;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh; /* 'h-screen' is 100% of the viewport height */
+        background-color: var(--preloader-background-color);
+        z-index: 1100; /* 'z-[1100]' sets the z-index */
+        transition: opacity 0.2s ease-in-out;
+    }
+
+    .ml13 {
+        font-size: 3.2rem;
+        /* text-transform: uppercase; */
+        color: var(--preloader-text-color);
+        letter-spacing: -1px;
+        font-weight: 500;
+        font-family: 'Chillax-Variable', sans-serif;
+        text-align: center;
+    }
+
+    .ml13 .word {
+        display: inline-flex;
+        flex-wrap: wrap;
+        white-space: nowrap;
+    }
+
+    .ml13 .letter {
+        display: inline-block;
+        line-height: 1em;
+    }
+</style>
+
+<div class="preloader">
+    <h2 class="ml13">
+        BaconToast&#39;s Shop
+    </h2>
+    <script>
+        var textWrapper = document.querySelector('.ml13');
+        // Split text into words
+        var words = textWrapper.textContent.trim().split(' ');
+
+        // Clear the existing content
+        textWrapper.innerHTML = '';
+
+        // Wrap each word and its letters in spans
+        words.forEach(function(word) {
+            var wordSpan = document.createElement('span');
+            wordSpan.classList.add('word');
+            wordSpan.innerHTML = word.replace(/\S/g, "<span class='letter'>$&</span>");
+            textWrapper.appendChild(wordSpan);
+            textWrapper.appendChild(document.createTextNode(' ')); // Add space between words
+        });
+
+        var animation = anime.timeline({ loop: true })
+            .add({
+                targets: '.ml13 .letter',
+                translateY: [20, 0],
+                translateZ: 0,
+                opacity: [0, 1],
+                filter: ['blur(5px)', 'blur(0px)'],
+                easing: "easeOutExpo",
+                duration: 1200,
+                delay: (el, i) => 300 + 20 * i,
+            })
+            .add({
+                targets: '.ml13 .letter',
+                translateY: [0, -20],
+                opacity: [1, 0],
+                filter: ['blur(0px)', 'blur(5px)'],
+                easing: "easeInExpo",
+                duration: 1000,
+                delay: (el, i) => 15 * i,
+                complete: function() {
+                    hidePreloader();
+                }
+            }, '-=700');
+
+
+        let themeStatus = JSON.parse(localStorage.getItem('REDEFINE-THEME-STATUS'))?.isDark;
+
+        // If the theme status is not found in local storage, check the preferred color scheme
+        if (themeStatus === undefined || themeStatus === null) {
+            if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                themeStatus = 'dark';
+            } else {
+                themeStatus = 'light';
+            }
+        }
+
+        // Now you can use the themeStatus variable in your code
+        if (themeStatus) {
+            document.documentElement.style.setProperty('--preloader-background-color', '#202124');
+            document.documentElement.style.setProperty('--preloader-text-color', '#fff');
+        } else {
+            document.documentElement.style.setProperty('--preloader-background-color', '#fff');
+            document.documentElement.style.setProperty('--preloader-text-color', '#000');
+        }
+
+        window.addEventListener('load', function () {
+            setTimeout(hidePreloader, 5000); // Call hidePreloader after 5000 milliseconds if not already called by animation
+        });
+
+        function hidePreloader() {
+            var preloader = document.querySelector('.preloader');
+            preloader.style.opacity = '0';
+            setTimeout(function () {
+                preloader.style.display = 'none';
+            }, 200);
+        }
+    </script>
+</div>
+
+<main class="page-container" id="swup">
+
+	
+
+	<div class="main-content-container flex flex-col justify-between min-h-dvh">
+		<div class="main-content-header">
+			<header class="navbar-container px-6 md:px-12">
+    <div class="navbar-content transition-navbar ">
+        <div class="left">
+            
+            <a class="logo-title" href="/">
+                
+                BaconToast&#39;s Shop
+                
+            </a>
+        </div>
+
+        <div class="right">
+            <!-- PC -->
+            <div class="desktop">
+                <ul class="navbar-list">
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/"
+                                        >
+                                    <i class="fa-regular fa-house fa-fw"></i>
+                                    HOME
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/archives"
+                                        >
+                                    <i class="fa-regular fa-archive fa-fw"></i>
+                                    ARCHIVES
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/links/"
+                                        >
+                                    <i class="fa-solid fa-link fa-fw"></i>
+                                    FRIENDS
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class="has-dropdown"
+                                   href="#"
+                                        onClick=&#34;return false;&#34;>
+                                    <i class="fa-regular fa-user fa-fw"></i>
+                                    ABOUT
+                                    <i class="fa-solid fa-chevron-down fa-fw"></i>
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                                    <ul class="sub-menu">
+                                        
+                                            <li>
+                                                <a target="_blank" rel="noopener" href="https://github.com/BaconToast-pro">
+                                                    GITHUB
+                                                </a>
+                                            </li>
+                                        
+                                            <li>
+                                                <a href="/links/">
+                                                    FRIENDS
+                                                </a>
+                                            </li>
+                                        
+                                    </ul>
+                                
+                            </li>
+                    
+                    
+                </ul>
+            </div>
+            <!-- Mobile -->
+            <div class="mobile">
+                
+                <div class="icon-item navbar-bar">
+                    <div class="navbar-bar-middle"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mobile sheet -->
+    <div class="navbar-drawer h-dvh w-full absolute top-0 left-0 bg-background-color flex flex-col justify-between">
+        <ul class="drawer-navbar-list flex flex-col px-4 justify-center items-start">
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/"
+                        >
+                            <span>
+                                HOME
+                            </span>
+                            
+                                <i class="fa-regular fa-house fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/archives"
+                        >
+                            <span>
+                                ARCHIVES
+                            </span>
+                            
+                                <i class="fa-regular fa-archive fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/links/"
+                        >
+                            <span>
+                                FRIENDS
+                            </span>
+                            
+                                <i class="fa-solid fa-link fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+                
+                    
+
+                    <li class="drawer-navbar-item-sub text-base my-1.5 flex flex-col w-full">
+                        
+                        <div class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary cursor-pointer text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                             navbar-data-toggle="submenu-About"
+                        >
+                            <span>
+                                ABOUT
+                            </span>
+                            
+                                <i class="fa-solid fa-chevron-right fa-sm fa-fw transition-all"></i>
+                            
+                        </div>
+                        
+
+                        
+                            <div class="flex-col items-start px-2 py-2 hidden" data-target="submenu-About">
+                                
+                                    <div class="drawer-navbar-item text-base flex flex-col justify-center items-start hover:underline active:underline hover:underline-offset-1 rounded-3xl">
+                                        <a class=" text-third-text-color text-xl"
+                                           target="_blank" rel="noopener" href="https://github.com/BaconToast-pro">GITHUB</a>
+                                    </div>
+                                
+                                    <div class="drawer-navbar-item text-base flex flex-col justify-center items-start hover:underline active:underline hover:underline-offset-1 rounded-3xl">
+                                        <a class=" text-third-text-color text-xl"
+                                           href="/links/">FRIENDS</a>
+                                    </div>
+                                
+                            </div>
+                        
+                    </li>
+            
+
+            
+            
+                
+                    
+                    
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full active"
+                           href="/tags"
+                        >
+                            <span>Tags</span>
+                            <i class="fa-regular fa-tags fa-sm fa-fw"></i>
+                        </a>
+                    </li>
+                
+                    
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full active"
+                           href="/categories"
+                        >
+                            <span>Categories</span>
+                            <i class="fa-regular fa-folder fa-sm fa-fw"></i>
+                        </a>
+                    </li>
+                
+            
+        </ul>
+
+        <div class="statistics flex justify-around my-2.5">
+    <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/tags">
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">10</div>
+        <div class="label text-third-text-color text-sm">Tags</div>
+    </a>
+    <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/categories">
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">3</div>
+        <div class="label text-third-text-color text-sm">Categories</div>
+    </a>
+    <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/archives">
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">10</div>
+        <div class="label text-third-text-color text-sm">Posts</div>
+    </a>
+</div>
+    </div>
+
+    <div class="window-mask"></div>
+
+</header>
+
+
+		</div>
+
+		<div class="main-content-body transition-fade-up">
+			
+
+			<div class="main-content">
+				<div class="post-page-container flex relative justify-between box-border w-full h-full">
+	<div class="article-content-container">
+
+		<div class="article-title relative w-full">
+			
+			
+			
+			<img src="/images/public/sakura.jpg" alt="计算机组成CO：P4课下-Verilog搭建单周期CPU" class="w-full h-60 sm:h-72 md:h-80 object-cover sm:rounded-t-large dark:brightness-75" />
+			
+			<div class="w-full flex items-center absolute bottom-0 justify-start">
+				<h1 class="article-title-cover text-center mx-6 my-6 text-second-text-color bg-background-color-transparent px-4 py-3 text-3xl sm:text-4xl md:text-5xl font-semibold backdrop-blur-lg rounded-xl border border-border-color ">计算机组成CO：P4课下-Verilog搭建单周期CPU</h1>
+			</div>
+			
+		</div>
+
+		
+		<div class="article-header flex flex-row gap-2 items-center px-2 sm:px-6 md:px-8">
+			<div class="avatar w-[46px] h-[46px] flex-shrink-0 rounded-medium border border-border-color p-[1px]">
+				<img src="/images/public/avatar.jpg">
+			</div>
+			<div class="info flex flex-col justify-between">
+				<div class="author flex items-center">
+					<span class="name text-default-text-color text-lg font-semibold">BaconToast</span>
+					
+					<span class="author-label ml-1.5 text-xs px-2 py-0.5 rounded-small text-third-text-color border border-shadow-color-1">Lv2</span>
+					
+				</div>
+				<div class="meta-info">
+					<div class="article-meta-info">
+    <span class="article-date article-meta-item">
+        <i class="fa-regular fa-pen-fancy"></i>&nbsp;
+        <span class="desktop">2025-11-18 11:15:55</span>
+        <span class="mobile">2025-11-18 11:15:55</span>
+        <span class="hover-info">Created</span>
+    </span>
+    
+        <span class="article-date article-meta-item">
+            <i class="fa-regular fa-wrench"></i>&nbsp;
+            <span class="desktop">2025-11-18 11:22</span>
+            <span class="mobile">2025-11-18 11:22</span>
+            <span class="hover-info">Updated</span>
+        </span>
+    
+
+    
+        <span class="article-categories article-meta-item">
+            <i class="fa-regular fa-folders"></i>&nbsp;
+            <ul>
+                
+                
+                    
+                        
+                        <li>
+                            <a href="/categories/CO/">CO</a>&nbsp;
+                        </li>
+                    
+                    
+                
+            </ul>
+        </span>
+    
+    
+        <span class="article-tags article-meta-item">
+            <i class="fa-regular fa-tags"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/tags/CO/">CO</a>&nbsp;
+                    </li>
+                
+                    <li>
+                        | <a href="/tags/Verilog/">Verilog</a>&nbsp;
+                    </li>
+                
+                    <li>
+                        | <a href="/tags/MIPS/">MIPS</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+
+    
+    
+    
+    
+        <span class="article-pv article-meta-item">
+            <i class="fa-regular fa-eye"></i>&nbsp;<span id="busuanzi_value_page_pv"></span>
+        </span>
+    
+</div>
+
+				</div>
+			</div>
+		</div>
+		
+
+		
+
+
+		<div class="article-content markdown-body px-2 sm:px-6 md:px-8 pb-8">
+			<p>处理器为 32 位单周期处理器，不考虑延迟槽。支持指令集：<code>add, sub, ori, lw, sw, beq, lui, jal, jr, nop</code>。其中 <code>nop</code> 为空指令，机器码 <code>0x00000000</code>；<code>add, sub</code> 按无符号处理，不考虑溢出；顶层有效驱动信号包括且仅包括<strong>同步复位信号 reset</strong> 和<strong>时钟信号 clk</strong> 。</p>
+<h2 id="IM（指令存储器）"><a href="#IM（指令存储器）" class="headerlink" title="IM（指令存储器）"></a>IM（指令存储器）</h2><p>在 ISE 中，我们直接将指令的十六进制代码从 code.txt 中读到 IM ，使用 <code>$readmemh</code> 指令完成相应功能即可。<br>该模块接收由 NPC 传入的指令，输出 PC 指令作为 NPC 的输入，在 NPC 模块中进一步进行跳转或累加。</p>
+<table>
+<thead>
+<tr>
+<th align="center">信号名</th>
+<th align="center">方向</th>
+<th align="center">描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">clk</td>
+<td align="center">I</td>
+<td align="center">时钟信号</td>
+</tr>
+<tr>
+<td align="center">reset</td>
+<td align="center">I</td>
+<td align="center">同步复位信号</td>
+</tr>
+<tr>
+<td align="center">NPC</td>
+<td align="center">I</td>
+<td align="center">32 位 PC 指令输入信号</td>
+</tr>
+<tr>
+<td align="center">Instr</td>
+<td align="center">O</td>
+<td align="center">32 位指令信号</td>
+</tr>
+<tr>
+<td align="center">PC</td>
+<td align="center">O</td>
+<td align="center">32 位 PC 指令输出信号</td>
+</tr>
+</tbody></table>
+<div class="code-container" data-rel="Verilog"><figure class="iseeu highlight verilog"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">module</span> IM(</span><br><span class="line">    <span class="keyword">input</span> clk,</span><br><span class="line">    <span class="keyword">input</span> reset,</span><br><span class="line">    <span class="keyword">input</span> [<span class="number">31</span>:<span class="number">0</span>] NPC,</span><br><span class="line">    <span class="keyword">output</span> [<span class="number">31</span>:<span class="number">0</span>] Instr,</span><br><span class="line">    <span class="keyword">output</span> <span class="keyword">reg</span> [<span class="number">31</span>:<span class="number">0</span>] PC</span><br><span class="line">    );</span><br><span class="line">	</span><br><span class="line">	<span class="keyword">reg</span> [<span class="number">31</span>:<span class="number">0</span>] im[<span class="number">0</span>:<span class="number">4095</span>];</span><br><span class="line">	<span class="keyword">wire</span> [<span class="number">31</span>:<span class="number">0</span>] addr;</span><br><span class="line">	</span><br><span class="line">	<span class="keyword">initial</span> <span class="keyword">begin</span></span><br><span class="line">		<span class="built_in">$readmemh</span>(<span class="string">&quot;code.txt&quot;</span>, im);</span><br><span class="line">		PC = <span class="number">32&#x27;h0000_3000</span>;</span><br><span class="line">	<span class="keyword">end</span></span><br><span class="line">	</span><br><span class="line">	<span class="keyword">always</span> @(<span class="keyword">posedge</span> clk) <span class="keyword">begin</span></span><br><span class="line">		<span class="keyword">if</span> (reset) <span class="keyword">begin</span></span><br><span class="line">			PC &lt;= <span class="number">32&#x27;h0000_3000</span>;</span><br><span class="line">		<span class="keyword">end</span></span><br><span class="line">		<span class="keyword">else</span> <span class="keyword">begin</span></span><br><span class="line">			PC &lt;= NPC;</span><br><span class="line">		<span class="keyword">end</span></span><br><span class="line">	<span class="keyword">end</span></span><br><span class="line">	</span><br><span class="line">	<span class="keyword">assign</span> addr = PC - <span class="number">32&#x27;h0000_3000</span>;</span><br><span class="line">	<span class="keyword">assign</span> Instr = im[(addr &gt;&gt; <span class="number">2</span>)];</span><br><span class="line"></span><br><span class="line"><span class="keyword">endmodule</span></span><br></pre></td></tr></table></figure></div>
+<h2 id="PC（程序计数器）"><a href="#PC（程序计数器）" class="headerlink" title="PC（程序计数器）"></a>PC（程序计数器）</h2><p>不同于上一个项目的 PC ，考虑到实际使用，这里的 PC 将用于实现指令地址的累加、跳转和复位。复位后，指令地址将指向 0x00003000。</p>
+<table>
+<thead>
+<tr>
+<th align="center">信号名</th>
+<th align="center">方向</th>
+<th align="center">描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">PC</td>
+<td align="center">I</td>
+<td align="center">32 位 PC 输入</td>
+</tr>
+<tr>
+<td align="center">imm16</td>
+<td align="center">I</td>
+<td align="center">16 位立即数</td>
+</tr>
+<tr>
+<td align="center">imm26</td>
+<td align="center">I</td>
+<td align="center">26 位立即数</td>
+</tr>
+<tr>
+<td align="center">BranchOp</td>
+<td align="center">I</td>
+<td align="center">3 位跳转方式</td>
+</tr>
+<tr>
+<td align="center">jrreg</td>
+<td align="center">I</td>
+<td align="center">32 位寄存器值，用于 jr 跳转</td>
+</tr>
+<tr>
+<td align="center">NPC</td>
+<td align="center">O</td>
+<td align="center">32 位新指令地址</td>
+</tr>
+</tbody></table>
+<div class="code-container" data-rel="Verilog"><figure class="iseeu highlight verilog"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">module</span> PC(</span><br><span class="line">    <span class="keyword">input</span> [<span class="number">31</span>:<span class="number">0</span>] PC,</span><br><span class="line">    <span class="keyword">input</span> [<span class="number">15</span>:<span class="number">0</span>] imm16,</span><br><span class="line">    <span class="keyword">input</span> [<span class="number">25</span>:<span class="number">0</span>] imm26,</span><br><span class="line">    <span class="keyword">input</span> [<span class="number">2</span>:<span class="number">0</span>] BranchOp,</span><br><span class="line">    <span class="keyword">input</span> [<span class="number">31</span>:<span class="number">0</span>] jrreg,</span><br><span class="line">    <span class="keyword">output</span> [<span class="number">31</span>:<span class="number">0</span>] NPC</span><br><span class="line">    );</span><br><span class="line">	 </span><br><span class="line">	<span class="keyword">wire</span> [<span class="number">31</span>:<span class="number">0</span>] imm;</span><br><span class="line">	<span class="keyword">assign</span> imm = (BranchOp == <span class="number">3&#x27;b001</span>) ? &#123;&#123;<span class="number">16</span>&#123;imm16[<span class="number">15</span>]&#125;&#125;, imm16&#125; :</span><br><span class="line">			  		 (BranchOp == <span class="number">3&#x27;b010</span>) ? &#123;&#123;<span class="number">6</span>&#123;imm26[<span class="number">25</span>]&#125;&#125;, imm26&#125; : <span class="number">0</span>;</span><br><span class="line">	 </span><br><span class="line">	<span class="keyword">assign</span> NPC = (BranchOp == <span class="number">3&#x27;b000</span>) ? (PC + <span class="number">3&#x27;d4</span>) :</span><br><span class="line">					 (BranchOp == <span class="number">3&#x27;b001</span>) ? (PC + <span class="number">3&#x27;d4</span> + (imm &lt;&lt; <span class="number">2</span>)) : </span><br><span class="line">					 (BranchOp == <span class="number">3&#x27;b010</span>) ? (&#123;PC[<span class="number">31</span>:<span class="number">28</span>], imm[<span class="number">25</span>:<span class="number">0</span>], <span class="number">2&#x27;b00</span>&#125;) :</span><br><span class="line">					 (BranchOp == <span class="number">3&#x27;b011</span>) ? (jrreg) : <span class="number">0</span>;</span><br><span class="line">					 </span><br><span class="line"><span class="keyword">endmodule</span></span><br></pre></td></tr></table></figure></div>
+<h2 id="GRF（通用寄存器组）"><a href="#GRF（通用寄存器组）" class="headerlink" title="GRF（通用寄存器组）"></a>GRF（通用寄存器组）</h2><p>使用 <code>reg [31:0] regs[0:31];</code> 构造 32 个寄存器，并全部初始化为 0 。<strong>时钟上升沿</strong>且<strong>写使能信号高电平</strong>时，使用 <code>$display</code> 进行输出。<br><strong>注意 0 号寄存器的值永远为 0 。</strong></p>
+<table>
+<thead>
+<tr>
+<th align="center">信号名</th>
+<th align="center">方向</th>
+<th align="center">描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">clk</td>
+<td align="center">I</td>
+<td align="center">时钟信号</td>
+</tr>
+<tr>
+<td align="center">reset</td>
+<td align="center">I</td>
+<td align="center">同步复位信号</td>
+</tr>
+<tr>
+<td align="center">WE</td>
+<td align="center">I</td>
+<td align="center">写使能信号</td>
+</tr>
+<tr>
+<td align="center">A1</td>
+<td align="center">I</td>
+<td align="center">5 位地址输入信号，读取输出到 RD1</td>
+</tr>
+<tr>
+<td align="center">A2</td>
+<td align="center">I</td>
+<td align="center">5 位地址输入信号，读取输出到 RD2</td>
+</tr>
+<tr>
+<td align="center">A3</td>
+<td align="center">I</td>
+<td align="center">5 位地址输入信号，作为目标写入寄存器</td>
+</tr>
+<tr>
+<td align="center">WD</td>
+<td align="center">I</td>
+<td align="center">32 位数据输入</td>
+</tr>
+<tr>
+<td align="center">PC</td>
+<td align="center">I</td>
+<td align="center">32 位指令地址信号，用作 display 输出</td>
+</tr>
+<tr>
+<td align="center">RD1</td>
+<td align="center">O</td>
+<td align="center">32 位 A1 数据输出</td>
+</tr>
+<tr>
+<td align="center">RD2</td>
+<td align="center">O</td>
+<td align="center">32 位 A2 数据输出</td>
+</tr>
+</tbody></table>
+<div class="code-container" data-rel="Verilog"><figure class="iseeu highlight verilog"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">module</span> GRF(</span><br><span class="line">    <span class="keyword">input</span> clk,</span><br><span class="line">    <span class="keyword">input</span> reset,</span><br><span class="line">    <span class="keyword">input</span> WE,</span><br><span class="line">    <span class="keyword">input</span> [<span class="number">4</span>:<span class="number">0</span>] A1,</span><br><span class="line">    <span class="keyword">input</span> [<span class="number">4</span>:<span class="number">0</span>] A2,</span><br><span class="line">    <span class="keyword">input</span> [<span class="number">4</span>:<span class="number">0</span>] A3,</span><br><span class="line">    <span class="keyword">input</span> [<span class="number">31</span>:<span class="number">0</span>] WD,</span><br><span class="line">    <span class="keyword">input</span> [<span class="number">31</span>:<span class="number">0</span>] PC,</span><br><span class="line">    <span class="keyword">output</span> [<span class="number">31</span>:<span class="number">0</span>] RD1,</span><br><span class="line">    <span class="keyword">output</span> [<span class="number">31</span>:<span class="number">0</span>] RD2</span><br><span class="line">    );</span><br><span class="line">	 </span><br><span class="line">	<span class="keyword">integer</span> i;</span><br><span class="line">	<span class="keyword">reg</span> [<span class="number">31</span>:<span class="number">0</span>] regs[<span class="number">0</span>:<span class="number">31</span>];</span><br><span class="line">	</span><br><span class="line">	<span class="keyword">always</span> @(<span class="keyword">posedge</span> clk) <span class="keyword">begin</span></span><br><span class="line">		<span class="keyword">if</span> (reset) <span class="keyword">begin</span></span><br><span class="line">			<span class="keyword">for</span> (i = <span class="number">0</span>; i &lt; <span class="number">32</span>; i = i + <span class="number">1</span>) <span class="keyword">begin</span></span><br><span class="line">				regs[i] &lt;= <span class="number">32&#x27;h0000_0000</span>;</span><br><span class="line">			<span class="keyword">end</span></span><br><span class="line">		<span class="keyword">end</span></span><br><span class="line">		<span class="keyword">else</span> <span class="keyword">begin</span></span><br><span class="line">			<span class="keyword">if</span> (WE) <span class="keyword">begin</span></span><br><span class="line">				<span class="built_in">$display</span>(<span class="string">&quot;@%h: $%d &lt;= %h&quot;</span>, PC, A3, WD);</span><br><span class="line">				<span class="keyword">if</span> (A3 != <span class="number">5&#x27;b0</span>) <span class="keyword">begin</span></span><br><span class="line">					regs[A3] &lt;= WD;</span><br><span class="line">				<span class="keyword">end</span></span><br><span class="line">			<span class="keyword">end</span></span><br><span class="line">		<span class="keyword">end</span></span><br><span class="line">	<span class="keyword">end</span></span><br><span class="line">	</span><br><span class="line">	<span class="keyword">assign</span> RD1 = regs[A1];</span><br><span class="line">	<span class="keyword">assign</span> RD2 = regs[A2];</span><br><span class="line"></span><br><span class="line"><span class="keyword">endmodule</span></span><br></pre></td></tr></table></figure></div>
+<h2 id="DM（数据存储器）"><a href="#DM（数据存储器）" class="headerlink" title="DM（数据存储器）"></a>DM（数据存储器）</h2><p>使用 <code>reg [31:0] dm[0:3071];</code> 构造内存，初始化为 0 。</p>
+<table>
+<thead>
+<tr>
+<th align="center">信号名</th>
+<th align="center">方向</th>
+<th align="center">描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">clk</td>
+<td align="center">I</td>
+<td align="center">时钟信号</td>
+</tr>
+<tr>
+<td align="center">reset</td>
+<td align="center">I</td>
+<td align="center">同步复位信号</td>
+</tr>
+<tr>
+<td align="center">WE</td>
+<td align="center">I</td>
+<td align="center">写使能信号</td>
+</tr>
+<tr>
+<td align="center">addr</td>
+<td align="center">I</td>
+<td align="center">16 位写入地址</td>
+</tr>
+<tr>
+<td align="center">WD</td>
+<td align="center">I</td>
+<td align="center">32 位写入数据</td>
+</tr>
+<tr>
+<td align="center">PC</td>
+<td align="center">I</td>
+<td align="center">32 位指令地址，用于 display 输出</td>
+</tr>
+<tr>
+<td align="center">RD</td>
+<td align="center">O</td>
+<td align="center">32 位数据输出</td>
+</tr>
+</tbody></table>
+<div class="code-container" data-rel="Verilog"><figure class="iseeu highlight verilog"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">module</span> DM(</span><br><span class="line">    <span class="keyword">input</span> clk,</span><br><span class="line">    <span class="keyword">input</span> reset,</span><br><span class="line">    <span class="keyword">input</span> WE,</span><br><span class="line">    <span class="keyword">input</span> [<span class="number">15</span>:<span class="number">0</span>] addr,</span><br><span class="line">    <span class="keyword">input</span> [<span class="number">31</span>:<span class="number">0</span>] WD,</span><br><span class="line">    <span class="keyword">input</span> [<span class="number">31</span>:<span class="number">0</span>] PC,</span><br><span class="line">    <span class="keyword">output</span> [<span class="number">31</span>:<span class="number">0</span>] RD</span><br><span class="line">    );</span><br><span class="line">	 </span><br><span class="line">	<span class="keyword">reg</span> [<span class="number">31</span>:<span class="number">0</span>] dm[<span class="number">0</span>:<span class="number">3071</span>];</span><br><span class="line">	<span class="keyword">wire</span> [<span class="number">11</span>:<span class="number">0</span>] MemAddr;</span><br><span class="line">	<span class="keyword">wire</span> [<span class="number">31</span>:<span class="number">0</span>] Addr;</span><br><span class="line">	<span class="keyword">integer</span> i;</span><br><span class="line">	</span><br><span class="line">	<span class="keyword">always</span> @(<span class="keyword">posedge</span> clk) <span class="keyword">begin</span></span><br><span class="line">		<span class="keyword">if</span> (reset) <span class="keyword">begin</span></span><br><span class="line">			<span class="keyword">for</span> (i = <span class="number">0</span>; i &lt; <span class="number">3072</span>; i = i + <span class="number">1</span>) <span class="keyword">begin</span></span><br><span class="line">				dm[i] &lt;= <span class="number">32&#x27;h0000_0000</span>;</span><br><span class="line">			<span class="keyword">end</span></span><br><span class="line">		<span class="keyword">end</span></span><br><span class="line">		<span class="keyword">else</span> <span class="keyword">begin</span></span><br><span class="line">			<span class="keyword">if</span> (WE) <span class="keyword">begin</span></span><br><span class="line">				dm[MemAddr] &lt;= WD;</span><br><span class="line">				<span class="built_in">$display</span>(<span class="string">&quot;@%h: *%h &lt;= %h&quot;</span>, PC, Addr, WD);</span><br><span class="line">			<span class="keyword">end</span></span><br><span class="line">		<span class="keyword">end</span></span><br><span class="line">	<span class="keyword">end</span></span><br><span class="line"></span><br><span class="line">	<span class="keyword">assign</span> MemAddr = addr[<span class="number">13</span>:<span class="number">2</span>];</span><br><span class="line">	<span class="keyword">assign</span> RD = dm[MemAddr];</span><br><span class="line">	<span class="keyword">assign</span> Addr = &#123;&#123;<span class="number">16</span>&#123;<span class="number">1&#x27;b0</span>&#125;&#125;, addr&#125;;</span><br><span class="line">	</span><br><span class="line"><span class="keyword">endmodule</span></span><br></pre></td></tr></table></figure></div>
+<h2 id="EXT（扩展单元）"><a href="#EXT（扩展单元）" class="headerlink" title="EXT（扩展单元）"></a>EXT（扩展单元）</h2><table>
+<thead>
+<tr>
+<th align="center">信号名</th>
+<th align="center">方向</th>
+<th align="center">描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">Imm</td>
+<td align="center">I</td>
+<td align="center">16 位立即数</td>
+</tr>
+<tr>
+<td align="center">ExtOp</td>
+<td align="center">I</td>
+<td align="center">扩展方式，高电平为符号扩展</td>
+</tr>
+<tr>
+<td align="center">Imm32</td>
+<td align="center">O</td>
+<td align="center">32 位输出</td>
+</tr>
+</tbody></table>
+<h2 id="ALU（算术逻辑单元）"><a href="#ALU（算术逻辑单元）" class="headerlink" title="ALU（算术逻辑单元）"></a>ALU（算术逻辑单元）</h2><table>
+<thead>
+<tr>
+<th align="center">信号名</th>
+<th align="center">方向</th>
+<th align="center">描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">ALUctr</td>
+<td align="center">I</td>
+<td align="center">3 位选择信号<br>000：加法<br>001：减法<br>010：或<br>011：逻辑左移 16 位</td>
+</tr>
+<tr>
+<td align="center">Op1</td>
+<td align="center">I</td>
+<td align="center">32 位操作数</td>
+</tr>
+<tr>
+<td align="center">Op2</td>
+<td align="center">I</td>
+<td align="center">32 位操作数</td>
+</tr>
+<tr>
+<td align="center">Zero</td>
+<td align="center">O</td>
+<td align="center">判断运算结果是否为 0</td>
+</tr>
+<tr>
+<td align="center">ALUResult</td>
+<td align="center">O</td>
+<td align="center">32 位运算结果</td>
+</tr>
+</tbody></table>
+<div class="code-container" data-rel="Verilog"><figure class="iseeu highlight verilog"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">module</span> ALU(</span><br><span class="line">    <span class="keyword">input</span> [<span class="number">2</span>:<span class="number">0</span>] ALUctr,</span><br><span class="line">    <span class="keyword">input</span> [<span class="number">31</span>:<span class="number">0</span>] Op1,</span><br><span class="line">    <span class="keyword">input</span> [<span class="number">31</span>:<span class="number">0</span>] Op2,</span><br><span class="line">    <span class="keyword">output</span> Zero,</span><br><span class="line">    <span class="keyword">output</span> <span class="keyword">reg</span> [<span class="number">31</span>:<span class="number">0</span>] ALUResult</span><br><span class="line">    );</span><br><span class="line"></span><br><span class="line">	<span class="keyword">always</span> @(*) <span class="keyword">begin</span></span><br><span class="line">		<span class="keyword">case</span> (ALUctr)</span><br><span class="line">			<span class="number">3&#x27;b000</span>: ALUResult = Op1 + Op2;</span><br><span class="line">			<span class="number">3&#x27;b001</span>: ALUResult = Op1 - Op2;</span><br><span class="line">			<span class="number">3&#x27;b010</span>: ALUResult = Op1 | Op2;</span><br><span class="line">			<span class="number">3&#x27;b011</span>: ALUResult = Op2 &lt;&lt; <span class="number">16</span>;</span><br><span class="line">		<span class="keyword">endcase</span></span><br><span class="line">	<span class="keyword">end</span></span><br><span class="line">	</span><br><span class="line">	<span class="keyword">assign</span> Zero = (ALUResult == <span class="number">0</span>) ? <span class="number">1&#x27;b1</span> : <span class="number">1&#x27;b0</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">endmodule</span></span><br></pre></td></tr></table></figure></div>
+<h2 id="Controller（控制器）"><a href="#Controller（控制器）" class="headerlink" title="Controller（控制器）"></a>Controller（控制器）</h2><table>
+<thead>
+<tr>
+<th align="center">信号名</th>
+<th align="center">方向</th>
+<th align="center">描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">Instr</td>
+<td align="center">I</td>
+<td align="center">32 位指令</td>
+</tr>
+<tr>
+<td align="center">RegDst</td>
+<td align="center">O</td>
+<td align="center">控制信号，确定目标寄存器的指定方式<br>0：将结果写入 <code>rt</code> 寄存器（I 型指令）<br>1：将结果写入 <code>rd</code> 寄存器（R 型指令）</td>
+</tr>
+<tr>
+<td align="center">ALUSrc</td>
+<td align="center">O</td>
+<td align="center">控制信号，选择 ALU 的第二个源操作数<br>0：来自寄存器文件的一个寄存器<br>1：来自指令中的立即数字段</td>
+</tr>
+<tr>
+<td align="center">MemtoReg</td>
+<td align="center">O</td>
+<td align="center">控制信号，控制数据从内存到寄存器的传输<br>0：执行指令后，不将内存中的数据写入寄存器文件<br>1：执行指令后，将内存中的数据写入寄存器文件</td>
+</tr>
+<tr>
+<td align="center">RegWrite</td>
+<td align="center">O</td>
+<td align="center">控制信号，控制数据是否从内部数据路径写入寄存器文件<br>0：不应该将执行结果写入寄存器文件<br>1：应该将执行结果写入寄存器文件中的一个指定寄存器</td>
+</tr>
+<tr>
+<td align="center">MemWrite</td>
+<td align="center">O</td>
+<td align="center">控制信号，指示是否应该将数据从数据缓存写入DM</td>
+</tr>
+<tr>
+<td align="center">BranchOp</td>
+<td align="center">O</td>
+<td align="center">3 位控制信号，表示跳转的种类<br>001：beq 跳转<br>010：jal 跳转，需要将 PC + 4 写入 31 号寄存器 （$ra）<br>011：jr 跳转</td>
+</tr>
+<tr>
+<td align="center">ExtOp</td>
+<td align="center">O</td>
+<td align="center">控制信号，操作数扩展信号<br>0：0扩展<br>1：符号扩展</td>
+</tr>
+<tr>
+<td align="center">ALUctr</td>
+<td align="center">O</td>
+<td align="center">3 位控制信号，选择 ALU 运算符</td>
+</tr>
+<tr>
+<td align="center">imm16</td>
+<td align="center">O</td>
+<td align="center">16 位立即数</td>
+</tr>
+<tr>
+<td align="center">imm26</td>
+<td align="center">O</td>
+<td align="center">26 位立即数</td>
+</tr>
+<tr>
+<td align="center">rs</td>
+<td align="center">O</td>
+<td align="center">5 位 rs</td>
+</tr>
+<tr>
+<td align="center">rt</td>
+<td align="center">O</td>
+<td align="center">5 位 rt</td>
+</tr>
+<tr>
+<td align="center">rd</td>
+<td align="center">O</td>
+<td align="center">5 位 rd</td>
+</tr>
+</tbody></table>
+<table>
+<thead>
+<tr>
+<th align="center">指令</th>
+<th align="center">add</th>
+<th align="center">sub</th>
+<th align="center">ori</th>
+<th align="center">lw</th>
+<th align="center">sw</th>
+<th align="center">beq</th>
+<th align="center">lui</th>
+<th align="center">jal</th>
+<th align="center">jr</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">RegDst</td>
+<td align="center">1</td>
+<td align="center">1</td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">ALUSrc</td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center">1</td>
+<td align="center">1</td>
+<td align="center">1</td>
+<td align="center"></td>
+<td align="center">1</td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">MemtoReg</td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center">1</td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">RegWrite</td>
+<td align="center">1</td>
+<td align="center">1</td>
+<td align="center">1</td>
+<td align="center">1</td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center">1</td>
+<td align="center">1</td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">MemWrite</td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center">1</td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">BranchOp</td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center">001</td>
+<td align="center"></td>
+<td align="center">010</td>
+<td align="center">011</td>
+</tr>
+<tr>
+<td align="center">ExtOp</td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center">1</td>
+<td align="center">1</td>
+<td align="center">1</td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">ALUctr</td>
+<td align="center">000</td>
+<td align="center">001</td>
+<td align="center">010</td>
+<td align="center">000</td>
+<td align="center">000</td>
+<td align="center">001</td>
+<td align="center">011</td>
+<td align="center">000</td>
+<td align="center">000</td>
+</tr>
+</tbody></table>
+<table>
+<thead>
+<tr>
+<th align="center">指令</th>
+<th align="center">op5</th>
+<th align="center">op4</th>
+<th align="center">op3</th>
+<th align="center">op2</th>
+<th align="center">op1</th>
+<th align="center">op0</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">add</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">0</td>
+</tr>
+<tr>
+<td align="center">sub</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">0</td>
+</tr>
+<tr>
+<td align="center">ori</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">1</td>
+<td align="center">1</td>
+<td align="center">0</td>
+<td align="center">1</td>
+</tr>
+<tr>
+<td align="center">lw</td>
+<td align="center">1</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">1</td>
+<td align="center">1</td>
+</tr>
+<tr>
+<td align="center">sw</td>
+<td align="center">1</td>
+<td align="center">0</td>
+<td align="center">1</td>
+<td align="center">0</td>
+<td align="center">1</td>
+<td align="center">1</td>
+</tr>
+<tr>
+<td align="center">beq</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">1</td>
+<td align="center">0</td>
+<td align="center">0</td>
+</tr>
+<tr>
+<td align="center">lui</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">1</td>
+<td align="center">1</td>
+<td align="center">1</td>
+<td align="center">1</td>
+</tr>
+<tr>
+<td align="center">nop</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">0</td>
+</tr>
+<tr>
+<td align="center">jal</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">1</td>
+<td align="center">1</td>
+</tr>
+<tr>
+<td align="center">jr</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">0</td>
+</tr>
+</tbody></table>
+<table>
+<thead>
+<tr>
+<th align="center">指令</th>
+<th align="center">func5</th>
+<th align="center">func4</th>
+<th align="center">func3</th>
+<th align="center">func2</th>
+<th align="center">func1</th>
+<th align="center">func0</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">add</td>
+<td align="center">1</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">0</td>
+</tr>
+<tr>
+<td align="center">sub</td>
+<td align="center">1</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">1</td>
+<td align="center">0</td>
+</tr>
+<tr>
+<td align="center">nop</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">0</td>
+</tr>
+<tr>
+<td align="center">jr</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">1</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">0</td>
+</tr>
+</tbody></table>
+<div class="code-container" data-rel="Verilog"><figure class="iseeu highlight verilog"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">module</span> Controller(</span><br><span class="line">    <span class="keyword">input</span> [<span class="number">31</span>:<span class="number">0</span>] Instr,</span><br><span class="line">    <span class="keyword">output</span> RegDst,</span><br><span class="line">    <span class="keyword">output</span> ALUSrc,</span><br><span class="line">	<span class="comment">// more</span></span><br><span class="line">    );</span><br><span class="line">	 </span><br><span class="line">	<span class="keyword">wire</span> [<span class="number">5</span>:<span class="number">0</span>] op;</span><br><span class="line">	<span class="keyword">wire</span> [<span class="number">5</span>:<span class="number">0</span>] func;</span><br><span class="line">	</span><br><span class="line">	<span class="keyword">assign</span> op = Instr[<span class="number">31</span>:<span class="number">26</span>];</span><br><span class="line">	<span class="keyword">assign</span> func = Instr[<span class="number">5</span>:<span class="number">0</span>];</span><br><span class="line">	<span class="keyword">assign</span> imm16 = Instr[<span class="number">15</span>:<span class="number">0</span>];</span><br><span class="line">	<span class="keyword">assign</span> imm26 = Instr[<span class="number">25</span>:<span class="number">0</span>];</span><br><span class="line">	<span class="keyword">assign</span> rs = Instr[<span class="number">25</span>:<span class="number">21</span>];</span><br><span class="line">	<span class="keyword">assign</span> rt = Instr[<span class="number">20</span>:<span class="number">16</span>];</span><br><span class="line">	<span class="keyword">assign</span> rd = Instr[<span class="number">15</span>:<span class="number">11</span>];</span><br><span class="line">	</span><br><span class="line">	<span class="keyword">wire</span> add = (op == <span class="number">6&#x27;b0</span> &amp;&amp; func == <span class="number">6&#x27;b100000</span>);</span><br><span class="line">	<span class="keyword">wire</span> sub = (op == <span class="number">6&#x27;b0</span> &amp;&amp; func == <span class="number">6&#x27;b100010</span>);</span><br><span class="line">	<span class="comment">// more</span></span><br><span class="line">	</span><br><span class="line">	<span class="keyword">assign</span> RegDst = add || sub;</span><br><span class="line">	<span class="keyword">assign</span> ALUSrc = ori || lw || sw || lui;</span><br><span class="line">	<span class="comment">// more</span></span><br><span class="line">	<span class="keyword">assign</span> BranchOp[<span class="number">0</span>] = beq || jr;</span><br><span class="line">	<span class="keyword">assign</span> BranchOp[<span class="number">1</span>] = jal || jr;</span><br><span class="line">	<span class="keyword">assign</span> BranchOp[<span class="number">2</span>] = <span class="number">0</span>;</span><br><span class="line">	<span class="comment">// more</span></span><br><span class="line">	</span><br><span class="line"><span class="keyword">endmodule</span></span><br></pre></td></tr></table></figure></div>
+<h2 id="mips（顶层模块组装）"><a href="#mips（顶层模块组装）" class="headerlink" title="mips（顶层模块组装）"></a>mips（顶层模块组装）</h2><h3 id="机器码指令"><a href="#机器码指令" class="headerlink" title="机器码指令"></a>机器码指令</h3><h4 id="J-类型指令"><a href="#J-类型指令" class="headerlink" title="J 类型指令"></a>J 类型指令</h4><p>本次项目中，<code>jal, jr</code> 是 J 类型指令。<br><code>jal</code>：</p>
+<table>
+<thead>
+<tr>
+<th align="center">op</th>
+<th align="center">target</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">6bit</td>
+<td align="center">26bit</td>
+</tr>
+</tbody></table>
+<p><strong>注意</strong>：将 PC 的最高 4 位与 target 拼接，最低两位补 0 作为新的 PC 值；原 PC 值 +4 存在 31 号寄存器中。<br><code>jr</code>：</p>
+<table>
+<thead>
+<tr>
+<th align="center">op</th>
+<th align="center">rs</th>
+<th align="center">padding</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">6bit</td>
+<td align="center">5bit</td>
+<td align="center">21bit</td>
+</tr>
+</tbody></table>
+<p><strong>注意</strong>：取出 rs 寄存器的值，作为新的 PC 。</p>
+<h3 id="寄存器编码"><a href="#寄存器编码" class="headerlink" title="寄存器编码"></a>寄存器编码</h3><table>
+<thead>
+<tr>
+<th align="center">reg</th>
+<th align="center">name</th>
+<th align="center">usage</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">$0</td>
+<td align="center">$zero</td>
+<td align="center">常量 0</td>
+</tr>
+<tr>
+<td align="center">$1</td>
+<td align="center">$at</td>
+<td align="center">保留给汇编器使用的临时变量</td>
+</tr>
+<tr>
+<td align="center">$2-$3</td>
+<td align="center">$v0-$v1</td>
+<td align="center">函数调用返回值</td>
+</tr>
+<tr>
+<td align="center">$4-$7</td>
+<td align="center">$a0-$a3</td>
+<td align="center">函数调用参数</td>
+</tr>
+<tr>
+<td align="center">$8-$15</td>
+<td align="center">$t0-$t7</td>
+<td align="center">临时变量</td>
+</tr>
+<tr>
+<td align="center">$16-$23</td>
+<td align="center">$s0-$s7</td>
+<td align="center">需要保存的变量</td>
+</tr>
+<tr>
+<td align="center">$24-$25</td>
+<td align="center">$t8-$t9</td>
+<td align="center">临时变量</td>
+</tr>
+<tr>
+<td align="center">$26-$27</td>
+<td align="center">$k0-$k1</td>
+<td align="center">留给操作系统使用</td>
+</tr>
+<tr>
+<td align="center">$28</td>
+<td align="center">$gp</td>
+<td align="center">全局指针</td>
+</tr>
+<tr>
+<td align="center">$29</td>
+<td align="center">$sp</td>
+<td align="center">堆栈指针</td>
+</tr>
+<tr>
+<td align="center">$30</td>
+<td align="center">$fp</td>
+<td align="center">帧指针</td>
+</tr>
+<tr>
+<td align="center">$31</td>
+<td align="center">$ra</td>
+<td align="center">返回地址</td>
+</tr>
+<tr>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+</tbody></table>
+<h3 id="要点简析"><a href="#要点简析" class="headerlink" title="要点简析"></a>要点简析</h3><div class="code-container" data-rel="Verilog"><figure class="iseeu highlight verilog"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">module</span> mips(</span><br><span class="line">    <span class="keyword">input</span> clk,</span><br><span class="line">    <span class="keyword">input</span> reset</span><br><span class="line">    );</span><br><span class="line">	 </span><br><span class="line">	<span class="keyword">wire</span> [<span class="number">31</span>:<span class="number">0</span>] NPC, Instr, PC;</span><br><span class="line">	IM u_IM (</span><br><span class="line">		<span class="variable">.clk</span>(clk),</span><br><span class="line">		<span class="variable">.reset</span>(reset),</span><br><span class="line">		<span class="variable">.NPC</span>(NPC),</span><br><span class="line">		<span class="variable">.Instr</span>(Instr),</span><br><span class="line">		<span class="variable">.PC</span>(PC)</span><br><span class="line">	);</span><br><span class="line">	</span><br><span class="line">	<span class="keyword">wire</span> [<span class="number">15</span>:<span class="number">0</span>] imm16;</span><br><span class="line">	<span class="keyword">wire</span> [<span class="number">25</span>:<span class="number">0</span>] imm26;</span><br><span class="line">	<span class="keyword">wire</span> [<span class="number">2</span>:<span class="number">0</span>] BranchOp, BRCHOp;</span><br><span class="line">	<span class="keyword">assign</span> BRCHOp = (BranchOp != <span class="number">3&#x27;b001</span>) ? BranchOp :</span><br><span class="line">						 (Zero == <span class="number">1&#x27;b1</span>) ? BranchOp : <span class="number">3&#x27;b000</span>;</span><br><span class="line">	<span class="keyword">wire</span> [<span class="number">31</span>:<span class="number">0</span>] jrreg;</span><br><span class="line">	PC u_PC (</span><br><span class="line">		<span class="variable">.PC</span>(PC),</span><br><span class="line">		<span class="variable">.imm16</span>(imm16),</span><br><span class="line">		<span class="variable">.imm26</span>(imm26),</span><br><span class="line">		<span class="variable">.BranchOp</span>(BRCHOp),</span><br><span class="line">		<span class="variable">.jrreg</span>(jrreg),</span><br><span class="line">		<span class="variable">.NPC</span>(NPC)</span><br><span class="line">	);</span><br><span class="line">	</span><br><span class="line">	<span class="comment">// Controller</span></span><br><span class="line">	</span><br><span class="line">	<span class="keyword">wire</span> [<span class="number">31</span>:<span class="number">0</span>] immALU;</span><br><span class="line">	EXT u_EXT_ALU (</span><br><span class="line">		<span class="variable">.Imm</span>(imm16),</span><br><span class="line">		<span class="variable">.ExtOp</span>(ExtOp),</span><br><span class="line">		<span class="variable">.Imm32</span>(immALU)</span><br><span class="line">	);</span><br><span class="line">	</span><br><span class="line">	<span class="keyword">wire</span> [<span class="number">31</span>:<span class="number">0</span>] RD1, RD2, ALUResult;</span><br><span class="line">	<span class="keyword">wire</span> Zero;</span><br><span class="line">	ALU u_ALU (</span><br><span class="line">		<span class="variable">.ALUctr</span>(ALUctr),</span><br><span class="line">		<span class="variable">.Op1</span>(RD1),</span><br><span class="line">		<span class="variable">.Op2</span>(ALUSrc ? immALU : RD2),</span><br><span class="line">		<span class="variable">.Zero</span>(Zero),</span><br><span class="line">		<span class="variable">.ALUResult</span>(ALUResult)</span><br><span class="line">	);</span><br><span class="line">	</span><br><span class="line">	<span class="keyword">wire</span> [<span class="number">31</span>:<span class="number">0</span>] RD;</span><br><span class="line">	GRF u_GRF (</span><br><span class="line">		<span class="variable">.clk</span>(clk),</span><br><span class="line">		<span class="variable">.reset</span>(reset),</span><br><span class="line">		<span class="variable">.WE</span>(RegWrite),</span><br><span class="line">		<span class="variable">.A1</span>(rs),</span><br><span class="line">		<span class="variable">.A2</span>(rt),</span><br><span class="line">		<span class="variable">.A3</span>(RegDst ? rd : </span><br><span class="line">		   (BranchOp == <span class="number">3&#x27;b010</span>) ? <span class="number">5&#x27;d31</span> : rt),</span><br><span class="line">		<span class="variable">.WD</span>(MemtoReg ? RD : </span><br><span class="line">		   (BranchOp == <span class="number">3&#x27;b010</span>) ? (PC + <span class="number">3&#x27;d4</span>) : ALUResult),</span><br><span class="line">		<span class="variable">.PC</span>(PC),</span><br><span class="line">		<span class="variable">.RD1</span>(RD1),</span><br><span class="line">		<span class="variable">.RD2</span>(RD2)</span><br><span class="line">	);</span><br><span class="line">	<span class="keyword">assign</span> jrreg = RD1;</span><br><span class="line">	</span><br><span class="line">	DM u_DM (</span><br><span class="line">		<span class="variable">.clk</span>(clk),</span><br><span class="line">		<span class="variable">.reset</span>(reset),</span><br><span class="line">		<span class="variable">.WE</span>(MemWrite),</span><br><span class="line">		<span class="variable">.addr</span>(ALUResult[<span class="number">15</span>:<span class="number">0</span>]),</span><br><span class="line">		<span class="variable">.WD</span>(RD2),</span><br><span class="line">		<span class="variable">.PC</span>(PC),</span><br><span class="line">		<span class="variable">.RD</span>(RD)</span><br><span class="line">	);</span><br><span class="line"></span><br><span class="line"><span class="keyword">endmodule</span></span><br></pre></td></tr></table></figure></div>
+
+<p>照着 P3 翻译即可，没啥需要具体说的。和 P3 的不同之处应该是使用 3bit 存储跳转指令了吧，其实也方便课上添加跳转。<strong>祝 P4 上机顺利！</strong></p>
+<h2 id="思考题"><a href="#思考题" class="headerlink" title="思考题"></a>思考题</h2><blockquote>
+<ol>
+<li>阅读下面给出的 DM 的输入示例中（示例 DM 容量为 4KB，即 32bit × 1024字），根据你的理解回答，这个 addr 信号又是从哪里来的？地址信号 addr 位数为什么是 [11:2] 而不是 [9:0] ？</li>
+</ol>
+</blockquote>
+<p>addr 直接与 ALUResult 相连，因为 DM 的写入地址一般是一个寄存器值与立即数偏转相加的结果；因为在 DM 中是按字存储的，需要舍弃最低两位。</p>
+<blockquote>
+<ol start="2">
+<li>思考上述两种控制器设计的译码方式，给出代码示例，并尝试对比各方式的优劣。</li>
+</ol>
+</blockquote>
+<p><strong>指令对应的控制信号如何取值</strong>：即为笔者使用的方法，这种方式非常直观，且符合逻辑，从机器码到操作数再到控制信号，一目了然。<br><strong>控制信号每种取值所对应的指令</strong>：似乎指令与控制信号之间联系更加紧密了（？），没有太多体会。</p>
+<blockquote>
+<ol start="3">
+<li>在相应的部件中，复位信号的设计都是<strong>同步复位</strong>，这与 P3 中的设计要求不同。请对比<strong>同步复位</strong>与<strong>异步复位</strong>这两种方式的 reset 信号与 clk 信号优先级的关系。</li>
+</ol>
+</blockquote>
+<p>同步复位，clk 优先级高；异步复位，reset 优先级高。</p>
+<blockquote>
+<ol start="4">
+<li>C 语言是一种弱类型程序设计语言。C 语言中不对计算结果溢出进行处理，这意味着 C 语言要求程序员必须很清楚计算结果是否会导致溢出。因此，如果仅仅支持 C 语言，MIPS 指令的所有计算指令均可以忽略溢出。 请说明为什么在忽略溢出的前提下，addi 与 addiu 是等价的，add 与 addu 是等价的。提示：阅读《MIPS32® Architecture For Programmers Volume II: The MIPS32® Instruction Set》中相关指令的 Operation 部分。</li>
+</ol>
+</blockquote>
+<p>addi 和 addiu 都是将 rs 与立即数（符号扩展）相加，结果存储在 rd 中；add 和 addu 都是将 rs 和 rt 相加，结果存储在 rd 中。</p>
+
+		</div>
+
+		
+		<div class="post-copyright-info w-full my-8 px-2 sm:px-6 md:px-8">
+			<div class="article-copyright-info-container">
+    <ul>
+        <li><strong>Title:</strong> 计算机组成CO：P4课下-Verilog搭建单周期CPU</li>
+        <li><strong>Author:</strong> BaconToast</li>
+        <li><strong>Created at
+                :</strong> 2025-11-18 11:15:55</li>
+        
+            <li>
+                <strong>Updated at
+                    :</strong> 2025-11-18 11:22:00
+            </li>
+        
+        <li>
+            <strong>Link:</strong> https://bacontoast-pro.github.io/2025/11/18/co/p4/
+        </li>
+        <li>
+            <strong>
+                License:
+            </strong>
+            
+
+            
+                This work is licensed under <a class="license" target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0">CC BY-NC-SA 4.0</a>.
+            
+        </li>
+    </ul>
+</div>
+
+		</div>
+		
+
+		
+		<ul class="post-tags-box text-lg mt-1.5 flex-wrap justify-center flex md:hidden">
+			
+			<li class="tag-item mx-0.5">
+				<a href="/tags/CO/">#CO</a>&nbsp;
+			</li>
+			
+			<li class="tag-item mx-0.5">
+				<a href="/tags/Verilog/">#Verilog</a>&nbsp;
+			</li>
+			
+			<li class="tag-item mx-0.5">
+				<a href="/tags/MIPS/">#MIPS</a>&nbsp;
+			</li>
+			
+		</ul>
+		
+
+		
+
+		
+		<div class="article-nav my-8 flex justify-between items-center px-2 sm:px-6 md:px-8">
+			
+			<div class="article-prev border-border-color shadow-redefine-flat shadow-shadow-color-2 rounded-medium px-4 py-2 hover:shadow-redefine-flat-hover hover:shadow-shadow-color-2">
+				<a class="prev" rel="prev" href="/2025/11/18/co/p5/">
+					<span class="left arrow-icon flex justify-center items-center">
+						<i class="fa-solid fa-chevron-left"></i>
+					</span>
+					<span class="title flex justify-center items-center">
+						<span class="post-nav-title-item truncate max-w-48">计算机组成CO：P5课下-Verilog搭建流水线CPU-1</span>
+						<span class="post-nav-item">Prev posts</span>
+					</span>
+				</a>
+			</div>
+			
+			
+			<div class="article-next border-border-color shadow-redefine-flat shadow-shadow-color-2 rounded-medium px-4 py-2 hover:shadow-redefine-flat-hover hover:shadow-shadow-color-2">
+				<a class="next" rel="next" href="/2025/11/18/co/p3/">
+					<span class="title flex justify-center items-center">
+						<span class="post-nav-title-item truncate max-w-48">计算机组成CO：P3课下-Logisim搭建单周期CPU</span>
+						<span class="post-nav-item">Next posts</span>
+					</span>
+					<span class="right arrow-icon flex justify-center items-center">
+						<i class="fa-solid fa-chevron-right"></i>
+					</span>
+				</a>
+			</div>
+			
+		</div>
+		
+
+
+		
+		<div class="comment-container px-2 sm:px-6 md:px-8 pb-8">
+			<div class="comments-container mt-10 w-full ">
+    <div id="comment-anchor" class="w-full h-2.5"></div>
+    <div class="comment-area-title w-full my-1.5 md:my-2.5 text-xl md:text-3xl font-bold">
+        Comments
+    </div>
+    
+
+        
+            
+    <div id="waline"></div>
+    <script type="module" data-swup-reload-script>
+      import { init } from '/js/libs/waline.mjs';
+
+      function loadWaline() {
+        init({
+          el: '#waline',
+          serverURL: 'https://example.example.com',
+          dark: 'body[class~="dark-mode"]',
+          reaction: false,
+          requiredMeta: ['nick', 'mail'],
+          emoji: [],
+                    lang: 'zh-CN',
+        });
+      }
+
+      if (typeof swup !== 'undefined') {
+        loadWaline();
+      } else {
+        window.addEventListener('DOMContentLoaded', loadWaline);
+      }
+    </script>
+
+
+
+        
+    
+</div>
+
+		</div>
+		
+	</div>
+
+	
+	<div class="toc-content-container">
+		<div class="post-toc-wrap">
+	<div class="post-toc">
+		<div class="toc-title">On this page</div>
+		<div class="page-title">计算机组成CO：P4课下-Verilog搭建单周期CPU</div>
+		<ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#IM%EF%BC%88%E6%8C%87%E4%BB%A4%E5%AD%98%E5%82%A8%E5%99%A8%EF%BC%89"><span class="nav-text">IM（指令存储器）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#PC%EF%BC%88%E7%A8%8B%E5%BA%8F%E8%AE%A1%E6%95%B0%E5%99%A8%EF%BC%89"><span class="nav-text">PC（程序计数器）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#GRF%EF%BC%88%E9%80%9A%E7%94%A8%E5%AF%84%E5%AD%98%E5%99%A8%E7%BB%84%EF%BC%89"><span class="nav-text">GRF（通用寄存器组）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#DM%EF%BC%88%E6%95%B0%E6%8D%AE%E5%AD%98%E5%82%A8%E5%99%A8%EF%BC%89"><span class="nav-text">DM（数据存储器）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#EXT%EF%BC%88%E6%89%A9%E5%B1%95%E5%8D%95%E5%85%83%EF%BC%89"><span class="nav-text">EXT（扩展单元）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ALU%EF%BC%88%E7%AE%97%E6%9C%AF%E9%80%BB%E8%BE%91%E5%8D%95%E5%85%83%EF%BC%89"><span class="nav-text">ALU（算术逻辑单元）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Controller%EF%BC%88%E6%8E%A7%E5%88%B6%E5%99%A8%EF%BC%89"><span class="nav-text">Controller（控制器）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#mips%EF%BC%88%E9%A1%B6%E5%B1%82%E6%A8%A1%E5%9D%97%E7%BB%84%E8%A3%85%EF%BC%89"><span class="nav-text">mips（顶层模块组装）</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9C%BA%E5%99%A8%E7%A0%81%E6%8C%87%E4%BB%A4"><span class="nav-text">机器码指令</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AF%84%E5%AD%98%E5%99%A8%E7%BC%96%E7%A0%81"><span class="nav-text">寄存器编码</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%A6%81%E7%82%B9%E7%AE%80%E6%9E%90"><span class="nav-text">要点简析</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%9D%E8%80%83%E9%A2%98"><span class="nav-text">思考题</span></a></li></ol>
+
+	</div>
+</div>
+	</div>
+	
+</div>
+			</div>
+
+			
+		</div>
+
+		<div class="main-content-footer">
+			<footer class="footer mt-5 py-5 h-auto text-base text-third-text-color relative border-t-2 border-t-border-color">
+    <div class="info-container py-3 text-center">
+        
+        <div class="text-center">
+            &copy;
+            
+              <span>2025</span>
+              -
+            
+            2025&nbsp;&nbsp;<i class="fa-solid fa-heart fa-beat" style="--fa-animation-duration: 0.5s; color: #f54545"></i>&nbsp;&nbsp;<a href="/">BaconToast</a>
+            
+                
+                <p class="post-count space-x-0.5">
+                    <span>
+                        10 posts in total
+                    </span>
+                    
+                </p>
+            
+        </div>
+        
+            <script data-swup-reload-script src="https://cn.vercount.one/js"></script>
+            <div class="relative text-center lg:absolute lg:right-[20px] lg:top-1/2 lg:-translate-y-1/2 lg:text-right">
+                
+                    <span id="busuanzi_container_site_uv" class="lg:!block">
+                        <span class="text-sm">VISITOR COUNT</span>
+                        <span id="busuanzi_value_site_uv"></span>
+                    </span>
+                
+                
+                    <span id="busuanzi_container_site_pv" class="lg:!block">
+                        <span class="text-sm">TOTAL PAGE VIEWS</span>
+                        <span id="busuanzi_value_site_pv"></span>
+                    </span>
+                
+            </div>
+        
+        <div class="relative text-center lg:absolute lg:left-[20px] lg:top-1/2 lg:-translate-y-1/2 lg:text-left">
+            <span class="lg:block text-sm">POWERED BY <?xml version="1.0" encoding="utf-8"?><!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"><svg class="relative top-[2px] inline-block align-baseline" version="1.1" id="圖層_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="1rem" height="1rem" viewBox="0 0 512 512" enable-background="new 0 0 512 512" xml:space="preserve"><path fill="#0E83CD" d="M256.4,25.8l-200,115.5L56,371.5l199.6,114.7l200-115.5l0.4-230.2L256.4,25.8z M349,354.6l-18.4,10.7l-18.6-11V275H200v79.6l-18.4,10.7l-18.6-11v-197l18.5-10.6l18.5,10.8V237h112v-79.6l18.5-10.6l18.5,10.8V354.6z"/></svg><a target="_blank" class="text-base" href="https://hexo.io">Hexo</a></span>
+            <span class="text-sm lg:block">THEME&nbsp;<a class="text-base" target="_blank" href="https://github.com/EvanNotFound/hexo-theme-redefine">Redefine v2.8.5</a></span>
+        </div>
+        
+        
+            <div>
+                Blog up for <span class="odometer" id="runtime_days" ></span> days <span class="odometer" id="runtime_hours"></span> hrs <span class="odometer" id="runtime_minutes"></span> Min <span class="odometer" id="runtime_seconds"></span> Sec
+            </div>
+        
+        
+            <script data-swup-reload-script>
+                try {
+                    function odometer_init() {
+                    const elements = document.querySelectorAll('.odometer');
+                    elements.forEach(el => {
+                        new Odometer({
+                            el,
+                            format: '( ddd).dd',
+                            duration: 200
+                        });
+                    });
+                    }
+                    odometer_init();
+                } catch (error) {}
+            </script>
+        
+        
+        
+    </div>  
+</footer>
+		</div>
+	</div>
+
+	
+	<div class="post-tools">
+		<div class="post-tools-container">
+	<ul class="article-tools-list">
+		<!-- TOC aside toggle -->
+		
+		<li class="right-bottom-tools page-aside-toggle">
+			<i class="fa-regular fa-outdent"></i>
+		</li>
+		
+
+		<!-- go comment -->
+		
+		<li class="go-comment">
+			<i class="fa-regular fa-comments"></i>
+		</li>
+		
+	</ul>
+</div>
+	</div>
+	
+
+	<div class="right-side-tools-container">
+		<div class="side-tools-container">
+	<ul class="hidden-tools-list">
+		<li class="right-bottom-tools tool-font-adjust-plus flex justify-center items-center">
+			<i class="fa-regular fa-magnifying-glass-plus"></i>
+		</li>
+
+		<li class="right-bottom-tools tool-font-adjust-minus flex justify-center items-center">
+			<i class="fa-regular fa-magnifying-glass-minus"></i>
+		</li>
+
+		<li class="right-bottom-tools tool-dark-light-toggle flex justify-center items-center">
+			<i class="fa-regular fa-moon"></i>
+		</li>
+
+		<!-- rss -->
+		
+
+		
+
+		<li class="right-bottom-tools tool-scroll-to-bottom flex justify-center items-center">
+			<i class="fa-regular fa-arrow-down"></i>
+		</li>
+	</ul>
+
+	<ul class="visible-tools-list">
+		<li class="right-bottom-tools toggle-tools-list flex justify-center items-center">
+			<i class="fa-regular fa-cog fa-spin"></i>
+		</li>
+		
+		<li class="right-bottom-tools tool-scroll-to-top flex justify-center items-center">
+			<i class="arrow-up fas fa-arrow-up"></i>
+			<span class="percent"></span>
+		</li>
+		
+		
+	</ul>
+</div>
+	</div>
+
+	<div class="image-viewer-container">
+	<img src="">
+</div>
+
+	
+
+</main>
+
+
+
+<script src="/js/build/libs/Swup.min.js"></script>
+
+<script src="/js/build/libs/SwupSlideTheme.min.js"></script>
+
+<script src="/js/build/libs/SwupScriptsPlugin.min.js"></script>
+
+<script src="/js/build/libs/SwupProgressPlugin.min.js"></script>
+
+<script src="/js/build/libs/SwupScrollPlugin.min.js"></script>
+
+<script src="/js/build/libs/SwupPreloadPlugin.min.js"></script>
+
+<script>
+    const swup = new Swup({
+        plugins: [
+            new SwupScriptsPlugin({
+                optin: true,
+            }),
+            new SwupProgressPlugin(),
+            new SwupScrollPlugin({
+                offset: 80,
+            }),
+            new SwupSlideTheme({
+                mainElement: ".main-content-body",
+            }),
+            new SwupPreloadPlugin(),
+        ],
+        containers: ["#swup"],
+    });
+</script>
+
+
+
+
+	
+<script src="/js/build/tools/imageViewer.js" type="module"></script>
+
+<script src="/js/build/utils.js" type="module"></script>
+
+<script src="/js/build/main.js" type="module"></script>
+
+<script src="/js/build/layouts/navbarShrink.js" type="module"></script>
+
+<script src="/js/build/tools/scrollTopBottom.js" type="module"></script>
+
+<script src="/js/build/tools/lightDarkSwitch.js" type="module"></script>
+
+<script src="/js/build/layouts/categoryList.js" type="module"></script>
+
+
+
+
+
+    
+<script src="/js/build/tools/codeBlock.js" type="module"></script>
+
+
+
+
+    
+<script src="/js/build/layouts/lazyload.js" type="module"></script>
+
+
+
+
+    
+<script src="/js/build/tools/runtime.js"></script>
+
+    
+<script src="/js/build/libs/odometer.min.js"></script>
+
+    
+<link rel="stylesheet" href="/assets/odometer-theme-minimal.css">
+
+
+
+
+  
+<script src="/js/build/libs/Typed.min.js"></script>
+
+  
+<script src="/js/build/plugins/typed.js" type="module"></script>
+
+
+
+
+
+
+    
+<script src="/js/build/libs/minimasonry.min.js"></script>
+
+    
+<script src="/js/build/plugins/masonry.js" type="module"></script>
+
+
+
+
+
+
+
+    
+<script src="/js/build/tools/tocToggle.js" type="module" data-swup-reload-script=""></script>
+
+<script src="/js/build/layouts/toc.js" type="module" data-swup-reload-script=""></script>
+
+<script src="/js/build/plugins/tabs.js" type="module" data-swup-reload-script=""></script>
+
+
+
+
+<script src="/js/build/libs/moment-with-locales.min.js" data-swup-reload-script=""></script>
+
+
+<script src="/js/build/layouts/essays.js" type="module" data-swup-reload-script=""></script>
+
+
+
+
+
+    
+<script src="/js/build/layouts/bookmarkNav.js" type="module"></script>
+
+
+	
+</body>
+
+</html>

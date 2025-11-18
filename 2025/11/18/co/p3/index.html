@@ -123,7 +123,7 @@
     
     <!--- Seo Part-->
     
-    <link rel="canonical" href="https://BaconToast-pro.github.io/2025/11/14/compiler/symbol/"/>
+    <link rel="canonical" href="https://BaconToast-pro.github.io/2025/11/18/co/p3/"/>
     <meta name="robots" content="index,follow">
     <meta name="googlebot" content="index,follow">
     <meta name="revisit-after" content="1 days">
@@ -133,17 +133,18 @@
         
         <meta name="description" content="Hexo Theme Redefine, Redefine Your Hexo Journey.">
 <meta property="og:type" content="article">
-<meta property="og:title" content="编译技术：语义分析">
-<meta property="og:url" content="https://bacontoast-pro.github.io/2025/11/14/compiler/symbol/index.html">
+<meta property="og:title" content="计算机组成CO：P3课下-Logisim搭建单周期CPU">
+<meta property="og:url" content="https://bacontoast-pro.github.io/2025/11/18/co/p3/index.html">
 <meta property="og:site_name" content="Hexo">
 <meta property="og:description" content="Hexo Theme Redefine, Redefine Your Hexo Journey.">
 <meta property="og:locale" content="en_US">
 <meta property="og:image" content="https://bacontoast-pro.github.io/images/redefine-og.webp">
-<meta property="article:published_time" content="2025-11-14T14:47:16.794Z">
-<meta property="article:modified_time" content="2025-11-18T03:05:05.904Z">
+<meta property="article:published_time" content="2025-11-18T03:03:14.448Z">
+<meta property="article:modified_time" content="2025-11-18T03:22:00.950Z">
 <meta property="article:author" content="BaconToast">
-<meta property="article:tag" content="Compiler">
-<meta property="article:tag" content="Java">
+<meta property="article:tag" content="CO">
+<meta property="article:tag" content="Logisim">
+<meta property="article:tag" content="MIPS">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https://bacontoast-pro.github.io/images/redefine-og.webp">
     
@@ -157,7 +158,7 @@
     
     <title>
         
-            编译技术：语义分析 | BaconToast&#39;s Shop
+            计算机组成CO：P3课下-Logisim搭建单周期CPU | BaconToast&#39;s Shop
         
     </title>
 
@@ -662,10 +663,10 @@
 			
 			
 			
-			<img src="/images/public/city.jpg" alt="编译技术：语义分析" class="w-full h-60 sm:h-72 md:h-80 object-cover sm:rounded-t-large dark:brightness-75" />
+			<img src="/images/public/sakura.jpg" alt="计算机组成CO：P3课下-Logisim搭建单周期CPU" class="w-full h-60 sm:h-72 md:h-80 object-cover sm:rounded-t-large dark:brightness-75" />
 			
 			<div class="w-full flex items-center absolute bottom-0 justify-start">
-				<h1 class="article-title-cover text-center mx-6 my-6 text-second-text-color bg-background-color-transparent px-4 py-3 text-3xl sm:text-4xl md:text-5xl font-semibold backdrop-blur-lg rounded-xl border border-border-color ">编译技术：语义分析</h1>
+				<h1 class="article-title-cover text-center mx-6 my-6 text-second-text-color bg-background-color-transparent px-4 py-3 text-3xl sm:text-4xl md:text-5xl font-semibold backdrop-blur-lg rounded-xl border border-border-color ">计算机组成CO：P3课下-Logisim搭建单周期CPU</h1>
 			</div>
 			
 		</div>
@@ -686,15 +687,15 @@
 					<div class="article-meta-info">
     <span class="article-date article-meta-item">
         <i class="fa-regular fa-pen-fancy"></i>&nbsp;
-        <span class="desktop">2025-11-14 22:47:16</span>
-        <span class="mobile">2025-11-14 22:47:16</span>
+        <span class="desktop">2025-11-18 11:03:14</span>
+        <span class="mobile">2025-11-18 11:03:14</span>
         <span class="hover-info">Created</span>
     </span>
     
         <span class="article-date article-meta-item">
             <i class="fa-regular fa-wrench"></i>&nbsp;
-            <span class="desktop">2025-11-18 11:05:05</span>
-            <span class="mobile">2025-11-18 11:05:05</span>
+            <span class="desktop">2025-11-18 11:22</span>
+            <span class="mobile">2025-11-18 11:22</span>
             <span class="hover-info">Updated</span>
         </span>
     
@@ -708,7 +709,7 @@
                     
                         
                         <li>
-                            <a href="/categories/Compiler/">Compiler</a>&nbsp;
+                            <a href="/categories/CO/">CO</a>&nbsp;
                         </li>
                     
                     
@@ -722,11 +723,15 @@
             <ul>
                 
                     <li>
-                        <a href="/tags/Compiler/">Compiler</a>&nbsp;
+                        <a href="/tags/CO/">CO</a>&nbsp;
                     </li>
                 
                     <li>
-                        | <a href="/tags/Java/">Java</a>&nbsp;
+                        | <a href="/tags/MIPS/">MIPS</a>&nbsp;
+                    </li>
+                
+                    <li>
+                        | <a href="/tags/Logisim/">Logisim</a>&nbsp;
                     </li>
                 
             </ul>
@@ -752,240 +757,812 @@
 
 
 		<div class="article-content markdown-body px-2 sm:px-6 md:px-8 pb-8">
-			<h2 id="语义分析设计"><a href="#语义分析设计" class="headerlink" title="语义分析设计"></a>语义分析设计</h2><h3 id="编码前的设计"><a href="#编码前的设计" class="headerlink" title="编码前的设计"></a>编码前的设计</h3><h4 id="需求分析"><a href="#需求分析" class="headerlink" title="需求分析"></a>需求分析</h4><p>读取语法分析构建的 AST，分析其语义构建符号表输出至 <code>symbol.txt</code>。如果存在错误则将错误信息输出至 <code>error.txt</code>。</p>
-<p>符号类型见下表。</p>
-<p><strong>语义分析符号类型</strong></p>
+			<p>处理器为 32 位单周期处理器，支持指令集：<code>add, sub, ori, lw, sw, beq, lui, nop</code>。其中 <code>nop</code> 为空指令，机器码 <code>0x00000000</code>；<code>add, sub</code> 按无符号处理，不考虑溢出；顶层有效驱动信号包括且仅包括 <strong>异步复位信号 reset</strong> 。</p>
+<h2 id="IFU（取指令单元）"><a href="#IFU（取指令单元）" class="headerlink" title="IFU（取指令单元）"></a>IFU（取指令单元）</h2><h3 id="PC（程序计数器）"><a href="#PC（程序计数器）" class="headerlink" title="PC（程序计数器）"></a>PC（程序计数器）</h3><ul>
+<li>用寄存器实现，输入信号为指令地址；</li>
+<li>提供<strong>异步复位</strong>，复位为<strong>起始地址 0x00003000</strong>，地址范围 0x00003000 ~ 0x00006FFF；</li>
+<li><strong>注意</strong>：在 32 位架构中，PC 从一条指令指向下一条指令时，递增的量为 4 （1字节），而 ROM 按字计算地址，PC 指令传给 ROM 时需要除以 4 ，在 Logisim 中，使用 Splitter 舍弃后两位；</li>
+<li>PC 的首地址 0x00003000 与 ROM 的首地址 0 对应，且复位为 0x00003000，考虑对输入端口 PC’ 减去 0x00003000，这么处理使得寄存器 PC 的值符合要求，且直接可以实现异步复位。</li>
+</ul>
+<h3 id="IM（指令存储器）"><a href="#IM（指令存储器）" class="headerlink" title="IM（指令存储器）"></a>IM（指令存储器）</h3><ul>
+<li>用 ROM 实现，容量 4096 $\times$ 32bit，起始地址 0；</li>
+<li>根据 PC 地址范围推算，ROM 实际地址宽度 12 位，与 PC 地址的 [13: 2] 位相连。</li>
+</ul>
 <table>
 <thead>
 <tr>
-<th><strong>类型</strong></th>
-<th><strong>类型名称</strong></th>
-<th><strong>类型</strong></th>
-<th><strong>类型名称</strong></th>
-<th><strong>类型</strong></th>
-<th><strong>类型名称</strong></th>
+<th align="center">信号名</th>
+<th align="center">方向</th>
+<th align="center">描述</th>
 </tr>
 </thead>
 <tbody><tr>
-<td>int型常量</td>
-<td>ConstInt</td>
-<td>int型变量</td>
-<td>Int</td>
-<td>void型函数</td>
-<td>VoidFunc</td>
+<td align="center">clk</td>
+<td align="center">I</td>
+<td align="center">时钟信号</td>
 </tr>
 <tr>
-<td>int型常量数组</td>
-<td>ConstIntArray</td>
-<td>int型变量数组</td>
-<td>IntArray</td>
-<td>int型函数</td>
-<td>IntFunc</td>
+<td align="center">rst</td>
+<td align="center">I</td>
+<td align="center">异步复位信号，将 PC 寄存器复位</td>
 </tr>
 <tr>
-<td>int型静态变量</td>
-<td>StaticInt</td>
-<td>int型静态变量数组</td>
-<td>StaticIntArray</td>
-<td></td>
-<td></td>
+<td align="center">PC’</td>
+<td align="center">I</td>
+<td align="center">32 位程序计数器信号</td>
+</tr>
+<tr>
+<td align="center">Instr</td>
+<td align="center">O</td>
+<td align="center">32 位指令信号</td>
 </tr>
 </tbody></table>
-<p><strong>语义分析错误类型</strong></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/co/p3-1.png"
+                      alt="p3-1"
+                ></p>
+<h2 id="GRF（通用寄存器组）"><a href="#GRF（通用寄存器组）" class="headerlink" title="GRF（通用寄存器组）"></a>GRF（通用寄存器组）</h2><ul>
+<li>用具有写使能的寄存器实现，寄存器总数 32 个，提供<strong>异步复位</strong>；</li>
+<li>0 号寄存器的值始终为 0，其他寄存器初始值为 0 ，在 P0 课下已经实现，可以直接套用；</li>
+<li>实现思路简述：先搭建包含 2 个寄存器的子电路，再进行地址扩展，扩展为 4reg、8reg、16reg、32reg。</li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/co/p3-2.png"
+                      alt="p3-2"
+                ></p>
+<p>  这是最底层的情况，仅有两个寄存器，地址 1 位。</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/co/p3-3.png"
+                      alt="p3-3"
+                ></p>
+<p>  这是第二层的情况，实际有 4 个寄存器，地址 2 位。其余高层类推，不再赘述。</p>
 <table>
 <thead>
 <tr>
-<th align="left"><strong>错误类型</strong></th>
-<th align="left"><strong>类别码</strong></th>
-<th align="left"><strong>解释</strong></th>
+<th align="center">信号名</th>
+<th align="center">方向</th>
+<th align="center">描述</th>
 </tr>
 </thead>
 <tbody><tr>
-<td align="left">名字重定义</td>
-<td align="left">b</td>
-<td align="left">函数名或变量名在当前作用域下重定义</td>
+<td align="center">clk</td>
+<td align="center">I</td>
+<td align="center">时钟信号</td>
 </tr>
 <tr>
-<td align="left">未定义的名字</td>
-<td align="left">c</td>
-<td align="left">使用了未定义的标识符</td>
+<td align="center">reset</td>
+<td align="center">I</td>
+<td align="center">复位信号，高电平有效，将 32 个寄存器的值全部清零</td>
 </tr>
 <tr>
-<td align="left">函数参数个数不匹配</td>
-<td align="left">d</td>
-<td align="left">函数调用时参数个数与函数定义不同</td>
+<td align="center">WE</td>
+<td align="center">I</td>
+<td align="center">写使能信号，高电平时允许向 GRF 写入数据</td>
 </tr>
 <tr>
-<td align="left">函数参数类型不匹配</td>
-<td align="left">e</td>
-<td align="left">函数调用时参数类型与函数定义不同</td>
+<td align="center">A1</td>
+<td align="center">I</td>
+<td align="center">5 位地址输入信号，指定 32 个寄存器中的一个，将其中数据输出到 RD1</td>
 </tr>
 <tr>
-<td align="left">return语句不匹配</td>
-<td align="left">f</td>
-<td align="left">无返回值的函数存在不匹配的return</td>
+<td align="center">A2</td>
+<td align="center">I</td>
+<td align="center">5 位地址输入信号，指定 32 个寄存器中的一个，将其中数据输出到 RD2</td>
 </tr>
 <tr>
-<td align="left">return语句缺失</td>
-<td align="left">g</td>
-<td align="left">有返回值的函数末尾缺少return</td>
+<td align="center">A3</td>
+<td align="center">I</td>
+<td align="center">5 位地址输入信号，指定 32 个寄存器中的一个，将其作为写入的目标寄存器</td>
 </tr>
 <tr>
-<td align="left">不能改变常量的值</td>
-<td align="left">h</td>
-<td align="left">常量无法被赋值</td>
+<td align="center">WD</td>
+<td align="center">I</td>
+<td align="center">32 位数据输入信号</td>
 </tr>
 <tr>
-<td align="left">printf格式字符与表达式个数不匹配</td>
-<td align="left">l</td>
-<td align="left">“%d”的个数与表达式不同</td>
+<td align="center">RD1</td>
+<td align="center">O</td>
+<td align="center">输出 A1 指定的寄存器中的 32 位数据</td>
 </tr>
 <tr>
-<td align="left">非循环快中使用break和continue语句</td>
-<td align="left">m</td>
-<td align="left">只有for语句块中出现</td>
+<td align="center">RD2</td>
+<td align="center">O</td>
+<td align="center">输出 A2 指定的寄存器中的 32 位数据</td>
 </tr>
 </tbody></table>
-<h4 id="文件组织"><a href="#文件组织" class="headerlink" title="文件组织"></a>文件组织</h4><p>新建目录 <code>src\midend</code>，其中包含一个类：</p>
-<ul>
-<li><strong>Midend</strong>：该模块为中段“主函数”。</li>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/co/p3-4.png"
+                      alt="p3-4"
+                ></p>
+<h2 id="ALU（算术逻辑单元）"><a href="#ALU（算术逻辑单元）" class="headerlink" title="ALU（算术逻辑单元）"></a>ALU（算术逻辑单元）</h2><table>
+<thead>
+<tr>
+<th align="center">信号名</th>
+<th align="center">方向</th>
+<th align="center">描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">ALUControl</td>
+<td align="center">I</td>
+<td align="center">3 位逻辑运算符选择信号<br>000：加法<br>001：减法<br>010：或<br>011：小于置1<br>100：加载至立即数最高位</td>
+</tr>
+<tr>
+<td align="center">Op1</td>
+<td align="center">I</td>
+<td align="center">32 位操作数 1</td>
+</tr>
+<tr>
+<td align="center">Op2</td>
+<td align="center">I</td>
+<td align="center">32 位操作数 2</td>
+</tr>
+<tr>
+<td align="center">Zero</td>
+<td align="center">O</td>
+<td align="center">运算结果判 0 信号，高电平表示为 0</td>
+</tr>
+<tr>
+<td align="center">ALUResult</td>
+<td align="center">O</td>
+<td align="center">32 位算术逻辑运算结果输出信号</td>
+</tr>
+</tbody></table>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/co/p3-5.png"
+                      alt="p3-5"
+                ></p>
+<p>这里有个 011 判断小于的指令，在课下实际用不到（照博客弄的，后来发现没有用）但我相信以后会有用的，先保留。（）</p>
+<h2 id="DM（数据存储器）"><a href="#DM（数据存储器）" class="headerlink" title="DM（数据存储器）"></a>DM（数据存储器）</h2><ul>
+<li>用 RAM 实现，容量 3072 $\times$ 32bit，提供<strong>异步复位</strong>，<strong>起始地址 0x00000000</strong>，地址范围 0x00000000 ~ 0x00002FFF；</li>
+<li>RAM 使用双端口模式，<strong>Seperate load and store ports</strong>；</li>
+<li>地址线 $3\times2^{10}&#x3D;3072$，机器码 16 位输入，使用 3 个 1K $\times$ 32 RAM 进行字扩展，由于输入一定是 4 的倍数，舍弃最低两位，接着 10 位寻址 RAM ，最高两位用于片选。</li>
 </ul>
-<p>新建目录 <code>src\midend\symbol</code>，该部分定义符号表，其中包含若干类：</p>
-<ul>
-<li><strong>SymbolType</strong>：枚举类，枚举所有符号类型。</li>
-<li><strong>Symbol</strong>：符号类，定义符号对象，存储标识符和符号类型。</li>
-<li><strong>SymbolTable</strong>：符号表类，记录符号表的作用域序号 <code>depth</code>、父节点 <code>parentTable</code>、子结点 <code>childTables</code>、符号容器 <code>symbolList</code>。</li>
-<li><strong>SymbolManager</strong>：内含静态方法，是该模块的引擎。</li>
-</ul>
-<h4 id="总体思路"><a href="#总体思路" class="headerlink" title="总体思路"></a>总体思路</h4><p><strong>符号表的逻辑结构</strong>：构建一个符号表的树形结构，作用域之间的嵌套和并列关系通过树结构实现，每一个作用域都是一个符号表（及其父节点与递归父节点）。</p>
-<p><strong>抽象语法树的遍历</strong>：对每个 Node 类定义 <code>public void visit()</code> 方法，该方法实现针对该节点子结点的遍历，并以此更新符号表和发现错误。</p>
-<p><strong>符号表的内容填充</strong>：在 SymbolManager 中定义静态方法 <code>public static void addSymbol(TokenNode ident, SymbolType type)</code>，传入标识符节点对象及已识别的符号类型，这样所有 Node 在进行 visit 时都能使用，将符号填入当前符号表。</p>
-<p><strong>当前符号表的切换</strong>：在 SymbolManager 中记录当前符号表 <code>curSymbolTable</code>，并定义切换方法，切换时机在 Node 类 visit 时判断。</p>
-<ul>
-<li><code>public static void sinkDown()</code>：符号表下沉，创建一个新的子符号表，并把当前符号表设为子符号表，<code>depth</code> 加一。</li>
-<li><code>public static void floatUp()</code>：符号表上浮，当前符号表设为父符号表，<code>depth</code> 减一。</li>
-</ul>
-<h3 id="编码完成之后的修改"><a href="#编码完成之后的修改" class="headerlink" title="编码完成之后的修改"></a>编码完成之后的修改</h3><h4 id="FuncSymbol-类"><a href="#FuncSymbol-类" class="headerlink" title="FuncSymbol 类"></a>FuncSymbol 类</h4><p>新建类 <code>src\midend\symbol\FuncSymbol.java</code>，继承于 Symbol 类，表示函数符号，新增参数列表 <code>paramList</code>。</p>
-<h4 id="ValueSymbol-类"><a href="#ValueSymbol-类" class="headerlink" title="ValueSymbol 类"></a>ValueSymbol 类</h4><p>新建类 <code>src\midend\symbol\ValueSymbol.java</code>，继承于 Symbol 类，表示变量符号，新增常量类型判断 <code>isConst</code>。</p>
-<h4 id="符号表切换的时机"><a href="#符号表切换的时机" class="headerlink" title="符号表切换的时机"></a>符号表切换的时机</h4><p>当遇到 Block 节点时，几乎必触发符号表的切换，这也统一了作用域序号的计算：诸如  <code>for (;;) a=1;</code> 、<code>if (a==1) b=0;</code> 这样的并不会新增作用域，思考其原因为此类作用块中不会出现定义语句，因此与符号表构建无关。</p>
-<p>如果遇到 Block 便切换符号表，存在函数定义的冲突，即函数定义的参数列表应属于该作用域，应该在读取参数列表前就进行切换符号表，而再读到 Block 时不进行切换。针对此问题，在 SymbolManager 中定义新方法：</p>
-<ul>
-<li><code>public static void diveInto()</code>：符号表下潜，该方法取代原 <code>sinkDown</code> 方法的无脑下沉逻辑，而给原方法增加一条判断，如果需要，则不进行下沉。</li>
-</ul>
-<p>因此最终统一为：</p>
-<ul>
-<li>在 Block 前后使用 <code>sinkDown</code> 与 <code>floatUp</code>。</li>
-<li>在 FuncFParams 前使用 <code>diveInto</code>。</li>
-</ul>
-<h4 id="节点间的信息传递"><a href="#节点间的信息传递" class="headerlink" title="节点间的信息传递"></a>节点间的信息传递</h4><p>由于错误处理需要大量信息传递，而 visit 方法本身没有参数也没有返回值（为了强迫症好看，并不是所有节点都需要信息传递的），因此节点间的信息传递费了一点心思，最终还是比较像屎山。</p>
-<p>主要有两种思路：</p>
-<ol>
-<li><strong>SymbolManager 中的“全局变量”</strong>：在其中定义所有 Node 可以读写的全局变量，优点是存取简单，缺点是递归限制。例如：<ol>
-<li><code>private static FuncSymbol curFuncSymbol</code>：当前函数符号，目的是记录当前函数定义的函数类型，以判断是否有正确的 return。因为函数定义不会出现嵌套覆盖，此方法是可行的。</li>
-<li><code>private static TokenNode curFuncIdent</code>：当前函数标识符，目的是记录当前函数调用的函数标识符，以寻找对应的函数定义，定位参数个数不匹配错误，因为同一行只有一个错误，因此嵌套函数调用并不会对其造成影响。</li>
-</ol>
-</li>
-<li><strong>Node 中的属性传递</strong>：在 Node 中定义个性化信息，然后通过父子的链接进行传递，优点是可以处理嵌套递归的信息覆盖问题，缺点是传递繁琐。例如：<ol>
-<li><code>private SymbolType symbolType;</code>：对 Exp 求类型时在一系列 Node 中传递，自底向上确定。</li>
-<li><code>private boolean isReturnStmt;</code>：在 Stmt 中记录是否是 return 语句，便于在其父节点中判断 return 的合法性。</li>
-<li><code>private boolean isForStmt;</code>：在 Stmt 中记录是否是 for 语句块，便于在父节点中判断 break 和 continue 的合法性。</li>
-<li><code>private ArrayList&lt;SymbolType&gt; paramTypeList</code>：在 FuncRParams 中记录实参列表，便于与函数定义的形参列表进行校对。</li>
-</ol>
-</li>
-</ol>
-<p>其余示例不再详细说明，将在下文错误处理部分复盘。</p>
-<h4 id="语法分析错误的纠正"><a href="#语法分析错误的纠正" class="headerlink" title="语法分析错误的纠正"></a>语法分析错误的纠正</h4><p>语法分析中处理了 ijk 类错误，主要是符号缺失，但之前没有对其进行补全，导制语义分析阶段无法正常解析错误。</p>
-<p>在 Node 类中定义新方法：</p>
-<div class="code-container" data-rel="Java"><figure class="iseeu highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title function_">padTokenNode</span><span class="params">(TokenType tokenType)</span> &#123;  </span><br><span class="line">    <span class="built_in">this</span>.addNode(<span class="keyword">new</span> <span class="title class_">TokenNode</span>(<span class="keyword">new</span> <span class="title class_">Token</span>(tokenType, tokenType.toString(), getPrevToken().getLineNumber())));  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
-
-<p>在 parse 时每次 catchError 后调用一次该方法，补全语法树节点。</p>
-<h4 id="错误处理总结"><a href="#错误处理总结" class="headerlink" title="错误处理总结"></a>错误处理总结</h4><ol>
-<li><strong>b 名字重定义</strong>：</li>
-</ol>
-<p>只在当前作用域下判断，内层作用域新定义会覆盖外层作用域。因此以 SymbolTable 为域，定义两个方法：</p>
-<div class="code-container" data-rel="Java"><figure class="iseeu highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> Symbol <span class="title function_">getSymbol</span><span class="params">(String name)</span> &#123;  </span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">this</span>.symbolTable.get(name);  </span><br><span class="line">&#125;  </span><br><span class="line">  </span><br><span class="line"><span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">isRedefine</span><span class="params">(String name)</span> &#123;  </span><br><span class="line">    <span class="keyword">return</span> getSymbol(name) != <span class="literal">null</span>;  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
-
-<p>并在 SymbolManager 给出全局调用方法。每次识别到变量定义和函数定义时调用。</p>
+<table>
+<thead>
+<tr>
+<th align="center">信号名</th>
+<th align="center">方向</th>
+<th align="center">描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">clk</td>
+<td align="center">I</td>
+<td align="center">时钟信号</td>
+</tr>
+<tr>
+<td align="center">rst</td>
+<td align="center">I</td>
+<td align="center">异步复位信号，将 RAM 复位</td>
+</tr>
+<tr>
+<td align="center">WE</td>
+<td align="center">I</td>
+<td align="center">RAM 写入使能信号</td>
+</tr>
+<tr>
+<td align="center">A</td>
+<td align="center">I</td>
+<td align="center">16 位机器码地址</td>
+</tr>
+<tr>
+<td align="center">WD</td>
+<td align="center">I</td>
+<td align="center">32 位数据输入信号</td>
+</tr>
+<tr>
+<td align="center">RD</td>
+<td align="center">O</td>
+<td align="center">32 位数据输出信号</td>
+</tr>
+</tbody></table>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/co/p3-6.png"
+                      alt="p3-6"
+                ></p>
+<p>很规范很完美的片选和位扩展！有不少同学图省事直接弄了个大 RAM 。</p>
+<blockquote>
 <ol start="2">
-<li><strong>c 未定义的名字</strong>：</li>
+<li>现在我们的模块中 IM 使用 ROM， DM 使用 RAM， GRF 使用 Register，这种做法合理吗？ 请给出分析，若有改进意见也请一并给出。</li>
 </ol>
-<p>在当前作用域及其外层作用域递归查找，与 b 类错误有所不同。因此直接在 SymbolManager 中定义递归查找方法：</p>
-<div class="code-container" data-rel="Java"><figure class="iseeu highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> Symbol <span class="title function_">getSymbol</span><span class="params">(String name)</span> &#123;  </span><br><span class="line">    <span class="type">SymbolTable</span> <span class="variable">table</span> <span class="operator">=</span> curSymbolTable;  </span><br><span class="line">    <span class="keyword">while</span> (table != <span class="literal">null</span>) &#123;  </span><br><span class="line">        <span class="type">Symbol</span> <span class="variable">symbol</span> <span class="operator">=</span> table.getSymbol(name);  </span><br><span class="line">        <span class="keyword">if</span> (symbol != <span class="literal">null</span>) &#123;  </span><br><span class="line">            <span class="keyword">return</span> symbol;  </span><br><span class="line">        &#125;  </span><br><span class="line">        table = table.getParentTable();  </span><br><span class="line">    &#125;  </span><br><span class="line">    <span class="keyword">return</span> <span class="literal">null</span>;  </span><br><span class="line">&#125;  </span><br><span class="line">  </span><br><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="type">boolean</span> <span class="title function_">isUndefine</span><span class="params">(String ident)</span> &#123;  </span><br><span class="line">    <span class="keyword">return</span> getSymbol(ident) == <span class="literal">null</span>;  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
-
-<p>每次在识别到 LVal（变量或数组） 和 UnaryExp（函数调用）时调用。</p>
-<ol start="3">
-<li><strong>d 函数参数个数不匹配</strong>：</li>
-</ol>
-<p>识别到 FuncRParams 即函数实参列表时考虑，获取 <code>private FuncSymbol funcSymbol</code> 信息，该信息由父节点识别到 Ident 时填充，表示该函数对应的函数符号，从中可以获取到函数定义的参数信息。</p>
-<div class="code-container" data-rel="Java"><figure class="iseeu highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (paramNum != funcSymbol.getParamList().size()) &#123;  </span><br><span class="line">    ErrorCatcher.catchError(  </span><br><span class="line">            <span class="keyword">new</span> <span class="title class_">Error</span>(ErrorType.UNMATCHING_FUNC_PARAM_NUM, SymbolManager.getCurFuncIdent().getLineNumber()));  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
-
-<ol start="4">
-<li><strong>e 函数参数类型不匹配</strong>：</li>
-</ol>
-<p>识别到 UnaryExp 即函数调用时考虑，首先将紧跟着的 FuncRParams 遍历透彻，此过程顺序：FuncRParams-&gt;Exp-&gt;AddExp-&gt;MulExp-&gt;UnaryExp-&gt;(PrimaryExp&#x2F;函数调用)，且 PrimaryExp-&gt;LVal&#x2F;Number，且LVal-&gt;Ident&#x2F;数组。</p>
-<p>自顶向下中遇到终结符即确定该 Exp 的类型：</p>
-<ul>
-<li>函数调用：类型由对应函数定义的返回值确定，Int 或 Void。</li>
-<li>Number：类型为 Int。</li>
-<li>Ident：类型为除了函数的所有情况。</li>
-<li>数组：类型为除了函数和数组的所有情况。</li>
+</blockquote>
+<p>回答第二个思考题。似乎是合理的？ROM 可读而不可写，用在 IM 似乎符合我们课程内对测试的需求，但如果考虑实际应用，对 CPU 输入的指令应该是能够实时增加的（毕竟人要操作），所以现实中可能这个模块更像个 RAM。DM 使用 RAM ，应该是没有是没问题的。GRF 使用 Register ，似乎也没有什么问题，毕竟在架构中确确实实是 32 个寄存器，但我认为或许换成一个容量足够的 RAM 也是可以的？</p>
+<h2 id="EXT（扩展单元）"><a href="#EXT（扩展单元）" class="headerlink" title="EXT（扩展单元）"></a>EXT（扩展单元）</h2><ul>
+<li>使用 Bit Extender 。</li>
 </ul>
-<p>自底向上中不断将属性 <code>private SymbolType symbolType</code> 传递和记录，最终 Exp 会获取到实际的类型。</p>
-<p>在 FuncRParams 中记录 <code>private ArrayList&lt;SymbolType&gt; paramTypeList</code>，该信息传递给父节点 UnaryExp，至此实参类型列表已获取。</p>
-<p>由 <code>FuncSymbol funcSymbol = (FuncSymbol) SymbolManager.getSymbol(ident.getStringValue());</code> 获取到对应的函数定义，由 <code>funcSymbol.getParamList()</code> 获取到形参列表，至此形参类型列表已获取。</p>
-<div class="code-container" data-rel="Java"><figure class="iseeu highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (node1 <span class="keyword">instanceof</span> TokenNode &amp;&amp;  </span><br><span class="line">        ((TokenNode) node1).getTokenType().equals(TokenType.RPARENT)) &#123;  </span><br><span class="line">&#125; <span class="keyword">else</span> <span class="keyword">if</span> (node1 <span class="keyword">instanceof</span> FuncRParams) &#123;  </span><br><span class="line">    <span class="type">FuncRParams</span> <span class="variable">funcRParams</span> <span class="operator">=</span> (FuncRParams) node1;  </span><br><span class="line">    funcRParams.setFuncSymbol(funcSymbol);  </span><br><span class="line">    funcRParams.visit();  </span><br><span class="line">    ArrayList&lt;SymbolType&gt; paramTypeList = funcRParams.getParamTypeList();  </span><br><span class="line">    <span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>;  </span><br><span class="line">    <span class="keyword">for</span> (Symbol symbol : funcSymbol.getParamList()) &#123;  </span><br><span class="line">        <span class="type">SymbolType</span> <span class="variable">fParamType</span> <span class="operator">=</span> symbol.getType();  </span><br><span class="line">        <span class="keyword">if</span> (i &lt; paramTypeList.size() &amp;&amp;  </span><br><span class="line">                !paramTypeList.get(i).paramEquals(fParamType)) &#123;  </span><br><span class="line">            ErrorCatcher.catchError(<span class="keyword">new</span> <span class="title class_">Error</span>(ErrorType.UNMATCHING_FUNC_PARAM_TYPE, ident.getLineNumber()));  </span><br><span class="line">            <span class="keyword">break</span>;  </span><br><span class="line">        &#125;  </span><br><span class="line">        i++;  </span><br><span class="line">    &#125;  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
-
-<p>同时需要注意类型的兼容性，ConstInt、StaticInt、Int 和 IntFunc 的实参应该同属于 Int 的形参，ConstIntArray、StaticIntArray 和 IntArray 的实参应该同属于 IntArray 的形参。</p>
+<table>
+<thead>
+<tr>
+<th align="center">信号名</th>
+<th align="center">方向</th>
+<th align="center">描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">imm</td>
+<td align="center">I</td>
+<td align="center">16位 Instr 读取的原始立即数</td>
+</tr>
+<tr>
+<td align="center">ExtOp</td>
+<td align="center">I</td>
+<td align="center">扩展方式信号</td>
+</tr>
+<tr>
+<td align="center">imm32</td>
+<td align="center">O</td>
+<td align="center">32 位扩展后的立即数</td>
+</tr>
+</tbody></table>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/co/p3-7.png"
+                      alt="p3-7"
+                ></p>
+<p>弄了个判断 0 扩展和符号扩展的小电路。</p>
+<h2 id="Controller（控制器）"><a href="#Controller（控制器）" class="headerlink" title="Controller（控制器）"></a>Controller（控制器）</h2><p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/co/p3-8.png"
+                      alt="p3-8"
+                ></p>
+<table>
+<thead>
+<tr>
+<th align="center">信号名</th>
+<th align="center">方向</th>
+<th align="center">描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">func</td>
+<td align="center">I</td>
+<td align="center">6 位 func 码信号</td>
+</tr>
+<tr>
+<td align="center">op</td>
+<td align="center">I</td>
+<td align="center">6 位 op 码信号</td>
+</tr>
+<tr>
+<td align="center">RegDst</td>
+<td align="center">O</td>
+<td align="center">控制信号，确定目标寄存器的指定方式<br>0：将结果写入 <code>rt</code> 寄存器（I 型指令）<br>1：将结果写入 <code>rd</code> 寄存器（R 型指令）</td>
+</tr>
+<tr>
+<td align="center">ALUSrc</td>
+<td align="center">O</td>
+<td align="center">控制信号，选择 ALU 的第二个源操作数<br>0：来自寄存器文件的一个寄存器<br>1：来自指令中的立即数字段</td>
+</tr>
+<tr>
+<td align="center">MemtoReg</td>
+<td align="center">O</td>
+<td align="center">控制信号，控制数据从内存到寄存器的传输<br>0：执行指令后，不将内存中的数据写入寄存器文件（通常发生在 ALU 指令）<br>1：执行指令后，将内存中的数据写入寄存器文件（通常发生在执行加载指令）</td>
+</tr>
+<tr>
+<td align="center">RegWrite</td>
+<td align="center">O</td>
+<td align="center">控制信号，控制数据是否从内部数据路径写入寄存器文件<br>0：不应该将执行结果写入寄存器文件<br>1：应该将执行结果写入寄存器文件中的一个指定寄存器</td>
+</tr>
+<tr>
+<td align="center">MemWrite</td>
+<td align="center">O</td>
+<td align="center">控制信号，指示是否应该将数据从数据缓存写入DM</td>
+</tr>
+<tr>
+<td align="center">branch</td>
+<td align="center">O</td>
+<td align="center">控制信号，表示是否跳转（是否 beq）</td>
+</tr>
+<tr>
+<td align="center">ExtOp</td>
+<td align="center">O</td>
+<td align="center">控制信号，操作数扩展信号<br>0：0扩展<br>1：符号扩展</td>
+</tr>
+<tr>
+<td align="center">ALUctr</td>
+<td align="center">O</td>
+<td align="center">3 位控制信号，选择 ALU 运算符</td>
+</tr>
+</tbody></table>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/co/p3-9.png"
+                      alt="p3-9"
+                ></p>
+<h3 id="和逻辑"><a href="#和逻辑" class="headerlink" title="和逻辑"></a>和逻辑</h3><p>根据机器码中的 op 和 func 进行译码，判断出指令的类型，传递给或逻辑：</p>
+<table>
+<thead>
+<tr>
+<th align="center">指令</th>
+<th align="center">op5</th>
+<th align="center">op4</th>
+<th align="center">op3</th>
+<th align="center">op2</th>
+<th align="center">op1</th>
+<th align="center">op0</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">add</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">0</td>
+</tr>
+<tr>
+<td align="center">sub</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">0</td>
+</tr>
+<tr>
+<td align="center">ori</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">1</td>
+<td align="center">1</td>
+<td align="center">0</td>
+<td align="center">1</td>
+</tr>
+<tr>
+<td align="center">lw</td>
+<td align="center">1</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">1</td>
+<td align="center">1</td>
+</tr>
+<tr>
+<td align="center">sw</td>
+<td align="center">1</td>
+<td align="center">0</td>
+<td align="center">1</td>
+<td align="center">0</td>
+<td align="center">1</td>
+<td align="center">1</td>
+</tr>
+<tr>
+<td align="center">beq</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">1</td>
+<td align="center">0</td>
+<td align="center">0</td>
+</tr>
+<tr>
+<td align="center">lui</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">1</td>
+<td align="center">1</td>
+<td align="center">1</td>
+<td align="center">1</td>
+</tr>
+<tr>
+<td align="center">nop</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">0</td>
+</tr>
+<tr>
+<td align="center">其中，使用 func 区分 <code>add, sub, nop</code>：</td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+</tbody></table>
+<table>
+<thead>
+<tr>
+<th align="center">指令</th>
+<th align="center">func5</th>
+<th align="center">func4</th>
+<th align="center">func3</th>
+<th align="center">func2</th>
+<th align="center">func1</th>
+<th align="center">func0</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">add</td>
+<td align="center">1</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">0</td>
+</tr>
+<tr>
+<td align="center">sub</td>
+<td align="center">1</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">1</td>
+<td align="center">0</td>
+</tr>
+<tr>
+<td align="center">nop</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">0</td>
+</tr>
+<tr>
+<td align="center">有了真值表，可以直接在 Logisim 中自动生成组合逻辑电路。（太复杂！还是自己搭吧……）</td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+</tbody></table>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/co/p3-10.png"
+                      alt="p3-10"
+                ></p>
+<p>只展示一部分了。这里 beq 的和逻辑和或逻辑我一开始都搭错了，喜提两个 WA 。</p>
+<h3 id="或逻辑"><a href="#或逻辑" class="headerlink" title="或逻辑"></a>或逻辑</h3><table>
+<thead>
+<tr>
+<th align="center">指令</th>
+<th align="center">add</th>
+<th align="center">sub</th>
+<th align="center">ori</th>
+<th align="center">lw</th>
+<th align="center">sw</th>
+<th align="center">beq</th>
+<th align="center">lui</th>
+<th align="center">nop</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">RegDst</td>
+<td align="center">1</td>
+<td align="center">1</td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">ALUSrc</td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center">1</td>
+<td align="center">1</td>
+<td align="center">1</td>
+<td align="center"></td>
+<td align="center">1</td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">MemtoReg</td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center">1</td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">RegWrite</td>
+<td align="center">1</td>
+<td align="center">1</td>
+<td align="center">1</td>
+<td align="center">1</td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center">1</td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">MemWrite</td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center">1</td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">branch</td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center">1</td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">ExtOp</td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center">1</td>
+<td align="center">1</td>
+<td align="center">1</td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">ALUctr</td>
+<td align="center">000</td>
+<td align="center">001</td>
+<td align="center">010</td>
+<td align="center">000</td>
+<td align="center">000</td>
+<td align="center">001</td>
+<td align="center">100</td>
+<td align="center"></td>
+</tr>
+</tbody></table>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/co/p3-11.png"
+                      alt="p3-11"
+                ></p>
+<blockquote>
+<ol start="4">
+<li>事实上，实现 <code>nop</code> 空指令，我们并不需要将它加入控制信号真值表，为什么？</li>
+</ol>
+</blockquote>
+<p>回答第四个思考题。虽然我在模块中添加了 nop ，但一通操作下来 nop 没有起到任何作用，没有输出任何控制信号，因此确实是可以删除的。在这个 CPU 中，控制读写有严格的使能信号约束，不需要担心如果不考虑 nop 会发生错误。</p>
+<h2 id="NPC（PC-跳转模块）"><a href="#NPC（PC-跳转模块）" class="headerlink" title="NPC（PC 跳转模块）"></a>NPC（PC 跳转模块）</h2><table>
+<thead>
+<tr>
+<th align="center">信号名</th>
+<th align="center">方向</th>
+<th align="center">描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">PC</td>
+<td align="center">I</td>
+<td align="center">32 位初始 PC 信号</td>
+</tr>
+<tr>
+<td align="center">Imm</td>
+<td align="center">I</td>
+<td align="center">16 位立即数信号，表示偏移量</td>
+</tr>
+<tr>
+<td align="center">branch</td>
+<td align="center">I</td>
+<td align="center">是否按照立即数偏移</td>
+</tr>
+<tr>
+<td align="center">PC‘</td>
+<td align="center">O</td>
+<td align="center">32 位更新 PC 信号</td>
+</tr>
+</tbody></table>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/co/p3-12.png"
+                      alt="p3-12"
+                ></p>
+<blockquote>
+<ol start="3">
+<li>在上述提示的模块之外，你是否在实际实现时设计了其他的模块？如果是的话，请给出介绍和设计的思路。</li>
+</ol>
+</blockquote>
+<p>回答了第三个思考题，这个模块用于计算下一个 PC 的值。注意到，如果没有发生跳转（不是 beq），那么直接在原基础上+4；如果需要跳转，那么 PC’&#x3D;PC + 4 + offset * 4，为什么要乘 4 呢，因为偏移 1 相当于 PC 增加 4 ，并且注意是符号扩展，要处理负数偏移的情况。</p>
+<h2 id="main（顶层模块组装）"><a href="#main（顶层模块组装）" class="headerlink" title="main（顶层模块组装）"></a>main（顶层模块组装）</h2><h3 id="机器码指令"><a href="#机器码指令" class="headerlink" title="机器码指令"></a>机器码指令</h3><h4 id="R-类型指令"><a href="#R-类型指令" class="headerlink" title="R 类型指令"></a>R 类型指令</h4><table>
+<thead>
+<tr>
+<th align="center">op</th>
+<th align="center">rs</th>
+<th align="center">rt</th>
+<th align="center">rd</th>
+<th align="center">shamt</th>
+<th align="center">funct</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">6bit</td>
+<td align="center">5bit</td>
+<td align="center">5bit</td>
+<td align="center">5bit</td>
+<td align="center">5bit</td>
+<td align="center">6bit</td>
+</tr>
+<tr>
+<td align="center">其中，op 为<strong>操作码</strong>，funct 为<strong>函数</strong>，所有 R 类型指令操作码都为 0 ，根据 funct 确定对应操作（在上文已经给出），在本次项目中，<code>add, sub</code> 是 R 类型指令。</td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">rs 和 rt 是源寄存器，rd 是目的寄存器，形象理解为：</td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+</tbody></table>
+<div class="code-container" data-rel="Mips"><figure class="iseeu highlight mips"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">add </span>rd, rs, rt</span><br><span class="line"><span class="keyword">sub </span>rd, rs, rt</span><br></pre></td></tr></table></figure></div>
+<p>shamt 是偏移数，本次不涉及，为 0 。</p>
+<h4 id="I-类型指令"><a href="#I-类型指令" class="headerlink" title="I 类型指令"></a>I 类型指令</h4><table>
+<thead>
+<tr>
+<th align="center">op</th>
+<th align="center">rs</th>
+<th align="center">rt</th>
+<th align="center">offset or imm</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">6bit</td>
+<td align="center">5bit</td>
+<td align="center">5bit</td>
+<td align="center">16bit</td>
+</tr>
+<tr>
+<td align="center">本次项目中，<code>ori, lw, sw, beq, lui</code> 是 I 类型指令。</td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">在不同指令中，目标寄存器和源寄存器指定不同，形象理解为：</td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+</tbody></table>
+<div class="code-container" data-rel="Mips"><figure class="iseeu highlight mips"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">ori </span>rt, rs, imm</span><br><span class="line"><span class="keyword">lw </span>rt, offset(rs)</span><br><span class="line"><span class="keyword">sw </span>rt, offset(rs)</span><br><span class="line"><span class="keyword">beq </span>rs, rt, offset</span><br><span class="line"><span class="keyword">lui </span>rt, imm</span><br></pre></td></tr></table></figure></div>
+<h4 id="J-类型指令"><a href="#J-类型指令" class="headerlink" title="J 类型指令"></a>J 类型指令</h4><table>
+<thead>
+<tr>
+<th align="center">op</th>
+<th align="center">address</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">6bit</td>
+<td align="center">26bit</td>
+</tr>
+<tr>
+<td align="center">暂时不涉及。</td>
+<td align="center"></td>
+</tr>
+</tbody></table>
+<h3 id="寄存器编码"><a href="#寄存器编码" class="headerlink" title="寄存器编码"></a>寄存器编码</h3><table>
+<thead>
+<tr>
+<th align="center">reg</th>
+<th align="center">name</th>
+<th align="center">usage</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">$0</td>
+<td align="center">$zero</td>
+<td align="center">常量 0</td>
+</tr>
+<tr>
+<td align="center">$1</td>
+<td align="center">$at</td>
+<td align="center">保留给汇编器使用的临时变量</td>
+</tr>
+<tr>
+<td align="center">$2-$3</td>
+<td align="center">$v0-$v1</td>
+<td align="center">函数调用返回值</td>
+</tr>
+<tr>
+<td align="center">$4-$7</td>
+<td align="center">$a0-$a3</td>
+<td align="center">函数调用参数</td>
+</tr>
+<tr>
+<td align="center">$8-$15</td>
+<td align="center">$t0-$t7</td>
+<td align="center">临时变量</td>
+</tr>
+<tr>
+<td align="center">$16-$23</td>
+<td align="center">$s0-$s7</td>
+<td align="center">需要保存的变量</td>
+</tr>
+<tr>
+<td align="center">$24-$25</td>
+<td align="center">$t8-$t9</td>
+<td align="center">临时变量</td>
+</tr>
+<tr>
+<td align="center">$26-$27</td>
+<td align="center">$k0-$k1</td>
+<td align="center">留给操作系统使用</td>
+</tr>
+<tr>
+<td align="center">$28</td>
+<td align="center">$gp</td>
+<td align="center">全局指针</td>
+</tr>
+<tr>
+<td align="center">$29</td>
+<td align="center">$sp</td>
+<td align="center">堆栈指针</td>
+</tr>
+<tr>
+<td align="center">$30</td>
+<td align="center">$fp</td>
+<td align="center">帧指针</td>
+</tr>
+<tr>
+<td align="center">$31</td>
+<td align="center">$ra</td>
+<td align="center">返回地址</td>
+</tr>
+</tbody></table>
+<h3 id="要点简析"><a href="#要点简析" class="headerlink" title="要点简析"></a>要点简析</h3><p>获取到 Instr ，使用 Splitter 将 32 位机器码分成不同的部分，参考上面提到的机器码格式。使用 op 判断指令类型，并输出相应的控制信号。对于 rt 和 rd ，需要判断指令的类型，再作进一步筛选输入 GRF 模块。注意立即数的扩展方式。理解 DM 和 GRF 的区别和联系：GRF 是 32 个寄存器，DM 是内存，寄存器中存有 DM 的基地址，根据这个和偏移量去对 DM 操作。形象理解：GRF 是 <code>$v0</code> 这种东西，DM 是 <code>.data</code> 字段的数组啥啥的。（可能不准确，但目前看来似乎可以这么理解）</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/co/p3-13.png"
+                      alt="p3-13"
+                ></p>
+<blockquote>
+<ol>
+<li>上面我们介绍了通过 FSM 理解单周期 CPU 的基本方法。请大家指出单周期 CPU 所用到的模块中，哪些发挥状态存储功能，哪些发挥状态转移功能。</li>
+</ol>
+</blockquote>
+<p>回答第一个思考题，状态存储：GRF、DM；状态转移：Controller。</p>
+<blockquote>
 <ol start="5">
-<li><strong>f 无返回值的函数存在不匹配的 return 语句</strong>：</li>
+<li>阅读 Pre 的 <a class="link"   target="_blank" rel="noopener" href="http://cscore.buaa.edu.cn/tutorial/mips/mips-6/mips6-1/" >“MIPS 指令集及汇编语言”<i class="fa-solid fa-arrow-up-right ml-[0.2em] font-light align-text-top text-[0.7em] link-icon"></i></a> 一节中给出的测试样例，评价其强度（可从各个指令的覆盖情况，单一指令各种行为的覆盖情况等方面分析），并指出具体的不足之处。</li>
 </ol>
-<p>只考虑 VoidFunc，当 return 中出现实际的 Exp 时报错，有多少行就报多少个错。</p>
-<p>在 Stmt 中的 return 分支中判断，由 <code>SymbolManager.getCurSymbolTableFuncSymbol()</code> 获取当前所处函数定义类型。</p>
-<div class="code-container" data-rel="Java"><figure class="iseeu highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">else</span> <span class="keyword">if</span> (tokenNode.equals(TokenType.RETURNTK)) &#123;  </span><br><span class="line">    <span class="comment">// Stmt → &#x27;return&#x27; [Exp] &#x27;;&#x27;  </span></span><br><span class="line">    <span class="built_in">this</span>.setReturnStmt();  </span><br><span class="line">    <span class="keyword">if</span> (getNode(<span class="number">1</span>) <span class="keyword">instanceof</span> Exp) &#123;  </span><br><span class="line">        <span class="type">Exp</span> <span class="variable">exp1</span> <span class="operator">=</span> (Exp) getNode(<span class="number">1</span>);  </span><br><span class="line">        exp1.visit();  </span><br><span class="line">        <span class="keyword">if</span> (SymbolManager.getCurSymbolTableFuncSymbol().getType().equals(SymbolType.VOID_FUNC)) &#123;  </span><br><span class="line">            ErrorCatcher.catchError(<span class="keyword">new</span> <span class="title class_">Error</span>(ErrorType.UNMATCHING_RETURN, tokenNode.getLineNumber()));  </span><br><span class="line">        &#125;  </span><br><span class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (getNode(<span class="number">1</span>) <span class="keyword">instanceof</span> TokenNode &amp;&amp;  </span><br><span class="line">            ((TokenNode) getNode(<span class="number">1</span>)).equals(TokenType.SEMICN)) &#123;  </span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure></div>
-
-<ol start="6">
-<li><strong>g 有返回值的函数缺少 return 语句</strong>：</li>
-</ol>
-<p>只考虑 IntFunc，当结束大括号的上一个语句不是正确的 return 时报错。</p>
-<p>在 Block 中判断，使用到属性 <code>private boolean isIntFuncBlock</code>，由父节点的 Ident 判断并提供信息。使用到 Stmt 中的属性 <code>private boolean isReturnStmt</code> 以及 BlockItem 中的属性 <code>private boolean isReturnBlockItem</code>，这些信息从 Stmt 的 return 分支中自底向上传递。</p>
-<div class="code-container" data-rel="Java"><figure class="iseeu highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (<span class="built_in">this</span>.isIntFuncBlock &amp;&amp;  </span><br><span class="line">        (i == <span class="number">1</span> || !((BlockItem) getNode(i - <span class="number">1</span>)).isReturnStmt())) &#123;  </span><br><span class="line">    ErrorCatcher.catchError(  </span><br><span class="line">            <span class="keyword">new</span> <span class="title class_">Error</span>(ErrorType.MISSING_RETURN, ((TokenNode) getNode(i)).getLineNumber()));  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
-
-<p>需要注意 Block 中没有 BlockItem 的情况。</p>
-<ol start="7">
-<li><strong>h 不能改变常量的值</strong>：</li>
-</ol>
-<p>在 Stmt 与 ForStmt 中出现，核心思路是判断 LVal 是不是常量。</p>
-<div class="code-container" data-rel="Java"><figure class="iseeu highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">lVal.visit();  </span><br><span class="line"><span class="keyword">if</span> (lVal.isConst()) &#123;  </span><br><span class="line">    ErrorCatcher.catchError(<span class="keyword">new</span> <span class="title class_">Error</span>(ErrorType.CHANGING_CONST, lVal.getLineNumber()));  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
-
-<p>LVal 中包含信息 <code>private boolean isConst</code>，该信息由 Ident 获取。</p>
-<div class="code-container" data-rel="Java"><figure class="iseeu highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (((ValueSymbol) SymbolManager.getSymbol(ident.getStringValue())).isConst()) &#123;  </span><br><span class="line">    <span class="built_in">this</span>.setConst();  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
-
-<ol start="8">
-<li><strong>l printf 语句中格式字符与表达式个数不匹配</strong>：</li>
-</ol>
-<p>在 Stmt 的 printf 分支中判断，由正则表达式解析 StringConst 中的 <code>%d</code> 出现次数，然后对 Exp 计数并判等。</p>
-<div class="code-container" data-rel="Java"><figure class="iseeu highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">else</span> <span class="keyword">if</span> (tokenNode.equals(TokenType.PRINTFTK)) &#123;  </span><br><span class="line">    <span class="comment">// Stmt → &#x27;printf&#x27;&#x27;(&#x27;StringConst &#123;&#x27;,&#x27;Exp&#125;&#x27;)&#x27;&#x27;;&#x27;  </span></span><br><span class="line">    <span class="type">TokenNode</span> <span class="variable">stringConst</span> <span class="operator">=</span> (TokenNode) getNode(<span class="number">2</span>);  </span><br><span class="line">    <span class="type">int</span> <span class="variable">formatCharNum</span> <span class="operator">=</span> <span class="number">0</span>;  </span><br><span class="line">    <span class="type">String</span> <span class="variable">string</span> <span class="operator">=</span> stringConst.getStringValue();  </span><br><span class="line">    java.util.regex.<span class="type">Pattern</span> <span class="variable">pattern</span> <span class="operator">=</span> java.util.regex.Pattern.compile(<span class="string">&quot;(?&lt;!%)%d&quot;</span>);  </span><br><span class="line">    java.util.regex.<span class="type">Matcher</span> <span class="variable">matcher</span> <span class="operator">=</span> pattern.matcher(string);  </span><br><span class="line">    <span class="keyword">while</span> (matcher.find()) &#123;  </span><br><span class="line">        formatCharNum++;  </span><br><span class="line">    &#125;  </span><br><span class="line">    <span class="type">int</span> <span class="variable">expNum</span> <span class="operator">=</span> <span class="number">0</span>;  </span><br><span class="line">    <span class="keyword">for</span> (Node node1 : nodeList) &#123;  </span><br><span class="line">        <span class="keyword">if</span> (node1 <span class="keyword">instanceof</span> Exp) &#123;  </span><br><span class="line">            <span class="type">Exp</span> <span class="variable">exp</span> <span class="operator">=</span> (Exp) node1;  </span><br><span class="line">            exp.visit();  </span><br><span class="line">            expNum++;  </span><br><span class="line">        &#125;  </span><br><span class="line">    &#125;  </span><br><span class="line">    <span class="keyword">if</span> (formatCharNum != expNum) &#123;  </span><br><span class="line">        ErrorCatcher.catchError(<span class="keyword">new</span> <span class="title class_">Error</span>(ErrorType.UNMATCHING_PRINTF, tokenNode.getLineNumber()));  </span><br><span class="line">    &#125;  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
-
-<ol start="9">
-<li><strong>m 在非循环块中使用 break 和 continue 语句</strong>：</li>
-</ol>
-<p>在 Stmt 的 break 和 continue 分支中判断，判断当前符号表在不在 for 符号表中。</p>
-<div class="code-container" data-rel="Java"><figure class="iseeu highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">else</span> <span class="keyword">if</span> (tokenNode.equals(TokenType.BREAKTK)) &#123;  </span><br><span class="line">    <span class="comment">// Stmt → &#x27;break&#x27; &#x27;;&#x27;  </span></span><br><span class="line">    <span class="keyword">if</span> (!<span class="built_in">this</span>.isForStmt &amp;&amp; !SymbolManager.getCurSymbolTable().inForSymbolTable()) &#123;  </span><br><span class="line">        ErrorCatcher.catchError(<span class="keyword">new</span> <span class="title class_">Error</span>(ErrorType.INVALID_BREAK_OR_CONTINUE, tokenNode.getLineNumber()));  </span><br><span class="line">    &#125;  </span><br><span class="line">&#125; <span class="keyword">else</span> <span class="keyword">if</span> (tokenNode.equals(TokenType.CONTINUETK)) &#123;  </span><br><span class="line">    <span class="comment">// Stmt → &#x27;continue&#x27; &#x27;;&#x27;  </span></span><br><span class="line">    <span class="keyword">if</span> (!<span class="built_in">this</span>.isForStmt &amp;&amp; !SymbolManager.getCurSymbolTable().inForSymbolTable()) &#123;  </span><br><span class="line">        ErrorCatcher.catchError(<span class="keyword">new</span> <span class="title class_">Error</span>(ErrorType.INVALID_BREAK_OR_CONTINUE, tokenNode.getLineNumber()));  </span><br><span class="line">    &#125;  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
-
-<p>由于存在嵌套，虽然可能处于 if 块，但若 if 块被 for 块包围也算正确，所以需要向上递归查找 for 符号表。SymbolTable 中：</p>
-<div class="code-container" data-rel="Java"><figure class="iseeu highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">inForSymbolTable</span><span class="params">()</span> &#123;  </span><br><span class="line">    <span class="type">SymbolTable</span> <span class="variable">symbolTable</span> <span class="operator">=</span> <span class="built_in">this</span>;  </span><br><span class="line">    <span class="keyword">while</span> (symbolTable != <span class="literal">null</span>) &#123;  </span><br><span class="line">        <span class="keyword">if</span> (symbolTable.isForSymbolTable()) &#123;  </span><br><span class="line">            <span class="keyword">return</span> <span class="literal">true</span>;  </span><br><span class="line">        &#125;  </span><br><span class="line">        symbolTable = symbolTable.getParentTable();  </span><br><span class="line">    &#125;  </span><br><span class="line">    <span class="keyword">return</span> <span class="literal">false</span>;  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
-
-<p>而是否是 for 符号表的信息在 Block 中设置完成：</p>
-<div class="code-container" data-rel="Java"><figure class="iseeu highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (<span class="built_in">this</span>.isForBlock) &#123;  </span><br><span class="line">    SymbolManager.getCurSymbolTable().setForSymbolTable();  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
-
-<p>注意考虑这种情况：</p>
-<div class="code-container" data-rel="C"><figure class="iseeu highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">()</span> &#123;  </span><br><span class="line">    <span class="keyword">for</span>(;;) <span class="keyword">break</span>;  </span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
-
-<p>错误输出：</p>
-<div class="code-container" data-rel="Text"><figure class="iseeu highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">2 m</span><br></pre></td></tr></table></figure></div>
-
-<p>第一次 AC 的提交未考虑这种 Stmt 直接解析为 break 而不是 Block 的，后来写文档的时候发现漏洞，修改后提交仍然是 AC。</p>
-<p>原思路是以符号表 SymbolTable 为单位进行考察是不是 for 的符号表，但实际上没有 Block 的 for 不会进行建表（因为不计算作用域所以我的实现也没有建表），因此会漏掉这种情况。</p>
+</blockquote>
+<p>回答最后一个思考题。指令覆盖情况：没有测试 sub 指令，没有测试 nop 指令。对于单一指令的行为：add 测试了正正、正负、负负，没有测试 0；ori 测试了 0 正，0 负，没有测试正负，且没有测试立即数为 0 或负数的情况；sw 和 lw 没有测试负偏移量的情况；beq 仅测试了跳转到后续指令的情况，没有测试跳转到之前指令的情况。</p>
 
 		</div>
 
@@ -993,18 +1570,18 @@
 		<div class="post-copyright-info w-full my-8 px-2 sm:px-6 md:px-8">
 			<div class="article-copyright-info-container">
     <ul>
-        <li><strong>Title:</strong> 编译技术：语义分析</li>
+        <li><strong>Title:</strong> 计算机组成CO：P3课下-Logisim搭建单周期CPU</li>
         <li><strong>Author:</strong> BaconToast</li>
         <li><strong>Created at
-                :</strong> 2025-11-14 22:47:16</li>
+                :</strong> 2025-11-18 11:03:14</li>
         
             <li>
                 <strong>Updated at
-                    :</strong> 2025-11-18 11:05:05
+                    :</strong> 2025-11-18 11:22:00
             </li>
         
         <li>
-            <strong>Link:</strong> https://bacontoast-pro.github.io/2025/11/14/compiler/symbol/
+            <strong>Link:</strong> https://bacontoast-pro.github.io/2025/11/18/co/p3/
         </li>
         <li>
             <strong>
@@ -1026,11 +1603,15 @@
 		<ul class="post-tags-box text-lg mt-1.5 flex-wrap justify-center flex md:hidden">
 			
 			<li class="tag-item mx-0.5">
-				<a href="/tags/Compiler/">#Compiler</a>&nbsp;
+				<a href="/tags/CO/">#CO</a>&nbsp;
 			</li>
 			
 			<li class="tag-item mx-0.5">
-				<a href="/tags/Java/">#Java</a>&nbsp;
+				<a href="/tags/MIPS/">#MIPS</a>&nbsp;
+			</li>
+			
+			<li class="tag-item mx-0.5">
+				<a href="/tags/Logisim/">#Logisim</a>&nbsp;
 			</li>
 			
 		</ul>
@@ -1042,12 +1623,12 @@
 		<div class="article-nav my-8 flex justify-between items-center px-2 sm:px-6 md:px-8">
 			
 			<div class="article-prev border-border-color shadow-redefine-flat shadow-shadow-color-2 rounded-medium px-4 py-2 hover:shadow-redefine-flat-hover hover:shadow-shadow-color-2">
-				<a class="prev" rel="prev" href="/2025/11/18/parallel/mulMatrix/">
+				<a class="prev" rel="prev" href="/2025/11/18/co/p4/">
 					<span class="left arrow-icon flex justify-center items-center">
 						<i class="fa-solid fa-chevron-left"></i>
 					</span>
 					<span class="title flex justify-center items-center">
-						<span class="post-nav-title-item truncate max-w-48">矩阵相乘的并行计算</span>
+						<span class="post-nav-title-item truncate max-w-48">计算机组成CO：P4课下-Verilog搭建单周期CPU</span>
 						<span class="post-nav-item">Prev posts</span>
 					</span>
 				</a>
@@ -1055,9 +1636,9 @@
 			
 			
 			<div class="article-next border-border-color shadow-redefine-flat shadow-shadow-color-2 rounded-medium px-4 py-2 hover:shadow-redefine-flat-hover hover:shadow-shadow-color-2">
-				<a class="next" rel="next" href="/2025/11/14/compiler/parser/">
+				<a class="next" rel="next" href="/2025/11/18/parallel/mulMatrix/">
 					<span class="title flex justify-center items-center">
-						<span class="post-nav-title-item truncate max-w-48">编译技术：语法分析</span>
+						<span class="post-nav-title-item truncate max-w-48">矩阵相乘的并行计算</span>
 						<span class="post-nav-item">Next posts</span>
 					</span>
 					<span class="right arrow-icon flex justify-center items-center">
@@ -1119,8 +1700,8 @@
 		<div class="post-toc-wrap">
 	<div class="post-toc">
 		<div class="toc-title">On this page</div>
-		<div class="page-title">编译技术：语义分析</div>
-		<ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AF%AD%E4%B9%89%E5%88%86%E6%9E%90%E8%AE%BE%E8%AE%A1"><span class="nav-text">语义分析设计</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BC%96%E7%A0%81%E5%89%8D%E7%9A%84%E8%AE%BE%E8%AE%A1"><span class="nav-text">编码前的设计</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BC%96%E7%A0%81%E5%AE%8C%E6%88%90%E4%B9%8B%E5%90%8E%E7%9A%84%E4%BF%AE%E6%94%B9"><span class="nav-text">编码完成之后的修改</span></a></li></ol></li></ol>
+		<div class="page-title">计算机组成CO：P3课下-Logisim搭建单周期CPU</div>
+		<ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#IFU%EF%BC%88%E5%8F%96%E6%8C%87%E4%BB%A4%E5%8D%95%E5%85%83%EF%BC%89"><span class="nav-text">IFU（取指令单元）</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#PC%EF%BC%88%E7%A8%8B%E5%BA%8F%E8%AE%A1%E6%95%B0%E5%99%A8%EF%BC%89"><span class="nav-text">PC（程序计数器）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#IM%EF%BC%88%E6%8C%87%E4%BB%A4%E5%AD%98%E5%82%A8%E5%99%A8%EF%BC%89"><span class="nav-text">IM（指令存储器）</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#GRF%EF%BC%88%E9%80%9A%E7%94%A8%E5%AF%84%E5%AD%98%E5%99%A8%E7%BB%84%EF%BC%89"><span class="nav-text">GRF（通用寄存器组）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ALU%EF%BC%88%E7%AE%97%E6%9C%AF%E9%80%BB%E8%BE%91%E5%8D%95%E5%85%83%EF%BC%89"><span class="nav-text">ALU（算术逻辑单元）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#DM%EF%BC%88%E6%95%B0%E6%8D%AE%E5%AD%98%E5%82%A8%E5%99%A8%EF%BC%89"><span class="nav-text">DM（数据存储器）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#EXT%EF%BC%88%E6%89%A9%E5%B1%95%E5%8D%95%E5%85%83%EF%BC%89"><span class="nav-text">EXT（扩展单元）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Controller%EF%BC%88%E6%8E%A7%E5%88%B6%E5%99%A8%EF%BC%89"><span class="nav-text">Controller（控制器）</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%92%8C%E9%80%BB%E8%BE%91"><span class="nav-text">和逻辑</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%88%96%E9%80%BB%E8%BE%91"><span class="nav-text">或逻辑</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#NPC%EF%BC%88PC-%E8%B7%B3%E8%BD%AC%E6%A8%A1%E5%9D%97%EF%BC%89"><span class="nav-text">NPC（PC 跳转模块）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#main%EF%BC%88%E9%A1%B6%E5%B1%82%E6%A8%A1%E5%9D%97%E7%BB%84%E8%A3%85%EF%BC%89"><span class="nav-text">main（顶层模块组装）</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9C%BA%E5%99%A8%E7%A0%81%E6%8C%87%E4%BB%A4"><span class="nav-text">机器码指令</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AF%84%E5%AD%98%E5%99%A8%E7%BC%96%E7%A0%81"><span class="nav-text">寄存器编码</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%A6%81%E7%82%B9%E7%AE%80%E6%9E%90"><span class="nav-text">要点简析</span></a></li></ol></li></ol>
 
 	</div>
 </div>

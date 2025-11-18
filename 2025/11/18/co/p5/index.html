@@ -1,0 +1,1766 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="keywords" content="Hexo Theme Redefine">
+    
+    <meta name="author" content="BaconToast">
+    
+    <!-- Completely eliminate flash of wrong theme -->
+    <script>
+        (function() {
+            const THEME_KEY = "REDEFINE-THEME-STATUS";
+            const DARK = "dark", LIGHT = "light";
+            
+            // Get preferred theme
+            function getTheme() {
+                try {
+                    const saved = localStorage.getItem(THEME_KEY);
+                    if (saved) {
+                        const { isDark } = JSON.parse(saved);
+                        return isDark ? DARK : LIGHT;
+                    }
+                } catch (e) {}
+                
+                return matchMedia("(prefers-color-scheme: dark)").matches ? DARK : LIGHT;
+            }
+            
+            // Apply theme to document
+            function applyTheme(theme) {
+                const isDark = theme === DARK;
+                const root = document.documentElement;
+                
+                // Set data attribute for CSS variables
+                root.setAttribute("data-theme", theme);
+                
+                // Set classes for compatibility
+                root.classList.add(theme);
+                root.classList.remove(isDark ? LIGHT : DARK);
+                root.style.colorScheme = theme;
+            }
+            
+            // Initial application
+            const theme = getTheme();
+            applyTheme(theme);
+            
+            // Listen for system preference changes
+            matchMedia("(prefers-color-scheme: dark)").addEventListener("change", ({ matches }) => {
+                // Only update if using system preference (no localStorage entry)
+                if (!localStorage.getItem(THEME_KEY)) {
+                    applyTheme(matches ? DARK : LIGHT);
+                }
+            });
+            
+            // Set body classes once DOM is ready
+            if (document.readyState !== "loading") {
+                document.body.classList.add(theme + "-mode");
+            } else {
+                document.addEventListener("DOMContentLoaded", () => {
+                    document.body.classList.add(theme + "-mode");
+                    document.body.classList.remove((theme === DARK ? LIGHT : DARK) + "-mode");
+                });
+            }
+        })();
+    </script>
+    
+    <!-- Critical CSS to prevent flash -->
+    <style>
+        :root[data-theme="dark"] {
+            --background-color: #202124;
+            --background-color-transparent: rgba(32, 33, 36, 0.6);
+            --second-background-color: #2d2e32;
+            --third-background-color: #34353a;
+            --third-background-color-transparent: rgba(32, 33, 36, 0.6);
+            --primary-color: #0066CC;
+            --first-text-color: #ffffff;
+            --second-text-color: #eeeeee;
+            --third-text-color: #bebec6;
+            --fourth-text-color: #999999;
+            --default-text-color: #bebec6;
+            --invert-text-color: #373D3F;
+            --border-color: rgba(255, 255, 255, 0.08);
+            --selection-color: #0066CC;
+            --shadow-color-1: rgba(255, 255, 255, 0.08);
+            --shadow-color-2: rgba(255, 255, 255, 0.05);
+        }
+        
+        :root[data-theme="light"] {
+            --background-color: #fff;
+            --background-color-transparent: rgba(255, 255, 255, 0.6);
+            --second-background-color: #f8f8f8;
+            --third-background-color: #f2f2f2;
+            --third-background-color-transparent: rgba(241, 241, 241, 0.6);
+            --primary-color: #0066CC;
+            --first-text-color: #16171a;
+            --second-text-color: #2f3037;
+            --third-text-color: #5e5e5e;
+            --fourth-text-color: #eeeeee;
+            --default-text-color: #373D3F;
+            --invert-text-color: #bebec6;
+            --border-color: rgba(0, 0, 0, 0.08);
+            --selection-color: #0066CC;
+            --shadow-color-1: rgba(0, 0, 0, 0.08);
+            --shadow-color-2: rgba(0, 0, 0, 0.05);
+        }
+        
+        body {
+            background-color: var(--background-color);
+            color: var(--default-text-color);
+        }
+        
+        /* Apply body classes as soon as DOM is ready */
+        :root[data-theme="dark"] body {
+            background-color: var(--background-color);
+            color: var(--default-text-color);
+        }
+    </style>
+    
+    <!-- preconnect -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    
+    <!--- Seo Part-->
+    
+    <link rel="canonical" href="https://BaconToast-pro.github.io/2025/11/18/co/p5/"/>
+    <meta name="robots" content="index,follow">
+    <meta name="googlebot" content="index,follow">
+    <meta name="revisit-after" content="1 days">
+    
+    
+    
+        
+        <meta name="description" content="Hexo Theme Redefine, Redefine Your Hexo Journey.">
+<meta property="og:type" content="article">
+<meta property="og:title" content="计算机组成CO：P5课下-Verilog搭建流水线CPU-1">
+<meta property="og:url" content="https://bacontoast-pro.github.io/2025/11/18/co/p5/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="Hexo Theme Redefine, Redefine Your Hexo Journey.">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://bacontoast-pro.github.io/images/redefine-og.webp">
+<meta property="article:published_time" content="2025-11-18T03:16:49.341Z">
+<meta property="article:modified_time" content="2025-11-18T03:22:00.919Z">
+<meta property="article:author" content="BaconToast">
+<meta property="article:tag" content="CO">
+<meta property="article:tag" content="MIPS">
+<meta property="article:tag" content="Verilog">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://bacontoast-pro.github.io/images/redefine-og.webp">
+    
+    
+    <!--- Icon Part-->
+    <link rel="icon" type="image/png" href="/images/public/toast.svg" sizes="192x192">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/public/toast.svg">
+    <meta name="theme-color" content="#A31F34">
+    <link rel="shortcut icon" href="/images/public/toast.svg">
+    <!--- Page Info-->
+    
+    <title>
+        
+            计算机组成CO：P5课下-Verilog搭建流水线CPU-1 | BaconToast&#39;s Shop
+        
+    </title>
+
+    
+<link rel="stylesheet" href="/fonts/Chillax/chillax.css">
+
+
+    <!--- Inject Part-->
+    
+
+    
+<link rel="stylesheet" href="/css/style.css">
+
+
+    
+        
+<link rel="stylesheet" href="/css/build/tailwind.css">
+
+    
+
+    
+<link rel="stylesheet" href="/fonts/GeistMono/geist-mono.css">
+
+    
+<link rel="stylesheet" href="/fonts/Geist/geist.css">
+
+    <!--- Font Part-->
+    
+    
+    
+    
+    
+    
+        
+<script src="/js/build/libs/anime.min.js"></script>
+
+    
+
+    <script id="hexo-configurations">
+    window.config = {"hostname":"bacontoast-pro.github.io","root":"/","language":"en"};
+    window.theme = {"articles":{"style":{"font_size":"16px","line_height":1.5,"image_border_radius":"14px","image_alignment":"center","image_caption":false,"link_icon":true,"delete_mask":false,"title_alignment":"left","headings_top_spacing":{"h1":"3.2rem","h2":"2.4rem","h3":"1.9rem","h4":"1.6rem","h5":"1.4rem","h6":"1.3rem"}},"word_count":{"enable":true,"count":true,"min2read":true},"author_label":{"enable":true,"auto":false,"list":[]},"code_block":{"copy":true,"style":"mac","highlight_theme":{"light":"github","dark":"vs2015"},"font":{"enable":false,"family":null,"url":null}},"toc":{"enable":true,"max_depth":3,"number":false,"expand":true,"init_open":true},"copyright":{"enable":true,"default":"cc_by_nc_sa"},"lazyload":true,"pangu_js":false,"recommendation":{"enable":false,"title":"推荐阅读","limit":3,"mobile_limit":2,"placeholder":"/images/wallhaven-wqery6-light.webp","skip_dirs":[]}},"colors":{"primary":"#A31F34","secondary":null,"default_mode":"light"},"global":{"fonts":{"chinese":{"enable":false,"family":null,"url":null},"english":{"enable":false,"family":null,"url":null},"title":{"enable":false,"family":null,"url":null}},"content_max_width":"1000px","sidebar_width":"210px","hover":{"shadow":true,"scale":true},"scroll_progress":{"bar":false,"percentage":true},"website_counter":{"url":"https://cn.vercount.one/js","enable":true,"site_pv":true,"site_uv":true,"post_pv":true},"single_page":true,"preloader":{"enable":true,"custom_message":null},"side_tools":{"gear_rotation":true,"auto_expand":true},"open_graph":{"enable":true,"image":"/images/redefine-og.webp","description":"Hexo Theme Redefine, Redefine Your Hexo Journey."},"google_analytics":{"enable":false,"id":null}},"home_banner":{"enable":true,"style":"fixed","image":{"light":"/images/wallhaven-wqery6-light.webp","dark":"/images/wallhaven-wqery6-dark.webp"},"title":"BaconToast Blog","subtitle":{"text":["欢迎来到BaconToast小商店~","We can be the light upon the day."],"hitokoto":{"enable":false,"show_author":false,"api":"https://v1.hitokoto.cn"},"typing_speed":100,"backing_speed":80,"starting_delay":500,"backing_delay":1500,"loop":true,"smart_backspace":true},"text_color":{"light":"#fff","dark":"#d1d1b6"},"text_style":{"title_size":"2.8rem","subtitle_size":"1.5rem","line_height":1.2},"custom_font":{"enable":false,"family":null,"url":null},"social_links":{"enable":true,"style":"default","links":{"github":"https://github.com/BaconToast-pro","instagram":null,"zhihu":null,"twitter":null,"email":"zhouzq@buaa.edu.cn"},"qrs":{"weixin":"images/public/wechat.jpg"}}},"plugins":{"feed":{"enable":false},"aplayer":{"enable":false,"type":"fixed","audios":[{"name":null,"artist":null,"url":null,"cover":null,"lrc":null}]},"mermaid":{"enable":false,"version":"11.4.1"}},"version":"2.8.5","navbar":{"auto_hide":true,"color":{"left":"#f78736","right":"#367df7","transparency":35},"width":{"home":"1200px","pages":"1000px"},"links":{"Home":{"path":"/","icon":"fa-regular fa-house"},"Archives":{"path":"/archives","icon":"fa-regular fa-archive"},"Friends":{"icon":"fa-solid fa-link","path":"/links/"},"About":{"icon":"fa-regular fa-user","submenus":{"Github":"https://github.com/BaconToast-pro","Friends":"/links/"}}},"search":{"enable":false,"preload":true}},"page_templates":{"friends_column":2,"tags_style":"blur"},"home":{"sidebar":{"enable":true,"position":"left","first_item":"menu","announcement":"~o(^_^)o~","show_on_mobile":true,"links":{"Archives":{"path":"/archives","icon":"fa-regular fa-archive"},"Tags":{"path":"/tags","icon":"fa-regular fa-tags"},"Categories":{"path":"/categories","icon":"fa-regular fa-folder"}}},"article_date_format":"auto","excerpt_length":200,"categories":{"enable":true,"limit":3},"tags":{"enable":true,"limit":3}},"footerStart":"2025/11/11 17:20:00"};
+    window.lang_ago = {"second":"%s seconds ago","minute":"%s minutes ago","hour":"%s hours ago","day":"%s days ago","week":"%s weeks ago","month":"%s months ago","year":"%s years ago"};
+    window.data = {"masonry":true};
+  </script>
+    
+    <!--- Fontawesome Part-->
+    
+<link rel="stylesheet" href="/fontawesome/fontawesome.min.css">
+
+    
+<link rel="stylesheet" href="/fontawesome/brands.min.css">
+
+    
+<link rel="stylesheet" href="/fontawesome/solid.min.css">
+
+    
+<link rel="stylesheet" href="/fontawesome/regular.min.css">
+
+    
+    
+    
+    
+<meta name="generator" content="Hexo 8.1.1"></head>
+
+
+
+<body>
+	<div class="progress-bar-container">
+	
+
+	
+	<span class="pjax-progress-bar"></span>
+	<!--        <span class="swup-progress-icon">-->
+	<!--            <i class="fa-solid fa-circle-notch fa-spin"></i>-->
+	<!--        </span>-->
+	
+</div>
+
+<style>
+    :root {
+        --preloader-background-color: #fff;
+        --preloader-text-color: #000;
+    }
+
+    @media (prefers-color-scheme: dark) {
+        :root {
+            --preloader-background-color: #202124;
+            --preloader-text-color: #fff;
+        }
+    }
+
+    @media (prefers-color-scheme: light) {
+        :root {
+            --preloader-background-color: #fff;
+            --preloader-text-color: #000;
+        }
+    }
+
+    @media (max-width: 600px) {
+        .ml13 {
+            font-size: 2.6rem !important; /* Adjust this value as needed */
+        }
+    }
+
+    .preloader {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem; /* Tailwind 'gap-4' is 1rem */
+        align-items: center;
+        justify-content: center;
+        position: fixed;
+        padding: 12px;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh; /* 'h-screen' is 100% of the viewport height */
+        background-color: var(--preloader-background-color);
+        z-index: 1100; /* 'z-[1100]' sets the z-index */
+        transition: opacity 0.2s ease-in-out;
+    }
+
+    .ml13 {
+        font-size: 3.2rem;
+        /* text-transform: uppercase; */
+        color: var(--preloader-text-color);
+        letter-spacing: -1px;
+        font-weight: 500;
+        font-family: 'Chillax-Variable', sans-serif;
+        text-align: center;
+    }
+
+    .ml13 .word {
+        display: inline-flex;
+        flex-wrap: wrap;
+        white-space: nowrap;
+    }
+
+    .ml13 .letter {
+        display: inline-block;
+        line-height: 1em;
+    }
+</style>
+
+<div class="preloader">
+    <h2 class="ml13">
+        BaconToast&#39;s Shop
+    </h2>
+    <script>
+        var textWrapper = document.querySelector('.ml13');
+        // Split text into words
+        var words = textWrapper.textContent.trim().split(' ');
+
+        // Clear the existing content
+        textWrapper.innerHTML = '';
+
+        // Wrap each word and its letters in spans
+        words.forEach(function(word) {
+            var wordSpan = document.createElement('span');
+            wordSpan.classList.add('word');
+            wordSpan.innerHTML = word.replace(/\S/g, "<span class='letter'>$&</span>");
+            textWrapper.appendChild(wordSpan);
+            textWrapper.appendChild(document.createTextNode(' ')); // Add space between words
+        });
+
+        var animation = anime.timeline({ loop: true })
+            .add({
+                targets: '.ml13 .letter',
+                translateY: [20, 0],
+                translateZ: 0,
+                opacity: [0, 1],
+                filter: ['blur(5px)', 'blur(0px)'],
+                easing: "easeOutExpo",
+                duration: 1200,
+                delay: (el, i) => 300 + 20 * i,
+            })
+            .add({
+                targets: '.ml13 .letter',
+                translateY: [0, -20],
+                opacity: [1, 0],
+                filter: ['blur(0px)', 'blur(5px)'],
+                easing: "easeInExpo",
+                duration: 1000,
+                delay: (el, i) => 15 * i,
+                complete: function() {
+                    hidePreloader();
+                }
+            }, '-=700');
+
+
+        let themeStatus = JSON.parse(localStorage.getItem('REDEFINE-THEME-STATUS'))?.isDark;
+
+        // If the theme status is not found in local storage, check the preferred color scheme
+        if (themeStatus === undefined || themeStatus === null) {
+            if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                themeStatus = 'dark';
+            } else {
+                themeStatus = 'light';
+            }
+        }
+
+        // Now you can use the themeStatus variable in your code
+        if (themeStatus) {
+            document.documentElement.style.setProperty('--preloader-background-color', '#202124');
+            document.documentElement.style.setProperty('--preloader-text-color', '#fff');
+        } else {
+            document.documentElement.style.setProperty('--preloader-background-color', '#fff');
+            document.documentElement.style.setProperty('--preloader-text-color', '#000');
+        }
+
+        window.addEventListener('load', function () {
+            setTimeout(hidePreloader, 5000); // Call hidePreloader after 5000 milliseconds if not already called by animation
+        });
+
+        function hidePreloader() {
+            var preloader = document.querySelector('.preloader');
+            preloader.style.opacity = '0';
+            setTimeout(function () {
+                preloader.style.display = 'none';
+            }, 200);
+        }
+    </script>
+</div>
+
+<main class="page-container" id="swup">
+
+	
+
+	<div class="main-content-container flex flex-col justify-between min-h-dvh">
+		<div class="main-content-header">
+			<header class="navbar-container px-6 md:px-12">
+    <div class="navbar-content transition-navbar ">
+        <div class="left">
+            
+            <a class="logo-title" href="/">
+                
+                BaconToast&#39;s Shop
+                
+            </a>
+        </div>
+
+        <div class="right">
+            <!-- PC -->
+            <div class="desktop">
+                <ul class="navbar-list">
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/"
+                                        >
+                                    <i class="fa-regular fa-house fa-fw"></i>
+                                    HOME
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/archives"
+                                        >
+                                    <i class="fa-regular fa-archive fa-fw"></i>
+                                    ARCHIVES
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/links/"
+                                        >
+                                    <i class="fa-solid fa-link fa-fw"></i>
+                                    FRIENDS
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class="has-dropdown"
+                                   href="#"
+                                        onClick=&#34;return false;&#34;>
+                                    <i class="fa-regular fa-user fa-fw"></i>
+                                    ABOUT
+                                    <i class="fa-solid fa-chevron-down fa-fw"></i>
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                                    <ul class="sub-menu">
+                                        
+                                            <li>
+                                                <a target="_blank" rel="noopener" href="https://github.com/BaconToast-pro">
+                                                    GITHUB
+                                                </a>
+                                            </li>
+                                        
+                                            <li>
+                                                <a href="/links/">
+                                                    FRIENDS
+                                                </a>
+                                            </li>
+                                        
+                                    </ul>
+                                
+                            </li>
+                    
+                    
+                </ul>
+            </div>
+            <!-- Mobile -->
+            <div class="mobile">
+                
+                <div class="icon-item navbar-bar">
+                    <div class="navbar-bar-middle"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mobile sheet -->
+    <div class="navbar-drawer h-dvh w-full absolute top-0 left-0 bg-background-color flex flex-col justify-between">
+        <ul class="drawer-navbar-list flex flex-col px-4 justify-center items-start">
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/"
+                        >
+                            <span>
+                                HOME
+                            </span>
+                            
+                                <i class="fa-regular fa-house fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/archives"
+                        >
+                            <span>
+                                ARCHIVES
+                            </span>
+                            
+                                <i class="fa-regular fa-archive fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/links/"
+                        >
+                            <span>
+                                FRIENDS
+                            </span>
+                            
+                                <i class="fa-solid fa-link fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+                
+                    
+
+                    <li class="drawer-navbar-item-sub text-base my-1.5 flex flex-col w-full">
+                        
+                        <div class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary cursor-pointer text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                             navbar-data-toggle="submenu-About"
+                        >
+                            <span>
+                                ABOUT
+                            </span>
+                            
+                                <i class="fa-solid fa-chevron-right fa-sm fa-fw transition-all"></i>
+                            
+                        </div>
+                        
+
+                        
+                            <div class="flex-col items-start px-2 py-2 hidden" data-target="submenu-About">
+                                
+                                    <div class="drawer-navbar-item text-base flex flex-col justify-center items-start hover:underline active:underline hover:underline-offset-1 rounded-3xl">
+                                        <a class=" text-third-text-color text-xl"
+                                           target="_blank" rel="noopener" href="https://github.com/BaconToast-pro">GITHUB</a>
+                                    </div>
+                                
+                                    <div class="drawer-navbar-item text-base flex flex-col justify-center items-start hover:underline active:underline hover:underline-offset-1 rounded-3xl">
+                                        <a class=" text-third-text-color text-xl"
+                                           href="/links/">FRIENDS</a>
+                                    </div>
+                                
+                            </div>
+                        
+                    </li>
+            
+
+            
+            
+                
+                    
+                    
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full active"
+                           href="/tags"
+                        >
+                            <span>Tags</span>
+                            <i class="fa-regular fa-tags fa-sm fa-fw"></i>
+                        </a>
+                    </li>
+                
+                    
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full active"
+                           href="/categories"
+                        >
+                            <span>Categories</span>
+                            <i class="fa-regular fa-folder fa-sm fa-fw"></i>
+                        </a>
+                    </li>
+                
+            
+        </ul>
+
+        <div class="statistics flex justify-around my-2.5">
+    <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/tags">
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">10</div>
+        <div class="label text-third-text-color text-sm">Tags</div>
+    </a>
+    <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/categories">
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">3</div>
+        <div class="label text-third-text-color text-sm">Categories</div>
+    </a>
+    <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/archives">
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">10</div>
+        <div class="label text-third-text-color text-sm">Posts</div>
+    </a>
+</div>
+    </div>
+
+    <div class="window-mask"></div>
+
+</header>
+
+
+		</div>
+
+		<div class="main-content-body transition-fade-up">
+			
+
+			<div class="main-content">
+				<div class="post-page-container flex relative justify-between box-border w-full h-full">
+	<div class="article-content-container">
+
+		<div class="article-title relative w-full">
+			
+			
+			
+			<img src="/images/public/sakura.jpg" alt="计算机组成CO：P5课下-Verilog搭建流水线CPU-1" class="w-full h-60 sm:h-72 md:h-80 object-cover sm:rounded-t-large dark:brightness-75" />
+			
+			<div class="w-full flex items-center absolute bottom-0 justify-start">
+				<h1 class="article-title-cover text-center mx-6 my-6 text-second-text-color bg-background-color-transparent px-4 py-3 text-3xl sm:text-4xl md:text-5xl font-semibold backdrop-blur-lg rounded-xl border border-border-color ">计算机组成CO：P5课下-Verilog搭建流水线CPU-1</h1>
+			</div>
+			
+		</div>
+
+		
+		<div class="article-header flex flex-row gap-2 items-center px-2 sm:px-6 md:px-8">
+			<div class="avatar w-[46px] h-[46px] flex-shrink-0 rounded-medium border border-border-color p-[1px]">
+				<img src="/images/public/avatar.jpg">
+			</div>
+			<div class="info flex flex-col justify-between">
+				<div class="author flex items-center">
+					<span class="name text-default-text-color text-lg font-semibold">BaconToast</span>
+					
+					<span class="author-label ml-1.5 text-xs px-2 py-0.5 rounded-small text-third-text-color border border-shadow-color-1">Lv2</span>
+					
+				</div>
+				<div class="meta-info">
+					<div class="article-meta-info">
+    <span class="article-date article-meta-item">
+        <i class="fa-regular fa-pen-fancy"></i>&nbsp;
+        <span class="desktop">2025-11-18 11:16:49</span>
+        <span class="mobile">2025-11-18 11:16:49</span>
+        <span class="hover-info">Created</span>
+    </span>
+    
+        <span class="article-date article-meta-item">
+            <i class="fa-regular fa-wrench"></i>&nbsp;
+            <span class="desktop">2025-11-18 11:22</span>
+            <span class="mobile">2025-11-18 11:22</span>
+            <span class="hover-info">Updated</span>
+        </span>
+    
+
+    
+        <span class="article-categories article-meta-item">
+            <i class="fa-regular fa-folders"></i>&nbsp;
+            <ul>
+                
+                
+                    
+                        
+                        <li>
+                            <a href="/categories/CO/">CO</a>&nbsp;
+                        </li>
+                    
+                    
+                
+            </ul>
+        </span>
+    
+    
+        <span class="article-tags article-meta-item">
+            <i class="fa-regular fa-tags"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/tags/CO/">CO</a>&nbsp;
+                    </li>
+                
+                    <li>
+                        | <a href="/tags/Verilog/">Verilog</a>&nbsp;
+                    </li>
+                
+                    <li>
+                        | <a href="/tags/MIPS/">MIPS</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+
+    
+    
+    
+    
+        <span class="article-pv article-meta-item">
+            <i class="fa-regular fa-eye"></i>&nbsp;<span id="busuanzi_value_page_pv"></span>
+        </span>
+    
+</div>
+
+				</div>
+			</div>
+		</div>
+		
+
+		
+
+
+		<div class="article-content markdown-body px-2 sm:px-6 md:px-8 pb-8">
+			<h2 id="流水线架构"><a href="#流水线架构" class="headerlink" title="流水线架构"></a>流水线架构</h2><h3 id="数据通路"><a href="#数据通路" class="headerlink" title="数据通路"></a>数据通路</h3><p>CPU 的 5 级流水线阶段为：</p>
+<table>
+<thead>
+<tr>
+<th>阶段</th>
+<th>简称</th>
+<th>功能概述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>取指阶段（Fetch）</td>
+<td>F</td>
+<td>从指令存储器中读取指令</td>
+</tr>
+<tr>
+<td>译码阶段（Decode）</td>
+<td>D</td>
+<td>从寄存器文件中读取源操作数并对指令译码以便得到控制信号</td>
+</tr>
+<tr>
+<td>执行阶段（Execute）</td>
+<td>E</td>
+<td>使用 ALU 执行计算</td>
+</tr>
+<tr>
+<td>存储阶段（Memory）</td>
+<td>M</td>
+<td>读或写数据存储器</td>
+</tr>
+<tr>
+<td>写回阶段（Writeback）</td>
+<td>W</td>
+<td>将结果写回到寄存器文件</td>
+</tr>
+</tbody></table>
+<p>梳理一下所有指令的数据通路：（无冒险，仅流水）<br><code>add</code>：</p>
+<ul>
+<li>F 级的 MUX 选择 0 ，PC+4；</li>
+<li>D 级的两个 MUX 都选择 0 ，ID&#x2F;EX 存入 GPR[rs], GPR[rt]；</li>
+<li>E 级的上面三个 MUX 都选择 0 ，GPR[rs], GPR[rt] 进入 ALU，进行 0 运算（加法），下方的 MUX 选择 1 ，EX&#x2F;MEM 中存入 rd；</li>
+<li>W 级的 MUX 选择 1 ，将 AO 回写，地址为 rd；<br><code>sub</code>：</li>
+<li>与 <code>add</code> 完全一致，仅有 ALU 选择不同；</li>
+<li>ALU 选择 1 运算（减法）；<br><code>ori</code>：</li>
+<li>F 级的 MUX 选择 0 ，PC+4；</li>
+<li>D 级的第一个 MUX 选择 0 ，ID&#x2F;EX 存入 GPR[rs]；</li>
+<li>E 级的第一个 MUX 选择 0，第三个 MUX 选择 1，GPR[rs], IMM 进入 ALU ，进行 2 运算（或），下方 MUX 选择 0 ，EX&#x2F;MEM 中存入 rt；</li>
+<li>W 级的 MUX 选择 1，将 AO 回写，地址为 rt；<br><code>lw</code>：</li>
+<li>F 级的 MUX 选择 0，PC+4；</li>
+<li>D 级的第一个 MUX 选择 0 ，ID&#x2F;EX 存入 GPR[rs]；</li>
+<li>E 级的第一个 MUX 选择 0 ，第三个 MUX 选择 1，GPR[rs], IMM 进入 ALU ，进行 0 运算，下方 MUX 选择 0 ，EX&#x2F;MEM 存入 rt；</li>
+<li>M 级允许 DM 可读不可写，MEM&#x2F;WB 存入 Memory[GPR[rs]+IMM]；</li>
+<li>W 级 MUX 选择 0 ，将 Memory 回写，地址为 rt；<br><code>sw</code>：</li>
+<li>F 级的 MUX 选择 0， PC+4；</li>
+<li>D 级第一个 MUX 选择 0，第二个 MUX 选择 0， GPR[rs], GPR[rt] 存入 ID&#x2F;EX，GRF 可读不可写；</li>
+<li>E 级的第一个和第二个 MUX 选择 0 ，第三个 MUX 选择 1 ，ALU 输入 GPR[rs], IMM，进行 0 运算，将 AO 和 GPR[rt]存入 EX&#x2F;MEM；</li>
+<li>M 级允许 DM 可写，写入 GPR[rt]，地址为 Memory[GPR[rs]+IMM]；<br><code>beq</code>：</li>
+<li>F 级 MUX 选择 1，跳转到 D 级计算出的 NPC；</li>
+<li>D 级两个 MUX 选择 0 ，ID&#x2F;EX 存入 GPR[rs], GPR[rt], IMM ，NPC 模块选择 0 （beq 计算），进行 PC + 4 + IMM&lt;&lt;2 计算；COMP 模块对 GPR[rs], GPR[rt] 进行判等，控制信号输入 NPC 模块，决定是否输出跳转；<br><code>lui</code>：</li>
+<li>F 级 MUX 选择 0 ，PC+4；</li>
+<li>D 级 ID&#x2F;EX 存入 IMM；</li>
+<li>E 级第三个 MUX 选择 1 ，ALU 输入 IMM ，选择 3 运算（立即数加载到最高位），最下方 MUX 选择 0，将 rt 存入 EX&#x2F;MEM；</li>
+<li>W 级选择 1 ，将 AO 回写，地址为 rt；<br><code>nop</code>：</li>
+<li>F 级 PC+4；</li>
+<li>其他级不进行任何操作，指令向下流水；<br><code>jal</code>：</li>
+<li>F 级选择 2 ，进行 jal 跳转；</li>
+<li>D 级 NPC 模块选择 1 ，进行 jal 计算，即 {PC[31:28], IMM26, 2’b00}；</li>
+<li>E 级最下方 MUX 选择 2 ，将 31 作为写入地址；</li>
+<li>W 级选择 2， 将 PC+8 回写，地址为 31。<br><code>jr</code>：</li>
+<li>F 级选择 3 ，进行 jr 跳转；</li>
+<li>D 级第一个 MUX 选择 0 ，将 GPR[rs] 作为 NPC；</li>
+</ul>
+<h3 id="译码器"><a href="#译码器" class="headerlink" title="译码器"></a>译码器</h3><p>各指令 OpCode 及 Func：</p>
+<table>
+<thead>
+<tr>
+<th align="center">指令</th>
+<th align="center">op5</th>
+<th align="center">op4</th>
+<th align="center">op3</th>
+<th align="center">op2</th>
+<th align="center">op1</th>
+<th align="center">op0</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">add</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">0</td>
+</tr>
+<tr>
+<td align="center">sub</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">0</td>
+</tr>
+<tr>
+<td align="center">ori</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">1</td>
+<td align="center">1</td>
+<td align="center">0</td>
+<td align="center">1</td>
+</tr>
+<tr>
+<td align="center">lui</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">1</td>
+<td align="center">1</td>
+<td align="center">1</td>
+<td align="center">1</td>
+</tr>
+<tr>
+<td align="center">lw</td>
+<td align="center">1</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">1</td>
+<td align="center">1</td>
+</tr>
+<tr>
+<td align="center">sw</td>
+<td align="center">1</td>
+<td align="center">0</td>
+<td align="center">1</td>
+<td align="center">0</td>
+<td align="center">1</td>
+<td align="center">1</td>
+</tr>
+<tr>
+<td align="center">beq</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">1</td>
+<td align="center">0</td>
+<td align="center">0</td>
+</tr>
+<tr>
+<td align="center">nop</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">0</td>
+</tr>
+<tr>
+<td align="center">jal</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">1</td>
+<td align="center">1</td>
+</tr>
+<tr>
+<td align="center">jr</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">0</td>
+</tr>
+</tbody></table>
+<table>
+<thead>
+<tr>
+<th align="center">指令</th>
+<th align="center">func5</th>
+<th align="center">func4</th>
+<th align="center">func3</th>
+<th align="center">func2</th>
+<th align="center">func1</th>
+<th align="center">func0</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">add</td>
+<td align="center">1</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">0</td>
+</tr>
+<tr>
+<td align="center">sub</td>
+<td align="center">1</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">1</td>
+<td align="center">0</td>
+</tr>
+<tr>
+<td align="center">nop</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">0</td>
+</tr>
+<tr>
+<td align="center">jr</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">1</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">0</td>
+</tr>
+</tbody></table>
+<p><strong>译码方式</strong>：<br>Logisim 中拟采用集中式译码；Verilog 中拟采用分布式译码。<br><strong>译码风格</strong>：<br>再说。<br><strong>控制信号</strong>：<strong>!!重点!!</strong></p>
+<table>
+<thead>
+<tr>
+<th align="center">指令</th>
+<th align="center">add</th>
+<th align="center">sub</th>
+<th align="center">ori</th>
+<th align="center">lui</th>
+<th align="center">lw</th>
+<th align="center">sw</th>
+<th align="center">beq</th>
+<th align="center">jal</th>
+<th align="center">jr</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">WDSel</td>
+<td align="center">01</td>
+<td align="center">01</td>
+<td align="center">01</td>
+<td align="center">01</td>
+<td align="center">00</td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center">10</td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">RegWrite</td>
+<td align="center">1</td>
+<td align="center">1</td>
+<td align="center">1</td>
+<td align="center">1</td>
+<td align="center">1</td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center">1</td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">MemWrite</td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center">1</td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">PCSel</td>
+<td align="center">000</td>
+<td align="center">000</td>
+<td align="center">000</td>
+<td align="center">000</td>
+<td align="center">000</td>
+<td align="center">000</td>
+<td align="center">001</td>
+<td align="center">010</td>
+<td align="center">011</td>
+</tr>
+<tr>
+<td align="center">ALUCtrl</td>
+<td align="center">000</td>
+<td align="center">001</td>
+<td align="center">010</td>
+<td align="center">011</td>
+<td align="center">000</td>
+<td align="center">000</td>
+<td align="center">001</td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">ALUSrc</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">1</td>
+<td align="center">1</td>
+<td align="center">1</td>
+<td align="center">1</td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">RegDst</td>
+<td align="center">01</td>
+<td align="center">01</td>
+<td align="center">00</td>
+<td align="center">00</td>
+<td align="center">00</td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center">10</td>
+<td align="center"></td>
+</tr>
+</tbody></table>
+<h2 id="流水线冒险"><a href="#流水线冒险" class="headerlink" title="流水线冒险"></a>流水线冒险</h2><h3 id="冒险的种类"><a href="#冒险的种类" class="headerlink" title="冒险的种类"></a>冒险的种类</h3><p><strong>结构冒险</strong>：不需要考虑<br><strong>控制冒险</strong>：主要是 beq 指令的判断结果影响接下来的指令执行流<br><strong>数据冒险</strong>：指令需要的数据还未进入寄存器堆的情况</p>
+<h3 id="冒险的解决"><a href="#冒险的解决" class="headerlink" title="冒险的解决"></a>冒险的解决</h3><p><strong>阻塞</strong>：两条指令发生数据依赖时，将前一条指令阻塞在 D 级，插入 nop 指令气泡。<br><strong>提前分支判断</strong>：在 D 级进行分支判断，如果发生跳转，F 级指令作废。<br><strong>延迟槽</strong>：只要不考虑 F 级指令的作废问题，就是实现了延迟槽；对于 jal 指令，当指令位于 D 级时，应当向 $31 写入 D_PC+8 或 F_PC+4。<br><strong>转发</strong>：这是对阻塞的进一步优化，例如 add 指令在 E 级就已经计算完成，那么在 M 级就可以将结果转发回去，从而解除 D 级的阻塞状态。可以处理部分数据冒险。</p>
+<h3 id="转发的实现"><a href="#转发的实现" class="headerlink" title="转发的实现"></a>转发的实现</h3><p><strong>AT模型</strong><br>$T_{use}$ 表示数据到了 D 级还需要多少个周期要使用，$T_{new}$ 表示数据还有多长时间产生；<br>对于永远不被使用的数据，设为一个大数（3）.<br><strong>!!重点看表格!!</strong></p>
+<table>
+<thead>
+<tr>
+<th align="center">指令</th>
+<th align="center">$rs_T_{use}$</th>
+<th align="center">$rt_T_{use}$</th>
+<th align="center">$E_T_{new}$</th>
+<th align="center">$M_T_{new}$</th>
+<th align="center">$W_T_{new}$</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">add</td>
+<td align="center">1</td>
+<td align="center">1</td>
+<td align="center">1</td>
+<td align="center">0</td>
+<td align="center">0</td>
+</tr>
+<tr>
+<td align="center">sub</td>
+<td align="center">1</td>
+<td align="center">1</td>
+<td align="center">1</td>
+<td align="center">0</td>
+<td align="center">0</td>
+</tr>
+<tr>
+<td align="center">ori</td>
+<td align="center">1</td>
+<td align="center">3</td>
+<td align="center">1</td>
+<td align="center">0</td>
+<td align="center">0</td>
+</tr>
+<tr>
+<td align="center">lui</td>
+<td align="center">1</td>
+<td align="center">3</td>
+<td align="center">1</td>
+<td align="center">0</td>
+<td align="center">0</td>
+</tr>
+<tr>
+<td align="center">lw</td>
+<td align="center">1</td>
+<td align="center">3</td>
+<td align="center">2</td>
+<td align="center">1</td>
+<td align="center">0</td>
+</tr>
+<tr>
+<td align="center">sw</td>
+<td align="center">1</td>
+<td align="center">1</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">0</td>
+</tr>
+<tr>
+<td align="center">beq</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">0</td>
+</tr>
+<tr>
+<td align="center">nop</td>
+<td align="center">3</td>
+<td align="center">3</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">0</td>
+</tr>
+<tr>
+<td align="center">jal</td>
+<td align="center">3</td>
+<td align="center">3</td>
+<td align="center">2</td>
+<td align="center">1</td>
+<td align="center">0</td>
+</tr>
+<tr>
+<td align="center">jr</td>
+<td align="center">0</td>
+<td align="center">3</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">0</td>
+</tr>
+</tbody></table>
+<p>当数据冒险时（ A 相等）：<br>$T_{use}\geq T_{new}$ ，转发；$T_{use}&lt;T_{new}$ ，阻塞。<br>需要阻塞的情况：</p>
+<ul>
+<li>$E_T_{new}&#x3D;2,T_{use}&#x3D;0$</li>
+<li>$E_T_{new}&#x3D;1,T_{use}&#x3D;0$</li>
+<li>$M_T_{new}&#x3D;1,T_{use}&#x3D;0$</li>
+<li>$E_T_{new}&#x3D;2,T_{use}&#x3D;1$<br><strong>转发优先级问题</strong>：选择流水线靠前的数据。</li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/co/p5.png"
+                      alt="p5"
+                ></p>
+<table>
+<thead>
+<tr>
+<th align="center">reg</th>
+<th align="center">name</th>
+<th align="center">usage</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">$0</td>
+<td align="center">$zero</td>
+<td align="center">常量 0</td>
+</tr>
+<tr>
+<td align="center">$1</td>
+<td align="center">$at</td>
+<td align="center">保留给汇编器使用的临时变量</td>
+</tr>
+<tr>
+<td align="center">$2-$3</td>
+<td align="center">$v0-$v1</td>
+<td align="center">函数调用返回值</td>
+</tr>
+<tr>
+<td align="center">$4-$7</td>
+<td align="center">$a0-$a3</td>
+<td align="center">函数调用参数</td>
+</tr>
+<tr>
+<td align="center">$8-$15</td>
+<td align="center">$t0-$t7</td>
+<td align="center">临时变量</td>
+</tr>
+<tr>
+<td align="center">$16-$23</td>
+<td align="center">$s0-$s7</td>
+<td align="center">需要保存的变量</td>
+</tr>
+<tr>
+<td align="center">$24-$25</td>
+<td align="center">$t8-$t9</td>
+<td align="center">临时变量</td>
+</tr>
+<tr>
+<td align="center">$26-$27</td>
+<td align="center">$k0-$k1</td>
+<td align="center">留给操作系统使用</td>
+</tr>
+<tr>
+<td align="center">$28</td>
+<td align="center">$gp</td>
+<td align="center">全局指针</td>
+</tr>
+<tr>
+<td align="center">$29</td>
+<td align="center">$sp</td>
+<td align="center">堆栈指针</td>
+</tr>
+<tr>
+<td align="center">$30</td>
+<td align="center">$fp</td>
+<td align="center">帧指针</td>
+</tr>
+<tr>
+<td align="center">$31</td>
+<td align="center">$ra</td>
+<td align="center">返回地址</td>
+</tr>
+</tbody></table>
+<h2 id="源码"><a href="#源码" class="headerlink" title="源码"></a>源码</h2><h3 id="constants-v"><a href="#constants-v" class="headerlink" title="constants.v"></a>constants.v</h3><div class="code-container" data-rel="Verilog"><figure class="iseeu highlight verilog"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// ALUCtrl</span></span><br><span class="line"><span class="meta">`<span class="keyword">define</span> aluAdd 3&#x27;d0</span></span><br><span class="line"><span class="meta">`<span class="keyword">define</span> aluSub 3&#x27;d1</span></span><br><span class="line"><span class="meta">`<span class="keyword">define</span> aluOri 3&#x27;d2</span></span><br><span class="line"><span class="meta">`<span class="keyword">define</span> aluLui 3&#x27;d3</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// PCSel</span></span><br><span class="line"><span class="meta">`<span class="keyword">define</span> pc4 3&#x27;d0</span></span><br><span class="line"><span class="meta">`<span class="keyword">define</span> pcBeq 3&#x27;d1</span></span><br><span class="line"><span class="meta">`<span class="keyword">define</span> pcJal 3&#x27;d2</span></span><br><span class="line"><span class="meta">`<span class="keyword">define</span> pcJr 3&#x27;d3</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// WDSel</span></span><br><span class="line"><span class="meta">`<span class="keyword">define</span> wdDM 2&#x27;d0</span></span><br><span class="line"><span class="meta">`<span class="keyword">define</span> wdAO 2&#x27;d1</span></span><br><span class="line"><span class="meta">`<span class="keyword">define</span> wdPC8 2&#x27;d2</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// RegDst</span></span><br><span class="line"><span class="meta">`<span class="keyword">define</span> a3rt 2&#x27;d0</span></span><br><span class="line"><span class="meta">`<span class="keyword">define</span> a3rd 2&#x27;d1</span></span><br><span class="line"><span class="meta">`<span class="keyword">define</span> a3ra 2&#x27;d2</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// Controller</span></span><br><span class="line"><span class="meta">`<span class="keyword">define</span> nop 6&#x27;b000000</span></span><br><span class="line"><span class="meta">`<span class="keyword">define</span> add 6&#x27;b100000</span></span><br><span class="line"><span class="comment">// more</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// Instr</span></span><br><span class="line"><span class="meta">`<span class="keyword">define</span> OpCode Instr[31:26]</span></span><br><span class="line"><span class="meta">`<span class="keyword">define</span> Rs Instr[25:21]</span></span><br><span class="line"><span class="meta">`<span class="keyword">define</span> Rt Instr[20:16]</span></span><br><span class="line"><span class="meta">`<span class="keyword">define</span> Rd Instr[15:11]</span></span><br><span class="line"><span class="meta">`<span class="keyword">define</span> IMM16 Instr[15:0]</span></span><br><span class="line"><span class="meta">`<span class="keyword">define</span> IMM26 Instr[25:0]</span></span><br><span class="line"><span class="meta">`<span class="keyword">define</span> Func Instr[5:0]</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// A-T</span></span><br><span class="line"><span class="comment">/********  add  ********/</span></span><br><span class="line"><span class="meta">`<span class="keyword">define</span> add_rs_Tuse 2&#x27;d1</span></span><br><span class="line"><span class="meta">`<span class="keyword">define</span> add_rt_Tuse 2&#x27;d1</span></span><br><span class="line"><span class="meta">`<span class="keyword">define</span> add_E_Tnew 2&#x27;d1</span></span><br><span class="line"><span class="meta">`<span class="keyword">define</span> add_M_Tnew 2&#x27;d0</span></span><br><span class="line"><span class="meta">`<span class="keyword">define</span> add_W_Tnew 2&#x27;d0</span></span><br><span class="line"><span class="comment">/********  sub  ********/</span></span><br><span class="line"><span class="comment">// more</span></span><br></pre></td></tr></table></figure></div>
+
+<h3 id="PC-v"><a href="#PC-v" class="headerlink" title="PC.v"></a>PC.v</h3><div class="code-container" data-rel="Verilog"><figure class="iseeu highlight verilog"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">module</span> PC(</span><br><span class="line">    <span class="keyword">input</span> clk,</span><br><span class="line">    <span class="keyword">input</span> reset,</span><br><span class="line">    <span class="keyword">input</span> EN,</span><br><span class="line">    <span class="keyword">input</span> [<span class="number">31</span>:<span class="number">0</span>] NPC,</span><br><span class="line">    <span class="keyword">output</span> <span class="keyword">reg</span> [<span class="number">31</span>:<span class="number">0</span>] PC</span><br><span class="line">    );</span><br><span class="line">	</span><br><span class="line">	<span class="keyword">initial</span> <span class="keyword">begin</span></span><br><span class="line">		PC = <span class="number">32&#x27;h0000_3000</span>;</span><br><span class="line">	<span class="keyword">end</span></span><br><span class="line">	</span><br><span class="line">	<span class="keyword">always</span> @(<span class="keyword">posedge</span> clk) <span class="keyword">begin</span></span><br><span class="line">		<span class="keyword">if</span> (reset) <span class="keyword">begin</span></span><br><span class="line">			PC &lt;= <span class="number">32&#x27;h0000_3000</span>;</span><br><span class="line">		<span class="keyword">end</span></span><br><span class="line">		<span class="keyword">else</span> <span class="keyword">if</span> (EN) <span class="keyword">begin</span></span><br><span class="line">			PC &lt;= NPC;</span><br><span class="line">		<span class="keyword">end</span></span><br><span class="line">		<span class="keyword">else</span> <span class="keyword">begin</span></span><br><span class="line">			PC &lt;= PC;</span><br><span class="line">		<span class="keyword">end</span></span><br><span class="line">	<span class="keyword">end</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">endmodule</span></span><br></pre></td></tr></table></figure></div>
+
+<h3 id="IM-v"><a href="#IM-v" class="headerlink" title="IM.v"></a>IM.v</h3><div class="code-container" data-rel="Verilog"><figure class="iseeu highlight verilog"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">module</span> IM(</span><br><span class="line">    <span class="keyword">input</span> [<span class="number">31</span>:<span class="number">0</span>] PC,</span><br><span class="line">    <span class="keyword">output</span> [<span class="number">31</span>:<span class="number">0</span>] RD</span><br><span class="line">    );</span><br><span class="line">	</span><br><span class="line">	<span class="keyword">wire</span> [<span class="number">31</span>:<span class="number">0</span>] addr;</span><br><span class="line">	<span class="keyword">reg</span> [<span class="number">31</span>:<span class="number">0</span>] im[<span class="number">0</span>:<span class="number">4095</span>];</span><br><span class="line">	</span><br><span class="line">	<span class="keyword">initial</span> <span class="keyword">begin</span></span><br><span class="line">		<span class="built_in">$readmemh</span>(<span class="string">&quot;code.txt&quot;</span>, im);</span><br><span class="line">	<span class="keyword">end</span></span><br><span class="line">	</span><br><span class="line">	<span class="keyword">assign</span> addr = PC - <span class="number">32&#x27;h0000_3000</span>;</span><br><span class="line">	<span class="keyword">assign</span> RD = im[(addr &gt;&gt; <span class="number">2</span>)];</span><br><span class="line"></span><br><span class="line"><span class="keyword">endmodule</span></span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
+
+<h3 id="Controller-v"><a href="#Controller-v" class="headerlink" title="Controller.v"></a>Controller.v</h3><div class="code-container" data-rel="Verilog"><figure class="iseeu highlight verilog"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">module</span> Controller(</span><br><span class="line">    <span class="keyword">input</span> [<span class="number">31</span>:<span class="number">0</span>] Instr,</span><br><span class="line">    <span class="keyword">output</span> <span class="keyword">reg</span> [<span class="number">1</span>:<span class="number">0</span>] WDSel,</span><br><span class="line">    <span class="keyword">output</span> <span class="keyword">reg</span> RegWrite,</span><br><span class="line">    <span class="keyword">output</span> <span class="keyword">reg</span> MemWrite,</span><br><span class="line">    <span class="keyword">output</span> <span class="keyword">reg</span> [<span class="number">2</span>:<span class="number">0</span>] PCSel,</span><br><span class="line">    <span class="keyword">output</span> <span class="keyword">reg</span> [<span class="number">2</span>:<span class="number">0</span>] ALUCtrl,</span><br><span class="line">    <span class="keyword">output</span> <span class="keyword">reg</span> ALUSrc,</span><br><span class="line">    <span class="keyword">output</span> <span class="keyword">reg</span> [<span class="number">1</span>:<span class="number">0</span>] RegDst</span><br><span class="line">    );</span><br><span class="line">	</span><br><span class="line">	<span class="keyword">always</span> @(*) <span class="keyword">begin</span></span><br><span class="line">		<span class="keyword">case</span> (`OpCode)</span><br><span class="line">			`nop: <span class="keyword">begin</span> <span class="comment">// OpCode = 6&#x27;b000000;</span></span><br><span class="line">				<span class="keyword">case</span> (`Func) </span><br><span class="line">					`add: <span class="keyword">begin</span></span><br><span class="line">						WDSel = `wdAO;</span><br><span class="line">						RegWrite = <span class="number">1</span>;</span><br><span class="line">						MemWrite = <span class="number">0</span>;</span><br><span class="line">						PCSel = `pc4;</span><br><span class="line">						ALUCtrl = `aluAdd;</span><br><span class="line">						ALUSrc = <span class="number">0</span>;</span><br><span class="line">						RegDst = `a3rd;</span><br><span class="line">					<span class="keyword">end</span></span><br><span class="line">					`sub: <span class="keyword">begin</span></span><br><span class="line">						<span class="comment">// more</span></span><br><span class="line">				<span class="keyword">endcase</span></span><br><span class="line">			<span class="keyword">end</span></span><br><span class="line">			`ori: <span class="keyword">begin</span></span><br><span class="line">				WDSel = `wdAO;</span><br><span class="line">				RegWrite = <span class="number">1</span>;</span><br><span class="line">				MemWrite = <span class="number">0</span>;</span><br><span class="line">				PCSel = `pc4;</span><br><span class="line">				ALUCtrl = `aluOri;</span><br><span class="line">				ALUSrc = <span class="number">1</span>;</span><br><span class="line">				RegDst = `a3rt;</span><br><span class="line">			<span class="keyword">end</span></span><br><span class="line">			`lui: <span class="keyword">begin</span></span><br><span class="line">				<span class="comment">// more</span></span><br><span class="line">		<span class="keyword">endcase</span></span><br><span class="line">	<span class="keyword">end</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">endmodule</span></span><br></pre></td></tr></table></figure></div>
+
+<h3 id="GRF-v"><a href="#GRF-v" class="headerlink" title="GRF.v"></a>GRF.v</h3><div class="code-container" data-rel="Verilog"><figure class="iseeu highlight verilog"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">module</span> GRF(</span><br><span class="line">    <span class="keyword">input</span> clk,</span><br><span class="line">    <span class="keyword">input</span> reset,</span><br><span class="line">    <span class="keyword">input</span> WE,</span><br><span class="line">    <span class="keyword">input</span> [<span class="number">4</span>:<span class="number">0</span>] A1,</span><br><span class="line">    <span class="keyword">input</span> [<span class="number">4</span>:<span class="number">0</span>] A2,</span><br><span class="line">    <span class="keyword">input</span> [<span class="number">4</span>:<span class="number">0</span>] A3,</span><br><span class="line">    <span class="keyword">input</span> [<span class="number">31</span>:<span class="number">0</span>] WD,</span><br><span class="line">	 <span class="keyword">input</span> [<span class="number">31</span>:<span class="number">0</span>] PC,</span><br><span class="line">    <span class="keyword">output</span> [<span class="number">31</span>:<span class="number">0</span>] RD1,</span><br><span class="line">    <span class="keyword">output</span> [<span class="number">31</span>:<span class="number">0</span>] RD2</span><br><span class="line">    );</span><br><span class="line"></span><br><span class="line">	<span class="keyword">integer</span> i;</span><br><span class="line">	<span class="keyword">reg</span> [<span class="number">31</span>:<span class="number">0</span>] regs[<span class="number">0</span>:<span class="number">31</span>];</span><br><span class="line">	</span><br><span class="line">	<span class="keyword">initial</span> <span class="keyword">begin</span></span><br><span class="line">		<span class="keyword">for</span> (i = <span class="number">0</span>; i &lt; <span class="number">32</span>; i = i + <span class="number">1</span>) <span class="keyword">begin</span></span><br><span class="line">			regs[i] &lt;= <span class="number">32&#x27;h0000_0000</span>;</span><br><span class="line">		<span class="keyword">end</span></span><br><span class="line">	<span class="keyword">end</span></span><br><span class="line">	</span><br><span class="line">	<span class="keyword">always</span> @(<span class="keyword">posedge</span> clk) <span class="keyword">begin</span></span><br><span class="line">		<span class="keyword">if</span> (reset) <span class="keyword">begin</span></span><br><span class="line">			<span class="keyword">for</span> (i = <span class="number">0</span>; i &lt; <span class="number">32</span>; i = i + <span class="number">1</span>) <span class="keyword">begin</span></span><br><span class="line">				regs[i] &lt;= <span class="number">32&#x27;h0000_0000</span>;</span><br><span class="line">			<span class="keyword">end</span></span><br><span class="line">		<span class="keyword">end</span></span><br><span class="line">		<span class="keyword">else</span> <span class="keyword">begin</span></span><br><span class="line">			<span class="keyword">if</span> (WE &amp;&amp; A3 != <span class="number">5&#x27;d0</span>) <span class="keyword">begin</span></span><br><span class="line">				<span class="built_in">$display</span>(<span class="string">&quot;%d@%h: $%d &lt;= %h&quot;</span>, <span class="built_in">$time</span>, PC, A3, WD);</span><br><span class="line">				regs[A3] &lt;= WD;</span><br><span class="line">			<span class="keyword">end</span></span><br><span class="line">		<span class="keyword">end</span></span><br><span class="line">	<span class="keyword">end</span></span><br><span class="line">	</span><br><span class="line">	<span class="keyword">assign</span> RD1 = regs[A1];</span><br><span class="line">	<span class="keyword">assign</span> RD2 = regs[A2];</span><br><span class="line"></span><br><span class="line"><span class="keyword">endmodule</span></span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
+
+<h3 id="NPC-v"><a href="#NPC-v" class="headerlink" title="NPC.v"></a>NPC.v</h3><div class="code-container" data-rel="Verilog"><figure class="iseeu highlight verilog"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">module</span> NPC(</span><br><span class="line">    <span class="keyword">input</span> [<span class="number">31</span>:<span class="number">0</span>] PC,</span><br><span class="line">    <span class="keyword">input</span> [<span class="number">25</span>:<span class="number">0</span>] IMM,</span><br><span class="line">    <span class="keyword">input</span> [<span class="number">2</span>:<span class="number">0</span>] PCSel,</span><br><span class="line">    <span class="keyword">input</span> equ,</span><br><span class="line">    <span class="keyword">output</span> <span class="keyword">reg</span> [<span class="number">31</span>:<span class="number">0</span>] NPC</span><br><span class="line">    );</span><br><span class="line">	</span><br><span class="line">	<span class="keyword">always</span> @(*) <span class="keyword">begin</span></span><br><span class="line">		<span class="keyword">case</span> (PCSel)</span><br><span class="line">			`pcBeq: <span class="keyword">begin</span></span><br><span class="line">				<span class="keyword">if</span> (equ) <span class="keyword">begin</span></span><br><span class="line">					NPC = PC + (&#123;&#123;<span class="number">16</span>&#123;IMM[<span class="number">15</span>]&#125;&#125;, IMM[<span class="number">15</span>:<span class="number">0</span>]&#125; &lt;&lt; <span class="number">2</span>);</span><br><span class="line">				<span class="keyword">end</span></span><br><span class="line">				<span class="keyword">else</span> <span class="keyword">begin</span></span><br><span class="line">					NPC = PC + <span class="number">32&#x27;d4</span>;</span><br><span class="line">				<span class="keyword">end</span></span><br><span class="line">			<span class="keyword">end</span></span><br><span class="line">			`pcJal: <span class="keyword">begin</span></span><br><span class="line">				NPC = &#123;PC[<span class="number">31</span>:<span class="number">28</span>], IMM, <span class="number">2&#x27;d0</span>&#125;;</span><br><span class="line">			<span class="keyword">end</span></span><br><span class="line">		<span class="keyword">endcase</span></span><br><span class="line">	<span class="keyword">end</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">endmodule</span></span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
+
+<h3 id="ALU-v"><a href="#ALU-v" class="headerlink" title="ALU.v"></a>ALU.v</h3><div class="code-container" data-rel="Verilog"><figure class="iseeu highlight verilog"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">module</span> ALU(</span><br><span class="line">    <span class="keyword">input</span> [<span class="number">31</span>:<span class="number">0</span>] alu_A,</span><br><span class="line">    <span class="keyword">input</span> [<span class="number">31</span>:<span class="number">0</span>] alu_B,</span><br><span class="line">    <span class="keyword">input</span> [<span class="number">2</span>:<span class="number">0</span>] ALUCtrl,</span><br><span class="line">    <span class="keyword">output</span> <span class="keyword">reg</span> [<span class="number">31</span>:<span class="number">0</span>] alu_out</span><br><span class="line">    );</span><br><span class="line">	 </span><br><span class="line">	<span class="keyword">always</span> @(*) <span class="keyword">begin</span></span><br><span class="line">		<span class="keyword">case</span> (ALUCtrl)</span><br><span class="line">			`aluAdd:</span><br><span class="line">				alu_out = alu_A + alu_B;</span><br><span class="line">			`aluSub:</span><br><span class="line">				alu_out = alu_A - alu_B;</span><br><span class="line">			`aluOri:</span><br><span class="line">				alu_out = alu_A | &#123;<span class="number">16&#x27;d0</span>, alu_B[<span class="number">15</span>:<span class="number">0</span>]&#125;;</span><br><span class="line">			`aluLui:</span><br><span class="line">				alu_out = alu_B &lt;&lt; <span class="number">16</span>;</span><br><span class="line">		<span class="keyword">endcase</span></span><br><span class="line">	<span class="keyword">end</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">endmodule</span></span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
+
+<h3 id="DM-v"><a href="#DM-v" class="headerlink" title="DM.v"></a>DM.v</h3><div class="code-container" data-rel="Verilog"><figure class="iseeu highlight verilog"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">module</span> DM(</span><br><span class="line">    <span class="keyword">input</span> clk,</span><br><span class="line">    <span class="keyword">input</span> reset,</span><br><span class="line">    <span class="keyword">input</span> WE,</span><br><span class="line">    <span class="keyword">input</span> [<span class="number">31</span>:<span class="number">0</span>] A,</span><br><span class="line">    <span class="keyword">input</span> [<span class="number">31</span>:<span class="number">0</span>] WD,</span><br><span class="line">    <span class="keyword">input</span> [<span class="number">31</span>:<span class="number">0</span>] PC,</span><br><span class="line">    <span class="keyword">output</span> [<span class="number">31</span>:<span class="number">0</span>] RD</span><br><span class="line">    );</span><br><span class="line">	 </span><br><span class="line">	<span class="keyword">reg</span> [<span class="number">31</span>:<span class="number">0</span>] dm[<span class="number">0</span>:<span class="number">3071</span>];</span><br><span class="line">	<span class="keyword">wire</span> [<span class="number">11</span>:<span class="number">0</span>] MemAddr;</span><br><span class="line">	<span class="keyword">wire</span> [<span class="number">31</span>:<span class="number">0</span>] Addr;</span><br><span class="line">	<span class="keyword">integer</span> i;</span><br><span class="line">	</span><br><span class="line">	<span class="keyword">always</span> @(<span class="keyword">posedge</span> clk) <span class="keyword">begin</span></span><br><span class="line">		<span class="keyword">if</span> (reset) <span class="keyword">begin</span></span><br><span class="line">			<span class="keyword">for</span> (i = <span class="number">0</span>; i &lt; <span class="number">3072</span>; i = i + <span class="number">1</span>) <span class="keyword">begin</span></span><br><span class="line">				dm[i] &lt;= <span class="number">32&#x27;h0000_0000</span>;</span><br><span class="line">			<span class="keyword">end</span></span><br><span class="line">		<span class="keyword">end</span></span><br><span class="line">		<span class="keyword">else</span> <span class="keyword">begin</span></span><br><span class="line">			<span class="keyword">if</span> (WE) <span class="keyword">begin</span></span><br><span class="line">				dm[MemAddr] &lt;= WD;</span><br><span class="line">				<span class="built_in">$display</span>(<span class="string">&quot;%d@%h: *%h &lt;= %h&quot;</span>, <span class="built_in">$time</span>, PC, A, WD);</span><br><span class="line">			<span class="keyword">end</span></span><br><span class="line">		<span class="keyword">end</span></span><br><span class="line">	<span class="keyword">end</span></span><br><span class="line"></span><br><span class="line">	<span class="keyword">assign</span> MemAddr = A &gt;&gt; <span class="number">2</span>;</span><br><span class="line">	<span class="keyword">assign</span> RD = dm[MemAddr];</span><br><span class="line">	</span><br><span class="line"><span class="keyword">endmodule</span></span><br></pre></td></tr></table></figure></div>
+
+<h3 id="HazardCtrl-v"><a href="#HazardCtrl-v" class="headerlink" title="HazardCtrl.v"></a>HazardCtrl.v</h3><div class="code-container" data-rel="Verilog"><figure class="iseeu highlight verilog"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">module</span> HazardCtrl(</span><br><span class="line">    <span class="keyword">input</span> [<span class="number">31</span>:<span class="number">0</span>] Instr_D,</span><br><span class="line">    <span class="keyword">input</span> [<span class="number">31</span>:<span class="number">0</span>] Instr_E,</span><br><span class="line">    <span class="keyword">input</span> [<span class="number">31</span>:<span class="number">0</span>] Instr_M,</span><br><span class="line">    <span class="keyword">input</span> [<span class="number">31</span>:<span class="number">0</span>] Instr_W,</span><br><span class="line">	 <span class="keyword">input</span> RegWrite_E,</span><br><span class="line">	 <span class="keyword">input</span> RegWrite_M,</span><br><span class="line">	 <span class="keyword">input</span> RegWrite_W,</span><br><span class="line">	 <span class="keyword">input</span> [<span class="number">1</span>:<span class="number">0</span>] RegDst_E,</span><br><span class="line">	 <span class="keyword">input</span> [<span class="number">1</span>:<span class="number">0</span>] RegDst_M,</span><br><span class="line">	 <span class="keyword">input</span> [<span class="number">1</span>:<span class="number">0</span>] RegDst_W,</span><br><span class="line">    <span class="keyword">output</span> StallPC,</span><br><span class="line">    <span class="keyword">output</span> StallD,</span><br><span class="line">    <span class="keyword">output</span> [<span class="number">1</span>:<span class="number">0</span>] RD1_D_Sel,</span><br><span class="line">    <span class="keyword">output</span> [<span class="number">1</span>:<span class="number">0</span>] RD2_D_Sel,</span><br><span class="line">    <span class="keyword">output</span> ClrE,</span><br><span class="line">    <span class="keyword">output</span> [<span class="number">1</span>:<span class="number">0</span>] RD1_E_Sel,</span><br><span class="line">    <span class="keyword">output</span> [<span class="number">1</span>:<span class="number">0</span>] RD2_E_Sel</span><br><span class="line">    );</span><br><span class="line">	</span><br><span class="line">	<span class="comment">/********** Declarations  **********/</span></span><br><span class="line">	<span class="keyword">reg</span> [<span class="number">1</span>:<span class="number">0</span>] rs_Tuse, rt_Tuse, E_Tnew, M_Tnew, W_Tnew;</span><br><span class="line">	<span class="keyword">wire</span> [<span class="number">4</span>:<span class="number">0</span>] A1_D = Instr_D[<span class="number">25</span>:<span class="number">21</span>], A2_D = Instr_D[<span class="number">20</span>:<span class="number">16</span>];</span><br><span class="line">	<span class="keyword">wire</span> [<span class="number">4</span>:<span class="number">0</span>] A1_E = Instr_E[<span class="number">25</span>:<span class="number">21</span>], A2_E = Instr_E[<span class="number">20</span>:<span class="number">16</span>];</span><br><span class="line">	<span class="keyword">wire</span> [<span class="number">4</span>:<span class="number">0</span>] A1_M = Instr_M[<span class="number">25</span>:<span class="number">21</span>], A2_M = Instr_M[<span class="number">20</span>:<span class="number">16</span>];</span><br><span class="line">	<span class="keyword">wire</span> [<span class="number">4</span>:<span class="number">0</span>] A1_W = Instr_W[<span class="number">25</span>:<span class="number">21</span>], A2_W = Instr_W[<span class="number">20</span>:<span class="number">16</span>];</span><br><span class="line">	<span class="keyword">wire</span> [<span class="number">4</span>:<span class="number">0</span>] A3_E, A3_M, A3_W;</span><br><span class="line">	<span class="keyword">assign</span> A3_E = (RegDst_E == <span class="number">2&#x27;d0</span>) ? Instr_E[<span class="number">20</span>:<span class="number">16</span>] :</span><br><span class="line">					  (RegDst_E == <span class="number">2&#x27;d1</span>) ? Instr_E[<span class="number">15</span>:<span class="number">11</span>] : <span class="number">5&#x27;d31</span>;</span><br><span class="line">	<span class="keyword">assign</span> A3_M = (RegDst_M == <span class="number">2&#x27;d0</span>) ? Instr_M[<span class="number">20</span>:<span class="number">16</span>] :</span><br><span class="line">					  (RegDst_M == <span class="number">2&#x27;d1</span>) ? Instr_M[<span class="number">15</span>:<span class="number">11</span>] : <span class="number">5&#x27;d31</span>;</span><br><span class="line">	<span class="keyword">assign</span> A3_W = (RegDst_W == <span class="number">2&#x27;d0</span>) ? Instr_W[<span class="number">20</span>:<span class="number">16</span>] :</span><br><span class="line">					  (RegDst_W == <span class="number">2&#x27;d1</span>) ? Instr_W[<span class="number">15</span>:<span class="number">11</span>] : <span class="number">5&#x27;d31</span>;</span><br><span class="line">	</span><br><span class="line">	<span class="comment">// StallCtrl</span></span><br><span class="line">	<span class="keyword">wire</span> Stall_RS0_E2, Stall_RS0_E1, Stall_RS0_M1, Stall_RS1_E2;</span><br><span class="line">	<span class="keyword">wire</span> Stall_RT0_E2, Stall_RT0_E1, Stall_RT0_M1, Stall_RT1_E2;</span><br><span class="line">	<span class="keyword">wire</span> Stall_RS, Stall_RT, Stall;</span><br><span class="line">	</span><br><span class="line">	<span class="comment">/**********  Stage_D  **********/</span></span><br><span class="line">	<span class="keyword">always</span> @(*) <span class="keyword">begin</span></span><br><span class="line">		<span class="keyword">case</span> (Instr_D[<span class="number">31</span>:<span class="number">26</span>])</span><br><span class="line">			`nop: <span class="keyword">begin</span></span><br><span class="line">				<span class="keyword">case</span> (Instr_D[<span class="number">5</span>:<span class="number">0</span>])</span><br><span class="line">					`add: <span class="keyword">begin</span></span><br><span class="line">						rs_Tuse = `add_rs_Tuse;</span><br><span class="line">						rt_Tuse = `add_rt_Tuse;</span><br><span class="line">					<span class="keyword">end</span></span><br><span class="line">					`sub: <span class="keyword">begin</span></span><br><span class="line">						<span class="comment">// more</span></span><br><span class="line">				<span class="keyword">endcase</span></span><br><span class="line">			<span class="keyword">end</span></span><br><span class="line">			`ori: <span class="keyword">begin</span></span><br><span class="line">				rs_Tuse = `ori_rs_Tuse;</span><br><span class="line">				rt_Tuse = `ori_rt_Tuse;</span><br><span class="line">			<span class="keyword">end</span></span><br><span class="line">			`lui: <span class="keyword">begin</span></span><br><span class="line">				<span class="comment">// more</span></span><br><span class="line">		<span class="keyword">endcase</span></span><br><span class="line">	<span class="keyword">end</span></span><br><span class="line">	</span><br><span class="line">	<span class="comment">/**********  Stage_E  **********/</span></span><br><span class="line">	<span class="keyword">always</span> @(*) <span class="keyword">begin</span></span><br><span class="line">		<span class="keyword">case</span> (Instr_E[<span class="number">31</span>:<span class="number">26</span>])</span><br><span class="line">			`nop: <span class="keyword">begin</span></span><br><span class="line">				<span class="keyword">case</span> (Instr_E[<span class="number">5</span>:<span class="number">0</span>])</span><br><span class="line">					`add: <span class="keyword">begin</span></span><br><span class="line">						E_Tnew = `add_E_Tnew;</span><br><span class="line">					<span class="keyword">end</span></span><br><span class="line">					`sub: <span class="keyword">begin</span></span><br><span class="line">						<span class="comment">// more</span></span><br><span class="line">				<span class="keyword">endcase</span></span><br><span class="line">			<span class="keyword">end</span></span><br><span class="line">			`ori: <span class="keyword">begin</span></span><br><span class="line">				E_Tnew = `ori_E_Tnew;</span><br><span class="line">			<span class="keyword">end</span></span><br><span class="line">			`lui: <span class="keyword">begin</span></span><br><span class="line">				<span class="comment">// more</span></span><br><span class="line">		<span class="keyword">endcase</span></span><br><span class="line">	<span class="keyword">end</span></span><br><span class="line"></span><br><span class="line">	<span class="comment">/**********  Stage_M  **********/</span></span><br><span class="line">	<span class="keyword">always</span> @(*) <span class="keyword">begin</span></span><br><span class="line">		<span class="keyword">case</span> (Instr_M[<span class="number">31</span>:<span class="number">26</span>])</span><br><span class="line">			`nop: <span class="keyword">begin</span></span><br><span class="line">				<span class="comment">// more</span></span><br><span class="line"></span><br><span class="line">	<span class="comment">/**********  Stage_W  **********/</span></span><br><span class="line">	<span class="comment">// more</span></span><br><span class="line"></span><br><span class="line">	<span class="comment">/**********  HazardCtrl  **********/</span></span><br><span class="line">	<span class="comment">// StallCtrl</span></span><br><span class="line">	<span class="keyword">assign</span> Stall_RS0_E2 = (rs_Tuse == <span class="number">2&#x27;d0</span>) &amp; (E_Tnew == <span class="number">2&#x27;d2</span>) &amp; (A1_D == A3_E) &amp; (A1_D != <span class="number">5&#x27;d0</span>) &amp; RegWrite_E;</span><br><span class="line">	<span class="keyword">assign</span> Stall_RS0_E1 = (rs_Tuse == <span class="number">2&#x27;d0</span>) &amp; (E_Tnew == <span class="number">2&#x27;d1</span>) &amp; (A1_D == A3_E) &amp; (A1_D != <span class="number">5&#x27;d0</span>) &amp; RegWrite_E;</span><br><span class="line">	<span class="keyword">assign</span> Stall_RS0_M1 = (rs_Tuse == <span class="number">2&#x27;d0</span>) &amp; (M_Tnew == <span class="number">2&#x27;d1</span>) &amp; (A1_D == A3_M) &amp; (A1_D != <span class="number">5&#x27;d0</span>) &amp; RegWrite_M;</span><br><span class="line">	<span class="keyword">assign</span> Stall_RS1_E2 = (rs_Tuse == <span class="number">2&#x27;d1</span>) &amp; (E_Tnew == <span class="number">2&#x27;d2</span>) &amp; (A1_D == A3_E) &amp; (A1_D != <span class="number">5&#x27;d0</span>) &amp; RegWrite_E;</span><br><span class="line">	<span class="keyword">assign</span> Stall_RS = Stall_RS0_E2 | Stall_RS0_E1 | Stall_RS0_M1 | Stall_RS1_E2;</span><br><span class="line">	</span><br><span class="line">	<span class="keyword">assign</span> Stall_RT0_E2 = (rt_Tuse == <span class="number">2&#x27;d0</span>) &amp; (E_Tnew == <span class="number">2&#x27;d2</span>) &amp; (A2_D == A3_E) &amp; (A2_D != <span class="number">5&#x27;d0</span>) &amp; RegWrite_E;</span><br><span class="line">	<span class="keyword">assign</span> Stall_RT0_E1 = (rt_Tuse == <span class="number">2&#x27;d0</span>) &amp; (E_Tnew == <span class="number">2&#x27;d1</span>) &amp; (A2_D == A3_E) &amp; (A2_D != <span class="number">5&#x27;d0</span>) &amp; RegWrite_E;</span><br><span class="line">	<span class="keyword">assign</span> Stall_RT0_M1 = (rt_Tuse == <span class="number">2&#x27;d0</span>) &amp; (M_Tnew == <span class="number">2&#x27;d1</span>) &amp; (A2_D == A3_M) &amp; (A2_D != <span class="number">5&#x27;d0</span>) &amp; RegWrite_M;</span><br><span class="line">	<span class="keyword">assign</span> Stall_RT1_E2 = (rt_Tuse == <span class="number">2&#x27;d1</span>) &amp; (E_Tnew == <span class="number">2&#x27;d2</span>) &amp; (A2_D == A3_E) &amp; (A2_D != <span class="number">5&#x27;d0</span>) &amp; RegWrite_E;</span><br><span class="line">	<span class="keyword">assign</span> Stall_RT = Stall_RT0_E2 | Stall_RT0_E1 | Stall_RT0_M1 | Stall_RT1_E2;</span><br><span class="line">	</span><br><span class="line">	<span class="keyword">assign</span> Stall = Stall_RS | Stall_RT;</span><br><span class="line">	<span class="keyword">assign</span> StallPC = Stall;</span><br><span class="line">	<span class="keyword">assign</span> StallD = Stall;</span><br><span class="line">	<span class="keyword">assign</span> ClrE = Stall;</span><br><span class="line">	</span><br><span class="line">	<span class="comment">// ForwardCtrl</span></span><br><span class="line">	<span class="keyword">assign</span> RD1_D_Sel = (A1_D == A3_M &amp;&amp; A1_D != <span class="number">5&#x27;d0</span> &amp;&amp; M_Tnew == <span class="number">2&#x27;d0</span> &amp;&amp; RegWrite_M == <span class="number">1&#x27;b1</span>) ? <span class="number">2&#x27;d2</span> :</span><br><span class="line">							 (A1_D == A3_W &amp;&amp; A1_D != <span class="number">5&#x27;d0</span> &amp;&amp; W_Tnew == <span class="number">2&#x27;d0</span> &amp;&amp; RegWrite_W == <span class="number">1&#x27;b1</span>) ? <span class="number">2&#x27;d1</span> : <span class="number">2&#x27;d0</span>;</span><br><span class="line">	<span class="keyword">assign</span> RD2_D_Sel = (A2_D == A3_M &amp;&amp; A2_D != <span class="number">5&#x27;d0</span> &amp;&amp; M_Tnew == <span class="number">2&#x27;d0</span> &amp;&amp; RegWrite_M == <span class="number">1&#x27;b1</span>) ? <span class="number">2&#x27;d2</span> :</span><br><span class="line">							 (A2_D == A3_W &amp;&amp; A2_D != <span class="number">5&#x27;d0</span> &amp;&amp; W_Tnew == <span class="number">2&#x27;d0</span> &amp;&amp; RegWrite_W == <span class="number">1&#x27;b1</span>) ? <span class="number">2&#x27;d1</span> : <span class="number">2&#x27;d0</span>;</span><br><span class="line">	<span class="keyword">assign</span> RD1_E_Sel = (A1_E == A3_M &amp;&amp; A1_E != <span class="number">5&#x27;d0</span> &amp;&amp; M_Tnew == <span class="number">2&#x27;d0</span> &amp;&amp; RegWrite_M == <span class="number">1&#x27;b1</span>) ? <span class="number">2&#x27;d2</span> :</span><br><span class="line">							 (A1_E == A3_W &amp;&amp; A1_E != <span class="number">5&#x27;d0</span> &amp;&amp; W_Tnew == <span class="number">2&#x27;d0</span> &amp;&amp; RegWrite_W == <span class="number">1&#x27;b1</span>) ? <span class="number">2&#x27;d1</span> : <span class="number">2&#x27;d0</span>;</span><br><span class="line">	<span class="keyword">assign</span> RD2_E_Sel = (A2_E == A3_M &amp;&amp; A2_E != <span class="number">5&#x27;d0</span> &amp;&amp; M_Tnew == <span class="number">2&#x27;d0</span> &amp;&amp; RegWrite_M == <span class="number">1&#x27;b1</span>) ? <span class="number">2&#x27;d2</span> :</span><br><span class="line">							 (A2_E == A3_W &amp;&amp; A2_E != <span class="number">5&#x27;d0</span> &amp;&amp; W_Tnew == <span class="number">2&#x27;d0</span> &amp;&amp; RegWrite_W == <span class="number">1&#x27;b1</span>) ? <span class="number">2&#x27;d1</span> : <span class="number">2&#x27;d0</span>;	</span><br><span class="line"><span class="keyword">endmodule</span></span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
+
+<h3 id="mips-v"><a href="#mips-v" class="headerlink" title="mips.v"></a>mips.v</h3><div class="code-container" data-rel="Verilog"><figure class="iseeu highlight verilog"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br><span class="line">196</span><br><span class="line">197</span><br><span class="line">198</span><br><span class="line">199</span><br><span class="line">200</span><br><span class="line">201</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">module</span> mips(</span><br><span class="line">    <span class="keyword">input</span> clk,</span><br><span class="line">    <span class="keyword">input</span> reset</span><br><span class="line">    );</span><br><span class="line"></span><br><span class="line"><span class="comment">/******** Declarations *********/</span></span><br><span class="line"><span class="comment">// F</span></span><br><span class="line"><span class="keyword">wire</span> StallPC;</span><br><span class="line"><span class="keyword">wire</span> [<span class="number">31</span>:<span class="number">0</span>] Instr_F;</span><br><span class="line"><span class="keyword">wire</span> [<span class="number">31</span>:<span class="number">0</span>] PC_F;</span><br><span class="line"><span class="keyword">wire</span> [<span class="number">31</span>:<span class="number">0</span>] PC;</span><br><span class="line"><span class="comment">// D</span></span><br><span class="line"><span class="keyword">wire</span> StallD;</span><br><span class="line"><span class="comment">// more</span></span><br><span class="line"><span class="comment">/**********  Stage_F  **********/</span></span><br><span class="line">PC F_PC(</span><br><span class="line">    <span class="variable">.clk</span>(clk),</span><br><span class="line">    <span class="variable">.reset</span>(reset),</span><br><span class="line">    <span class="variable">.EN</span>(~StallPC),</span><br><span class="line">    <span class="variable">.NPC</span>(PC),</span><br><span class="line">    <span class="variable">.PC</span>(PC_F)</span><br><span class="line">    );</span><br><span class="line">	 </span><br><span class="line">IM F_IM(</span><br><span class="line">    <span class="variable">.PC</span>(PC_F),</span><br><span class="line">    <span class="variable">.RD</span>(Instr_F)</span><br><span class="line">    );</span><br><span class="line"></span><br><span class="line"><span class="keyword">assign</span> PC = (PCSel_D == <span class="number">3&#x27;d0</span>) ? PC_F + <span class="number">32&#x27;d4</span> :</span><br><span class="line">				(PCSel_D == <span class="number">3&#x27;d1</span> || PCSel_D == <span class="number">3&#x27;d2</span>) ? NPC_D :</span><br><span class="line">				(PCSel_D == <span class="number">3&#x27;d3</span>) ? RD1_D : <span class="number">0</span>;</span><br><span class="line">				</span><br><span class="line"><span class="comment">/**********  Stage_D  **********/</span></span><br><span class="line"><span class="keyword">always</span> @(<span class="keyword">posedge</span> clk) <span class="keyword">begin</span></span><br><span class="line">	<span class="keyword">if</span> (reset) <span class="keyword">begin</span></span><br><span class="line">		Instr_D &lt;= <span class="number">32&#x27;d0</span>;</span><br><span class="line">		PC4_D &lt;= <span class="number">32&#x27;d0</span>;</span><br><span class="line">	<span class="keyword">end</span></span><br><span class="line">	<span class="keyword">else</span> <span class="keyword">if</span> (StallD) <span class="keyword">begin</span></span><br><span class="line">		Instr_D &lt;= Instr_D;</span><br><span class="line">		PC4_D &lt;= PC4_D;</span><br><span class="line">	<span class="keyword">end</span></span><br><span class="line">	<span class="keyword">else</span> <span class="keyword">begin</span></span><br><span class="line">		Instr_D &lt;= Instr_F;</span><br><span class="line">		PC4_D &lt;= PC_F + <span class="number">32&#x27;d4</span>;</span><br><span class="line">	<span class="keyword">end</span></span><br><span class="line"><span class="keyword">end</span></span><br><span class="line"></span><br><span class="line">Controller D_Controller(</span><br><span class="line">    <span class="variable">.Instr</span>(Instr_D),</span><br><span class="line">    <span class="variable">.PCSel</span>(PCSel_D)</span><br><span class="line">    );</span><br><span class="line"></span><br><span class="line">GRF D_GRF(</span><br><span class="line">    <span class="variable">.clk</span>(clk),</span><br><span class="line">    <span class="variable">.reset</span>(reset),</span><br><span class="line">    <span class="variable">.WE</span>(RegWrite_W),</span><br><span class="line">    <span class="variable">.A1</span>(Instr_D[<span class="number">25</span>:<span class="number">21</span>]),</span><br><span class="line">    <span class="variable">.A2</span>(Instr_D[<span class="number">20</span>:<span class="number">16</span>]),</span><br><span class="line">    <span class="variable">.A3</span>(GPR_A3_W),</span><br><span class="line">    <span class="variable">.WD</span>(GPR_WD_W),</span><br><span class="line">	 <span class="variable">.PC</span>(PC_D),</span><br><span class="line">    <span class="variable">.RD1</span>(GPR_rs),</span><br><span class="line">    <span class="variable">.RD2</span>(GPR_rt)</span><br><span class="line">    );</span><br><span class="line">NPC D_NPC(</span><br><span class="line">    <span class="variable">.PC</span>(PC4_D),</span><br><span class="line">    <span class="variable">.IMM</span>(Instr_D[<span class="number">25</span>:<span class="number">0</span>]),</span><br><span class="line">    <span class="variable">.PCSel</span>(PCSel_D),</span><br><span class="line">    <span class="variable">.equ</span>(equ_D),</span><br><span class="line">    <span class="variable">.NPC</span>(NPC_D)</span><br><span class="line">    );</span><br><span class="line"><span class="keyword">assign</span> RD1_D = (RD1_D_Sel == <span class="number">2&#x27;d0</span>) ? GPR_rs :</span><br><span class="line">					(RD1_D_Sel == <span class="number">2&#x27;d1</span>) ? GPR_WD_W :</span><br><span class="line">					(RD1_D_Sel == <span class="number">2&#x27;d2</span>) ? AO_M : <span class="number">0</span>;</span><br><span class="line"><span class="keyword">assign</span> RD2_D = (RD2_D_Sel == <span class="number">2&#x27;d0</span>) ? GPR_rt :</span><br><span class="line">					(RD2_D_Sel == <span class="number">2&#x27;d1</span>) ? GPR_WD_W :</span><br><span class="line">					(RD2_D_Sel == <span class="number">2&#x27;d2</span>) ? AO_M : <span class="number">0</span>;</span><br><span class="line"><span class="keyword">assign</span> equ_D = (RD1_D == RD2_D);</span><br><span class="line"><span class="keyword">assign</span> PC_D = PC8_W - <span class="number">32&#x27;d8</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**********  Stage_E  **********/</span></span><br><span class="line"><span class="keyword">always</span> @(<span class="keyword">posedge</span> clk) <span class="keyword">begin</span></span><br><span class="line">	<span class="keyword">if</span> (reset) <span class="keyword">begin</span></span><br><span class="line">		Instr_E &lt;= <span class="number">32&#x27;d0</span>;</span><br><span class="line">		PC4_E &lt;= <span class="number">32&#x27;d0</span>;</span><br><span class="line">		RD1_E &lt;= <span class="number">32&#x27;d0</span>;</span><br><span class="line">		RD2_E &lt;= <span class="number">32&#x27;d0</span>;</span><br><span class="line">	<span class="keyword">end</span></span><br><span class="line">	<span class="keyword">else</span> <span class="keyword">if</span> (ClrE) <span class="keyword">begin</span></span><br><span class="line">		Instr_E &lt;= <span class="number">32&#x27;d0</span>;</span><br><span class="line">	<span class="keyword">end</span></span><br><span class="line">	<span class="keyword">else</span> <span class="keyword">begin</span></span><br><span class="line">		Instr_E &lt;= Instr_D;</span><br><span class="line">		PC4_E &lt;= PC4_D;</span><br><span class="line">		RD1_E &lt;= RD1_D;</span><br><span class="line">		RD2_E &lt;= RD2_D;</span><br><span class="line">	<span class="keyword">end</span></span><br><span class="line"><span class="keyword">end</span></span><br><span class="line"></span><br><span class="line">Controller E_Controller(</span><br><span class="line">    <span class="variable">.Instr</span>(Instr_E),</span><br><span class="line">	 <span class="variable">.RegWrite</span>(RegWrite_E),</span><br><span class="line">    <span class="variable">.ALUCtrl</span>(ALUCtrl_E),</span><br><span class="line">    <span class="variable">.ALUSrc</span>(ALUSrc_E),</span><br><span class="line">    <span class="variable">.RegDst</span>(RegDst_E)</span><br><span class="line">    );</span><br><span class="line"></span><br><span class="line"><span class="keyword">assign</span> Op1_E = (RD1_E_Sel == <span class="number">2&#x27;d0</span>) ? RD1_E :</span><br><span class="line">					(RD1_E_Sel == <span class="number">2&#x27;d1</span>) ? GPR_WD_W :</span><br><span class="line">					(RD1_E_Sel == <span class="number">2&#x27;d2</span>) ? AO_M : <span class="number">0</span>;</span><br><span class="line"><span class="keyword">assign</span> Op2_E = (ALUSrc_E == <span class="number">1&#x27;d1</span>) ? &#123;&#123;<span class="number">20</span>&#123;Instr_E[<span class="number">15</span>]&#125;&#125;, Instr_E[<span class="number">15</span>:<span class="number">0</span>]&#125; :</span><br><span class="line">					(RD2_E_Sel == <span class="number">2&#x27;d0</span>) ? RD2_E :</span><br><span class="line">					(RD2_E_Sel == <span class="number">2&#x27;d1</span>) ? GPR_WD_W :</span><br><span class="line">					(RD2_E_Sel == <span class="number">2&#x27;d2</span>) ? AO_M : <span class="number">0</span>;</span><br><span class="line"><span class="keyword">assign</span> RD2_to_M = (RD2_E_Sel == <span class="number">2&#x27;d0</span>) ? RD2_E :</span><br><span class="line">					   (RD2_E_Sel == <span class="number">2&#x27;d1</span>) ? GPR_WD_W :</span><br><span class="line">					   (RD2_E_Sel == <span class="number">2&#x27;d2</span>) ? AO_M : <span class="number">0</span>;</span><br><span class="line">ALU E_ALU(</span><br><span class="line">    <span class="variable">.alu_A</span>(Op1_E),</span><br><span class="line">    <span class="variable">.alu_B</span>(Op2_E),</span><br><span class="line">    <span class="variable">.ALUCtrl</span>(ALUCtrl_E),</span><br><span class="line">    <span class="variable">.alu_out</span>(AO_E)</span><br><span class="line">    );</span><br><span class="line">	 </span><br><span class="line"><span class="keyword">assign</span> GPR_A3_E = (RegDst_E == <span class="number">2&#x27;d0</span>) ? Instr_E[<span class="number">20</span>:<span class="number">16</span>] :</span><br><span class="line">						(RegDst_E == <span class="number">2&#x27;d1</span>) ? Instr_E[<span class="number">15</span>:<span class="number">11</span>] :</span><br><span class="line">						(RegDst_E == <span class="number">2&#x27;d2</span>) ? <span class="number">5&#x27;d31</span> : <span class="number">0</span>;</span><br><span class="line">		</span><br><span class="line"><span class="comment">/**********  Stage_M  **********/</span></span><br><span class="line"><span class="keyword">always</span> @(<span class="keyword">posedge</span> clk) <span class="keyword">begin</span></span><br><span class="line">	<span class="keyword">if</span> (reset) <span class="keyword">begin</span></span><br><span class="line">		Instr_M &lt;= <span class="number">32&#x27;d0</span>;</span><br><span class="line">		PC4_M &lt;= <span class="number">32&#x27;d0</span>;</span><br><span class="line">		AO_M &lt;= <span class="number">32&#x27;d0</span>;</span><br><span class="line">		RD2_M &lt;= <span class="number">32&#x27;d0</span>;</span><br><span class="line">		GPR_A3_M &lt;= <span class="number">5&#x27;d0</span>;</span><br><span class="line">	<span class="keyword">end</span></span><br><span class="line">	<span class="keyword">else</span> <span class="keyword">begin</span></span><br><span class="line">		Instr_M &lt;= Instr_E;</span><br><span class="line">		PC4_M &lt;= PC4_E;</span><br><span class="line">		AO_M &lt;= AO_E;</span><br><span class="line">		RD2_M &lt;= RD2_to_M;</span><br><span class="line">		GPR_A3_M &lt;= GPR_A3_E;</span><br><span class="line">	<span class="keyword">end</span></span><br><span class="line"><span class="keyword">end</span></span><br><span class="line"></span><br><span class="line">Controller M_Controller(</span><br><span class="line">    <span class="variable">.Instr</span>(Instr_M),</span><br><span class="line">	 <span class="variable">.RegWrite</span>(RegWrite_M),</span><br><span class="line">    <span class="variable">.MemWrite</span>(MemWrite_M),</span><br><span class="line">    <span class="variable">.PCSel</span>(PCSel_M),</span><br><span class="line">	 <span class="variable">.RegDst</span>(RegDst_M)</span><br><span class="line">    );</span><br><span class="line">	</span><br><span class="line">DM M_DM(</span><br><span class="line">    <span class="variable">.clk</span>(clk),</span><br><span class="line">    <span class="variable">.reset</span>(reset),</span><br><span class="line">    <span class="variable">.WE</span>(MemWrite_M),</span><br><span class="line">    <span class="variable">.A</span>(AO_M),</span><br><span class="line">    <span class="variable">.WD</span>(RD2_M),</span><br><span class="line">    <span class="variable">.PC</span>(PC_M),</span><br><span class="line">    <span class="variable">.RD</span>(DO_M)</span><br><span class="line">    );</span><br><span class="line"><span class="keyword">assign</span> PC_M = PC4_M - <span class="number">32&#x27;d4</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**********  Stage_W  **********/</span></span><br><span class="line"><span class="keyword">always</span> @(<span class="keyword">posedge</span> clk) <span class="keyword">begin</span></span><br><span class="line">	<span class="keyword">if</span> (reset) <span class="keyword">begin</span></span><br><span class="line">		Instr_W &lt;= <span class="number">32&#x27;d0</span>;</span><br><span class="line">		PC8_W &lt;= <span class="number">32&#x27;d0</span>;</span><br><span class="line">		AO_W &lt;= <span class="number">32&#x27;d0</span>;</span><br><span class="line">		DO_W &lt;= <span class="number">32&#x27;d0</span>;</span><br><span class="line">		GPR_A3_W &lt;= <span class="number">5&#x27;d0</span>;</span><br><span class="line">	<span class="keyword">end</span></span><br><span class="line">	<span class="keyword">else</span> <span class="keyword">begin</span></span><br><span class="line">		Instr_W &lt;= Instr_M;</span><br><span class="line">		PC8_W &lt;= PC4_M + <span class="number">32&#x27;d4</span>;</span><br><span class="line">		AO_W &lt;= AO_M;</span><br><span class="line">		DO_W &lt;= DO_M;</span><br><span class="line">		GPR_A3_W &lt;= GPR_A3_M;</span><br><span class="line">	<span class="keyword">end</span></span><br><span class="line"><span class="keyword">end</span></span><br><span class="line"></span><br><span class="line">Controller W_Controller(</span><br><span class="line">    <span class="variable">.Instr</span>(Instr_W),</span><br><span class="line">    <span class="variable">.WDSel</span>(WDSel_W),</span><br><span class="line">    <span class="variable">.RegWrite</span>(RegWrite_W),</span><br><span class="line">	 <span class="variable">.RegDst</span>(RegDst_W)</span><br><span class="line">    );</span><br><span class="line"><span class="keyword">assign</span> GPR_WD_W = (WDSel_W == <span class="number">2&#x27;d0</span>) ? DO_W :</span><br><span class="line">						(WDSel_W == <span class="number">2&#x27;d1</span>) ? AO_W :</span><br><span class="line">						(WDSel_W == <span class="number">2&#x27;d2</span>) ? PC8_W : <span class="number">0</span>;</span><br><span class="line">						</span><br><span class="line"><span class="comment">/********** HazardCtrl **********/</span></span><br><span class="line">HazardCtrl HazardCtrl(</span><br><span class="line">    <span class="variable">.Instr_D</span>(Instr_D),</span><br><span class="line">    <span class="comment">// more</span></span><br><span class="line">    );</span><br><span class="line">	 </span><br><span class="line"><span class="keyword">endmodule</span></span><br></pre></td></tr></table></figure></div>
+
+<h2 id="思考题"><a href="#思考题" class="headerlink" title="思考题"></a>思考题</h2><blockquote>
+<ol>
+<li>我们使用提前分支判断的方法尽早产生结果来减少因不确定而带来的开销，但实际上这种方法并非总能提高效率，请从流水线冒险的角度思考其原因并给出一个指令序列的例子。</li>
+</ol>
+</blockquote>
+<p>提前分支判断，意味着当前面的指令产生数据依赖时，需要阻塞更多时间。例如：</p>
+<div class="code-container" data-rel="Mips"><figure class="iseeu highlight mips"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">add </span>$<span class="built_in">s0</span>, $<span class="built_in">t1</span>, $<span class="built_in">t2</span></span><br><span class="line"><span class="keyword">sub </span>$<span class="built_in">s1</span>, $<span class="built_in">t3</span>, $<span class="built_in">t4</span></span><br><span class="line"><span class="keyword">beq </span>$<span class="built_in">s0</span>, $<span class="built_in">s1</span>, lable</span><br></pre></td></tr></table></figure></div>
+
+<p>如果提前分支判断，当 beq 处于 D 级时，add 的计算结果 $s0 可以转发回来，而 sub 的计算结果无法转发，需要阻塞一周期；如果不提前分支判断，当 beq 处于 E 级时，add 和 sub 都可以转发回来。<br>因此，提前分支判断的优势是当 beq 条件成立时，无需作废任何指令；不提前分支判断，需要作废延迟槽之后的指令。</p>
+<blockquote>
+<ol start="2">
+<li>因为延迟槽的存在，对于 jal 等需要将指令地址写入寄存器的指令，要写回 PC + 8，请思考为什么这样设计？</li>
+</ol>
+</blockquote>
+<p>因为 jal 之后紧跟的指令是延迟槽，而延迟槽内的指令不作废，如果是 PC+4 ，则会再次跳转到延迟槽的位置，再一次执行该指令。</p>
+<blockquote>
+<ol start="3">
+<li>我们要求所有转发数据都来源于流水寄存器而不能是功能部件（如 DM、ALU），请思考为什么？</li>
+</ol>
+</blockquote>
+<p>这样便于不同流水级的管理和统一，避免出错。</p>
+<blockquote>
+<ol start="5">
+<li>我们为什么要使用 GPR 内部转发？该如何实现？</li>
+</ol>
+</blockquote>
+<p>内部转发可以提高运行效率，减少阻塞的情况。在 GRF 的输出端进行转发即可。</p>
+<blockquote>
+<ol start="7">
+<li>我们转发时数据的需求者和供给者可能来源于哪些位置？共有哪些转发数据通路？</li>
+</ol>
+</blockquote>
+<p>在上述分析已提到。</p>
+<blockquote>
+<ol start="8">
+<li>在课上测试时，我们需要你现场实现新的指令，对于这些新的指令，你可能需要在原有的数据通路上做哪些扩展或修改？提示：你可以对指令进行分类，思考每一类指令可能修改或扩展哪些位置。</li>
+</ol>
+</blockquote>
+<ul>
+<li>跳转型<br>修改 equ 的判断即取值可能性，或者直接新定义一个信号，其实只需要给 NPC 模块增加一个 input 并不是很麻烦，这样不容易出错。</li>
+<li>访存型<br>这个感觉比较好加，类比 lw sw 指令。</li>
+<li>计算型<br>对 ALU 进行一些更改即可啦，注意 Tuse 和 Tnew 的设置，类比一下已有指令。</li>
+</ul>
+<p><strong>清空延迟槽</strong>：关键其实在如何清空延迟槽， CMP 如果时 bonall 指令并且不跳转，则生成一个 flush 信号，如果 flush 为 1 并且没有处于阻塞状态，则 flush 一下 FD 级寄存器即可（想一想：为什么可以直接清空 FD 级寄存器，为什么不能处于阻塞状态）</p>
+<blockquote>
+<ol start="9">
+<li>简要描述你的译码器架构，并思考该架构的优势以及不足。</li>
+</ol>
+</blockquote>
+<p>分布式译码，指令驱动型，便于添加指令。缺点是代码过长。<br><strong>上机后发现并不是很便于添加指令……</strong></p>
+<h2 id="测试数据"><a href="#测试数据" class="headerlink" title="测试数据"></a>测试数据</h2><h3 id="一"><a href="#一" class="headerlink" title="一"></a>一</h3><div class="code-container" data-rel="Mips"><figure class="iseeu highlight mips"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">.text</span>  </span><br><span class="line"><span class="keyword">ori </span>$<span class="built_in">s0</span>, $<span class="built_in">s0</span>, <span class="number">5</span>     <span class="comment"># 自调用是否有问题  </span></span><br><span class="line"><span class="keyword">ori </span>$<span class="built_in">s1</span>, $<span class="built_in">zero</span>, <span class="number">4</span>       #   </span><br><span class="line"><span class="keyword">add </span>$<span class="built_in">t0</span>, $<span class="built_in">s0</span>, $<span class="built_in">s1</span>       <span class="comment"># R型指令的两种转发是否有问题  </span></span><br><span class="line"><span class="keyword">lui </span>$<span class="built_in">t1</span>, <span class="number">65535</span>          <span class="comment"># 与接下来的sub指令一起判断高位减法是否有问题  </span></span><br><span class="line"><span class="keyword">sw </span>$<span class="built_in">s1</span>, <span class="number">0</span>($<span class="built_in">s1</span>)          <span class="comment"># 判断line 3的指令写入GRF是否符合要求且无冲突  </span></span><br><span class="line"><span class="keyword">add </span>$<span class="built_in">zero</span>, $<span class="built_in">s1</span>, $<span class="built_in">t0</span>     <span class="comment"># 给$0复制并观察是否转发数据为0  </span></span><br><span class="line"><span class="keyword">sub </span>$<span class="built_in">t1</span>, $<span class="built_in">zero</span>, $<span class="built_in">t1</span>     <span class="comment"># 使用$0观察转发数据以及检查高位减法  </span></span><br><span class="line">  </span><br><span class="line"><span class="keyword">lw </span>$<span class="built_in">t1</span>, <span class="number">0</span>($<span class="built_in">s1</span>)          <span class="comment"># 检查寄存器写入是否覆盖  </span></span><br><span class="line"><span class="keyword">sw </span>$<span class="built_in">t1</span>, <span class="number">0</span>($<span class="built_in">s1</span>)          <span class="comment"># 检查lw-sw的转发或阻塞是否实现  </span></span><br><span class="line">  </span><br><span class="line"><span class="keyword">lw </span>$<span class="built_in">t2</span>, <span class="number">0</span>($<span class="built_in">s1</span>)            </span><br><span class="line"><span class="keyword">sub </span>$<span class="built_in">t2</span>, $<span class="built_in">s0</span>, $<span class="built_in">s1</span>  </span><br><span class="line"><span class="keyword">add </span>$<span class="built_in">t4</span>, $<span class="built_in">s0</span>, $<span class="built_in">t2</span>       <span class="comment"># 以上三行检查R型指令转发的优先级是否正确  </span></span><br><span class="line">  </span><br><span class="line"><span class="keyword">sub </span>$<span class="built_in">s3</span>, $<span class="built_in">s0</span>, $<span class="built_in">s1</span>         </span><br><span class="line"><span class="keyword">ori </span>$<span class="built_in">s4</span>, $<span class="built_in">zero</span>, <span class="number">48</span>  </span><br><span class="line"><span class="keyword">ori </span>$<span class="built_in">s2</span>, $<span class="built_in">zero</span>, <span class="number">12344</span>   <span class="comment"># 以上三行纯属为了凑数据()  </span></span><br><span class="line"><span class="keyword">lw </span>$<span class="built_in">ra</span>, <span class="number">0</span>($<span class="built_in">s1</span>)            </span><br><span class="line"><span class="keyword">sub </span>$<span class="built_in">ra</span>, $<span class="built_in">ra</span>, $<span class="built_in">s1</span>  </span><br><span class="line"><span class="keyword">jal </span>tag1  </span><br><span class="line"><span class="keyword">nop </span>                    <span class="comment">#添加延时槽  </span></span><br><span class="line"><span class="symbol">  </span></span><br><span class="line"><span class="symbol">tag1:</span>  </span><br><span class="line"><span class="keyword">beq </span>$<span class="built_in">ra</span>, $<span class="built_in">s2</span>, end1      <span class="comment"># 以上六行反复对$ra更改以检查beq转发的优先级是否正确  </span></span><br><span class="line"><span class="keyword">nop </span> </span><br><span class="line"><span class="keyword">sw </span>$<span class="built_in">ra</span>, <span class="number">0</span>($<span class="built_in">s1</span>)            </span><br><span class="line"><span class="keyword">add </span>$<span class="built_in">ra</span>, $<span class="built_in">ra</span>, $<span class="built_in">s1</span>  </span><br><span class="line"><span class="symbol">end1:</span>  </span><br><span class="line"><span class="keyword">sub </span>$<span class="built_in">s0</span>, $<span class="built_in">s0</span>, $<span class="built_in">s3</span>  </span><br><span class="line"><span class="keyword">beq </span>$<span class="built_in">s0</span>, $<span class="built_in">zero</span>, end2    <span class="comment"># 检查R型指令是否会对beq指令造成影响[笔者就在这里错了]  </span></span><br><span class="line"><span class="keyword">nop </span> </span><br><span class="line"><span class="keyword">jr </span>$<span class="built_in">ra</span>                  <span class="comment"># 反复更改$ra后观察是否跳转到正确的pc值  </span></span><br><span class="line"><span class="keyword">nop </span> </span><br><span class="line"><span class="symbol">  </span></span><br><span class="line"><span class="symbol">end2:</span>  </span><br><span class="line"><span class="keyword">jal </span>tag2                  </span><br><span class="line"><span class="keyword">nop </span> </span><br><span class="line"><span class="symbol">tag2:</span>  </span><br><span class="line"><span class="keyword">lw </span>$<span class="built_in">ra</span>, <span class="number">0</span>($<span class="built_in">s1</span>)  </span><br><span class="line"><span class="keyword">add </span>$<span class="built_in">ra</span>, $<span class="built_in">ra</span>, $<span class="built_in">s4</span>  </span><br><span class="line"><span class="keyword">jr </span>$<span class="built_in">ra</span>                  <span class="comment">#以上六行检查jr指令转发的优先级是否正确  </span></span><br><span class="line"><span class="keyword">nop </span> </span><br><span class="line"><span class="keyword">lui </span>$<span class="built_in">zero</span>, <span class="number">1111</span>         <span class="comment"># 最后jr $ra指令会跳转到该行</span></span><br></pre></td></tr></table></figure></div>
+
+<p>机器码：</p>
+<div class="code-container" data-rel="Mips"><figure class="iseeu highlight mips"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">36100005</span></span><br><span class="line"><span class="number">34110004</span></span><br><span class="line"><span class="number">02114020</span></span><br><span class="line"><span class="number">3</span>c<span class="symbol">09f</span>fff</span><br><span class="line">ae310000</span><br><span class="line"><span class="number">02280020</span></span><br><span class="line"><span class="number">00094822</span></span><br><span class="line"><span class="number">8</span>e290000</span><br><span class="line">ae290000</span><br><span class="line"><span class="number">8</span>e2a0000</span><br><span class="line"><span class="number">02115022</span></span><br><span class="line"><span class="number">020</span>a6020</span><br><span class="line"><span class="number">02119822</span></span><br><span class="line"><span class="number">34140030</span></span><br><span class="line"><span class="number">34123038</span></span><br><span class="line"><span class="number">8</span>e<span class="symbol">3f</span>0000</span><br><span class="line"><span class="number">03</span>f<span class="symbol">1f</span>822</span><br><span class="line"><span class="number">0</span>c000c13</span><br><span class="line"><span class="number">00000000</span></span><br><span class="line"><span class="number">13</span>f20003</span><br><span class="line"><span class="number">00000000</span></span><br><span class="line">ae<span class="symbol">3f</span>0000</span><br><span class="line"><span class="number">03</span>f<span class="symbol">1f</span>820</span><br><span class="line"><span class="number">02138022</span></span><br><span class="line"><span class="number">12000003</span></span><br><span class="line"><span class="number">00000000</span></span><br><span class="line"><span class="number">03</span>e00008</span><br><span class="line"><span class="number">00000000</span></span><br><span class="line"><span class="number">0</span>c000c1e</span><br><span class="line"><span class="number">00000000</span></span><br><span class="line"><span class="number">8</span>e<span class="symbol">3f</span>0000</span><br><span class="line"><span class="number">03</span>f<span class="symbol">4f</span>820</span><br><span class="line"><span class="number">03</span>e00008</span><br><span class="line"><span class="number">00000000</span></span><br><span class="line"><span class="number">3</span>c000457</span><br></pre></td></tr></table></figure></div>
+
+<p>输出：</p>
+<div class="code-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">@00003000: $16 &lt;= 00000005  </span><br><span class="line">@00003004: $17 &lt;= 00000004  </span><br><span class="line">@00003008: $ 8 &lt;= 00000009  </span><br><span class="line">@0000300c: $ 9 &lt;= ffff0000  </span><br><span class="line">@00003010: *00000004 &lt;= 00000004  </span><br><span class="line">@00003018: $ 9 &lt;= 00010000  </span><br><span class="line">@0000301c: $ 9 &lt;= 00000004  </span><br><span class="line">@00003020: *00000004 &lt;= 00000004  </span><br><span class="line">@00003024: $10 &lt;= 00000004  </span><br><span class="line">@00003028: $10 &lt;= 00000001  </span><br><span class="line">@0000302c: $12 &lt;= 00000006  </span><br><span class="line">@00003030: $19 &lt;= 00000001  </span><br><span class="line">@00003034: $20 &lt;= 00000030  </span><br><span class="line">@00003038: $18 &lt;= 00003038  </span><br><span class="line">@0000303c: $31 &lt;= 00000004  </span><br><span class="line">@00003040: $31 &lt;= 00000000  </span><br><span class="line">@00003044: $31 &lt;= 0000304c  </span><br><span class="line">@00003054: *00000004 &lt;= 0000304c  </span><br><span class="line">@00003058: $31 &lt;= 00003050  </span><br><span class="line">@0000305c: $16 &lt;= 00000004  </span><br><span class="line">@00003054: *00000004 &lt;= 00003050  </span><br><span class="line">@00003058: $31 &lt;= 00003054  </span><br><span class="line">@0000305c: $16 &lt;= 00000003  </span><br><span class="line">@00003054: *00000004 &lt;= 00003054  </span><br><span class="line">@00003058: $31 &lt;= 00003058  </span><br><span class="line">@0000305c: $16 &lt;= 00000002  </span><br><span class="line">@00003058: $31 &lt;= 0000305c  </span><br><span class="line">@0000305c: $16 &lt;= 00000001  </span><br><span class="line">@0000305c: $16 &lt;= 00000000  </span><br><span class="line">@00003070: $31 &lt;= 00003078  </span><br><span class="line">@00003078: $31 &lt;= 00003054  </span><br><span class="line">@0000307c: $31 &lt;= 00003084</span><br></pre></td></tr></table></figure></div>
+
+<h3 id="二"><a href="#二" class="headerlink" title="二"></a>二</h3><div class="code-container" data-rel="Mips"><figure class="iseeu highlight mips"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">ori </span>$<span class="built_in">t1</span>, $<span class="built_in">zero</span>, <span class="number">0</span></span><br><span class="line"><span class="keyword">ori </span>$<span class="built_in">t2</span>, $<span class="built_in">zero</span>, <span class="number">10</span></span><br><span class="line"><span class="keyword">ori </span>$<span class="built_in">t0</span>, $<span class="built_in">zero</span>, <span class="number">1</span></span><br><span class="line"><span class="keyword">ori </span>$<span class="built_in">t4</span>, $<span class="built_in">zero</span>, <span class="number">0</span></span><br><span class="line"><span class="keyword">ori </span>$<span class="built_in">t5</span>, $<span class="built_in">zero</span>, <span class="number">4</span></span><br><span class="line"><span class="keyword">ori </span>$<span class="built_in">a0</span>, $<span class="built_in">zero</span>, <span class="number">0</span></span><br><span class="line"><span class="keyword">ori </span>$<span class="built_in">a1</span>, $<span class="built_in">zero</span>, <span class="number">10</span></span><br><span class="line"><span class="symbol">for_i_begin:</span></span><br><span class="line"><span class="keyword">beq </span>$<span class="built_in">t1</span>, $<span class="built_in">t2</span>, for_i_end</span><br><span class="line"><span class="keyword">nop</span></span><br><span class="line"><span class="keyword"></span><span class="keyword">add </span>$<span class="built_in">t1</span>, $<span class="built_in">t1</span>, $<span class="built_in">t0</span></span><br><span class="line"><span class="keyword">sw </span>$<span class="built_in">t4</span>, <span class="number">0</span>($<span class="built_in">t4</span>)</span><br><span class="line"><span class="keyword">add </span>$<span class="built_in">t4</span>, $<span class="built_in">t4</span>, $<span class="built_in">t5</span></span><br><span class="line"><span class="keyword">jal </span>for_i_begin</span><br><span class="line"><span class="keyword">nop</span></span><br><span class="line"><span class="keyword"></span><span class="keyword">beq </span>$<span class="built_in">a0</span>, $<span class="built_in">a1</span>, true_end</span><br><span class="line"><span class="keyword">nop</span></span><br><span class="line"><span class="keyword"></span><span class="keyword">add </span>$<span class="built_in">a0</span>, $<span class="built_in">a0</span>, $<span class="built_in">t0</span></span><br><span class="line"><span class="keyword">sw </span>$<span class="built_in">t4</span>, <span class="number">0</span>($<span class="built_in">t4</span>)</span><br><span class="line"><span class="keyword">add </span>$<span class="built_in">t4</span>, $<span class="built_in">t4</span>, $<span class="built_in">t5</span></span><br><span class="line"><span class="symbol">for_i_end:</span></span><br><span class="line"><span class="keyword">jr </span>$<span class="built_in">ra</span></span><br><span class="line"><span class="keyword">nop</span></span><br><span class="line"><span class="keyword"></span><span class="symbol">true_end:</span></span><br></pre></td></tr></table></figure></div>
+
+<p>机器码：</p>
+<div class="code-container" data-rel="Mips"><figure class="iseeu highlight mips"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">34090000</span></span><br><span class="line"><span class="number">340</span>a000a</span><br><span class="line"><span class="number">34080001</span></span><br><span class="line"><span class="number">340</span>c0000</span><br><span class="line"><span class="number">340</span>d0004</span><br><span class="line"><span class="number">34040000</span></span><br><span class="line"><span class="number">3405000</span>a</span><br><span class="line"><span class="number">112</span>a<span class="symbol">000b</span></span><br><span class="line"><span class="number">00000000</span></span><br><span class="line"><span class="number">01284820</span></span><br><span class="line">ad8c0000</span><br><span class="line"><span class="number">018</span>d6020</span><br><span class="line"><span class="number">0</span>c000c07</span><br><span class="line"><span class="number">00000000</span></span><br><span class="line"><span class="number">10850006</span></span><br><span class="line"><span class="number">00000000</span></span><br><span class="line"><span class="number">00882020</span></span><br><span class="line">ad8c0000</span><br><span class="line"><span class="number">018</span>d6020</span><br><span class="line"><span class="number">03</span>e00008</span><br><span class="line"><span class="number">00000000</span></span><br></pre></td></tr></table></figure></div>
+
+<p>输出：</p>
+<div class="code-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br></pre></td><td class="code"><pre><span class="line">  55@00003000: $ 9 &lt;= 00000000</span><br><span class="line">  65@00003004: $10 &lt;= 0000000a</span><br><span class="line">  75@00003008: $ 8 &lt;= 00000001</span><br><span class="line">  85@0000300c: $12 &lt;= 00000000</span><br><span class="line">  95@00003010: $13 &lt;= 00000004</span><br><span class="line"> 105@00003014: $ 4 &lt;= 00000000</span><br><span class="line"> 115@00003018: $ 5 &lt;= 0000000a</span><br><span class="line"> 145@00003024: $ 9 &lt;= 00000001</span><br><span class="line"> 145@00003028: *00000000 &lt;= 00000000</span><br><span class="line"> 165@0000302c: $12 &lt;= 00000004</span><br><span class="line"> 175@00003030: $31 &lt;= 00003038</span><br><span class="line"> 215@00003024: $ 9 &lt;= 00000002</span><br><span class="line"> 215@00003028: *00000004 &lt;= 00000004</span><br><span class="line"> 235@0000302c: $12 &lt;= 00000008</span><br><span class="line"> 245@00003030: $31 &lt;= 00003038</span><br><span class="line"> 285@00003024: $ 9 &lt;= 00000003</span><br><span class="line"> 285@00003028: *00000008 &lt;= 00000008</span><br><span class="line"> 305@0000302c: $12 &lt;= 0000000c</span><br><span class="line"> 315@00003030: $31 &lt;= 00003038</span><br><span class="line"> 355@00003024: $ 9 &lt;= 00000004</span><br><span class="line"> 355@00003028: *0000000c &lt;= 0000000c</span><br><span class="line"> 375@0000302c: $12 &lt;= 00000010</span><br><span class="line"> 385@00003030: $31 &lt;= 00003038</span><br><span class="line"> 425@00003024: $ 9 &lt;= 00000005</span><br><span class="line"> 425@00003028: *00000010 &lt;= 00000010</span><br><span class="line"> 445@0000302c: $12 &lt;= 00000014</span><br><span class="line"> 455@00003030: $31 &lt;= 00003038</span><br><span class="line"> 495@00003024: $ 9 &lt;= 00000006</span><br><span class="line"> 495@00003028: *00000014 &lt;= 00000014</span><br><span class="line"> 515@0000302c: $12 &lt;= 00000018</span><br><span class="line"> 525@00003030: $31 &lt;= 00003038</span><br><span class="line"> 565@00003024: $ 9 &lt;= 00000007</span><br><span class="line"> 565@00003028: *00000018 &lt;= 00000018</span><br><span class="line"> 585@0000302c: $12 &lt;= 0000001c</span><br><span class="line"> 595@00003030: $31 &lt;= 00003038</span><br><span class="line"> 635@00003024: $ 9 &lt;= 00000008</span><br><span class="line"> 635@00003028: *0000001c &lt;= 0000001c</span><br><span class="line"> 655@0000302c: $12 &lt;= 00000020</span><br><span class="line"> 665@00003030: $31 &lt;= 00003038</span><br><span class="line"> 705@00003024: $ 9 &lt;= 00000009</span><br><span class="line"> 705@00003028: *00000020 &lt;= 00000020</span><br><span class="line"> 725@0000302c: $12 &lt;= 00000024</span><br><span class="line"> 735@00003030: $31 &lt;= 00003038</span><br><span class="line"> 775@00003024: $ 9 &lt;= 0000000a</span><br><span class="line"> 775@00003028: *00000024 &lt;= 00000024</span><br><span class="line"> 795@0000302c: $12 &lt;= 00000028</span><br><span class="line"> 805@00003030: $31 &lt;= 00003038</span><br><span class="line"> 885@00003040: $ 4 &lt;= 00000001</span><br><span class="line"> 885@00003044: *00000028 &lt;= 00000028</span><br><span class="line"> 905@00003048: $12 &lt;= 0000002c</span><br><span class="line"> 955@00003040: $ 4 &lt;= 00000002</span><br><span class="line"> 955@00003044: *0000002c &lt;= 0000002c</span><br><span class="line"> 975@00003048: $12 &lt;= 00000030</span><br><span class="line">1025@00003040: $ 4 &lt;= 00000003</span><br><span class="line">1025@00003044: *00000030 &lt;= 00000030</span><br><span class="line">1045@00003048: $12 &lt;= 00000034</span><br><span class="line">1095@00003040: $ 4 &lt;= 00000004</span><br><span class="line">1095@00003044: *00000034 &lt;= 00000034</span><br><span class="line">1115@00003048: $12 &lt;= 00000038</span><br><span class="line">1165@00003040: $ 4 &lt;= 00000005</span><br><span class="line">1165@00003044: *00000038 &lt;= 00000038</span><br><span class="line">1185@00003048: $12 &lt;= 0000003c</span><br><span class="line">1235@00003040: $ 4 &lt;= 00000006</span><br><span class="line">1235@00003044: *0000003c &lt;= 0000003c</span><br><span class="line">1255@00003048: $12 &lt;= 00000040</span><br><span class="line">1305@00003040: $ 4 &lt;= 00000007</span><br><span class="line">1305@00003044: *00000040 &lt;= 00000040</span><br><span class="line">1325@00003048: $12 &lt;= 00000044</span><br><span class="line">1375@00003040: $ 4 &lt;= 00000008</span><br><span class="line">1375@00003044: *00000044 &lt;= 00000044</span><br><span class="line">1395@00003048: $12 &lt;= 00000048</span><br><span class="line">1445@00003040: $ 4 &lt;= 00000009</span><br><span class="line">1445@00003044: *00000048 &lt;= 00000048</span><br><span class="line">1465@00003048: $12 &lt;= 0000004c</span><br><span class="line">1515@00003040: $ 4 &lt;= 0000000a</span><br><span class="line">1515@00003044: *0000004c &lt;= 0000004c</span><br><span class="line">1535@00003048: $12 &lt;= 00000050</span><br></pre></td></tr></table></figure></div>
+		</div>
+
+		
+		<div class="post-copyright-info w-full my-8 px-2 sm:px-6 md:px-8">
+			<div class="article-copyright-info-container">
+    <ul>
+        <li><strong>Title:</strong> 计算机组成CO：P5课下-Verilog搭建流水线CPU-1</li>
+        <li><strong>Author:</strong> BaconToast</li>
+        <li><strong>Created at
+                :</strong> 2025-11-18 11:16:49</li>
+        
+            <li>
+                <strong>Updated at
+                    :</strong> 2025-11-18 11:22:00
+            </li>
+        
+        <li>
+            <strong>Link:</strong> https://bacontoast-pro.github.io/2025/11/18/co/p5/
+        </li>
+        <li>
+            <strong>
+                License:
+            </strong>
+            
+
+            
+                This work is licensed under <a class="license" target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0">CC BY-NC-SA 4.0</a>.
+            
+        </li>
+    </ul>
+</div>
+
+		</div>
+		
+
+		
+		<ul class="post-tags-box text-lg mt-1.5 flex-wrap justify-center flex md:hidden">
+			
+			<li class="tag-item mx-0.5">
+				<a href="/tags/CO/">#CO</a>&nbsp;
+			</li>
+			
+			<li class="tag-item mx-0.5">
+				<a href="/tags/Verilog/">#Verilog</a>&nbsp;
+			</li>
+			
+			<li class="tag-item mx-0.5">
+				<a href="/tags/MIPS/">#MIPS</a>&nbsp;
+			</li>
+			
+		</ul>
+		
+
+		
+
+		
+		<div class="article-nav my-8 flex justify-between items-center px-2 sm:px-6 md:px-8">
+			
+			<div class="article-prev border-border-color shadow-redefine-flat shadow-shadow-color-2 rounded-medium px-4 py-2 hover:shadow-redefine-flat-hover hover:shadow-shadow-color-2">
+				<a class="prev" rel="prev" href="/2025/11/18/co/p6/">
+					<span class="left arrow-icon flex justify-center items-center">
+						<i class="fa-solid fa-chevron-left"></i>
+					</span>
+					<span class="title flex justify-center items-center">
+						<span class="post-nav-title-item truncate max-w-48">P6课下-Verilog搭建流水线CPU-2</span>
+						<span class="post-nav-item">Prev posts</span>
+					</span>
+				</a>
+			</div>
+			
+			
+			<div class="article-next border-border-color shadow-redefine-flat shadow-shadow-color-2 rounded-medium px-4 py-2 hover:shadow-redefine-flat-hover hover:shadow-shadow-color-2">
+				<a class="next" rel="next" href="/2025/11/18/co/p4/">
+					<span class="title flex justify-center items-center">
+						<span class="post-nav-title-item truncate max-w-48">计算机组成CO：P4课下-Verilog搭建单周期CPU</span>
+						<span class="post-nav-item">Next posts</span>
+					</span>
+					<span class="right arrow-icon flex justify-center items-center">
+						<i class="fa-solid fa-chevron-right"></i>
+					</span>
+				</a>
+			</div>
+			
+		</div>
+		
+
+
+		
+		<div class="comment-container px-2 sm:px-6 md:px-8 pb-8">
+			<div class="comments-container mt-10 w-full ">
+    <div id="comment-anchor" class="w-full h-2.5"></div>
+    <div class="comment-area-title w-full my-1.5 md:my-2.5 text-xl md:text-3xl font-bold">
+        Comments
+    </div>
+    
+
+        
+            
+    <div id="waline"></div>
+    <script type="module" data-swup-reload-script>
+      import { init } from '/js/libs/waline.mjs';
+
+      function loadWaline() {
+        init({
+          el: '#waline',
+          serverURL: 'https://example.example.com',
+          dark: 'body[class~="dark-mode"]',
+          reaction: false,
+          requiredMeta: ['nick', 'mail'],
+          emoji: [],
+                    lang: 'zh-CN',
+        });
+      }
+
+      if (typeof swup !== 'undefined') {
+        loadWaline();
+      } else {
+        window.addEventListener('DOMContentLoaded', loadWaline);
+      }
+    </script>
+
+
+
+        
+    
+</div>
+
+		</div>
+		
+	</div>
+
+	
+	<div class="toc-content-container">
+		<div class="post-toc-wrap">
+	<div class="post-toc">
+		<div class="toc-title">On this page</div>
+		<div class="page-title">计算机组成CO：P5课下-Verilog搭建流水线CPU-1</div>
+		<ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B5%81%E6%B0%B4%E7%BA%BF%E6%9E%B6%E6%9E%84"><span class="nav-text">流水线架构</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E9%80%9A%E8%B7%AF"><span class="nav-text">数据通路</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%AF%91%E7%A0%81%E5%99%A8"><span class="nav-text">译码器</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B5%81%E6%B0%B4%E7%BA%BF%E5%86%92%E9%99%A9"><span class="nav-text">流水线冒险</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%86%92%E9%99%A9%E7%9A%84%E7%A7%8D%E7%B1%BB"><span class="nav-text">冒险的种类</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%86%92%E9%99%A9%E7%9A%84%E8%A7%A3%E5%86%B3"><span class="nav-text">冒险的解决</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BD%AC%E5%8F%91%E7%9A%84%E5%AE%9E%E7%8E%B0"><span class="nav-text">转发的实现</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%BA%90%E7%A0%81"><span class="nav-text">源码</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#constants-v"><span class="nav-text">constants.v</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#PC-v"><span class="nav-text">PC.v</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#IM-v"><span class="nav-text">IM.v</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Controller-v"><span class="nav-text">Controller.v</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#GRF-v"><span class="nav-text">GRF.v</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#NPC-v"><span class="nav-text">NPC.v</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ALU-v"><span class="nav-text">ALU.v</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#DM-v"><span class="nav-text">DM.v</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#HazardCtrl-v"><span class="nav-text">HazardCtrl.v</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#mips-v"><span class="nav-text">mips.v</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%9D%E8%80%83%E9%A2%98"><span class="nav-text">思考题</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B5%8B%E8%AF%95%E6%95%B0%E6%8D%AE"><span class="nav-text">测试数据</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%80"><span class="nav-text">一</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BA%8C"><span class="nav-text">二</span></a></li></ol></li></ol>
+
+	</div>
+</div>
+	</div>
+	
+</div>
+			</div>
+
+			
+		</div>
+
+		<div class="main-content-footer">
+			<footer class="footer mt-5 py-5 h-auto text-base text-third-text-color relative border-t-2 border-t-border-color">
+    <div class="info-container py-3 text-center">
+        
+        <div class="text-center">
+            &copy;
+            
+              <span>2025</span>
+              -
+            
+            2025&nbsp;&nbsp;<i class="fa-solid fa-heart fa-beat" style="--fa-animation-duration: 0.5s; color: #f54545"></i>&nbsp;&nbsp;<a href="/">BaconToast</a>
+            
+                
+                <p class="post-count space-x-0.5">
+                    <span>
+                        10 posts in total
+                    </span>
+                    
+                </p>
+            
+        </div>
+        
+            <script data-swup-reload-script src="https://cn.vercount.one/js"></script>
+            <div class="relative text-center lg:absolute lg:right-[20px] lg:top-1/2 lg:-translate-y-1/2 lg:text-right">
+                
+                    <span id="busuanzi_container_site_uv" class="lg:!block">
+                        <span class="text-sm">VISITOR COUNT</span>
+                        <span id="busuanzi_value_site_uv"></span>
+                    </span>
+                
+                
+                    <span id="busuanzi_container_site_pv" class="lg:!block">
+                        <span class="text-sm">TOTAL PAGE VIEWS</span>
+                        <span id="busuanzi_value_site_pv"></span>
+                    </span>
+                
+            </div>
+        
+        <div class="relative text-center lg:absolute lg:left-[20px] lg:top-1/2 lg:-translate-y-1/2 lg:text-left">
+            <span class="lg:block text-sm">POWERED BY <?xml version="1.0" encoding="utf-8"?><!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"><svg class="relative top-[2px] inline-block align-baseline" version="1.1" id="圖層_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="1rem" height="1rem" viewBox="0 0 512 512" enable-background="new 0 0 512 512" xml:space="preserve"><path fill="#0E83CD" d="M256.4,25.8l-200,115.5L56,371.5l199.6,114.7l200-115.5l0.4-230.2L256.4,25.8z M349,354.6l-18.4,10.7l-18.6-11V275H200v79.6l-18.4,10.7l-18.6-11v-197l18.5-10.6l18.5,10.8V237h112v-79.6l18.5-10.6l18.5,10.8V354.6z"/></svg><a target="_blank" class="text-base" href="https://hexo.io">Hexo</a></span>
+            <span class="text-sm lg:block">THEME&nbsp;<a class="text-base" target="_blank" href="https://github.com/EvanNotFound/hexo-theme-redefine">Redefine v2.8.5</a></span>
+        </div>
+        
+        
+            <div>
+                Blog up for <span class="odometer" id="runtime_days" ></span> days <span class="odometer" id="runtime_hours"></span> hrs <span class="odometer" id="runtime_minutes"></span> Min <span class="odometer" id="runtime_seconds"></span> Sec
+            </div>
+        
+        
+            <script data-swup-reload-script>
+                try {
+                    function odometer_init() {
+                    const elements = document.querySelectorAll('.odometer');
+                    elements.forEach(el => {
+                        new Odometer({
+                            el,
+                            format: '( ddd).dd',
+                            duration: 200
+                        });
+                    });
+                    }
+                    odometer_init();
+                } catch (error) {}
+            </script>
+        
+        
+        
+    </div>  
+</footer>
+		</div>
+	</div>
+
+	
+	<div class="post-tools">
+		<div class="post-tools-container">
+	<ul class="article-tools-list">
+		<!-- TOC aside toggle -->
+		
+		<li class="right-bottom-tools page-aside-toggle">
+			<i class="fa-regular fa-outdent"></i>
+		</li>
+		
+
+		<!-- go comment -->
+		
+		<li class="go-comment">
+			<i class="fa-regular fa-comments"></i>
+		</li>
+		
+	</ul>
+</div>
+	</div>
+	
+
+	<div class="right-side-tools-container">
+		<div class="side-tools-container">
+	<ul class="hidden-tools-list">
+		<li class="right-bottom-tools tool-font-adjust-plus flex justify-center items-center">
+			<i class="fa-regular fa-magnifying-glass-plus"></i>
+		</li>
+
+		<li class="right-bottom-tools tool-font-adjust-minus flex justify-center items-center">
+			<i class="fa-regular fa-magnifying-glass-minus"></i>
+		</li>
+
+		<li class="right-bottom-tools tool-dark-light-toggle flex justify-center items-center">
+			<i class="fa-regular fa-moon"></i>
+		</li>
+
+		<!-- rss -->
+		
+
+		
+
+		<li class="right-bottom-tools tool-scroll-to-bottom flex justify-center items-center">
+			<i class="fa-regular fa-arrow-down"></i>
+		</li>
+	</ul>
+
+	<ul class="visible-tools-list">
+		<li class="right-bottom-tools toggle-tools-list flex justify-center items-center">
+			<i class="fa-regular fa-cog fa-spin"></i>
+		</li>
+		
+		<li class="right-bottom-tools tool-scroll-to-top flex justify-center items-center">
+			<i class="arrow-up fas fa-arrow-up"></i>
+			<span class="percent"></span>
+		</li>
+		
+		
+	</ul>
+</div>
+	</div>
+
+	<div class="image-viewer-container">
+	<img src="">
+</div>
+
+	
+
+</main>
+
+
+
+<script src="/js/build/libs/Swup.min.js"></script>
+
+<script src="/js/build/libs/SwupSlideTheme.min.js"></script>
+
+<script src="/js/build/libs/SwupScriptsPlugin.min.js"></script>
+
+<script src="/js/build/libs/SwupProgressPlugin.min.js"></script>
+
+<script src="/js/build/libs/SwupScrollPlugin.min.js"></script>
+
+<script src="/js/build/libs/SwupPreloadPlugin.min.js"></script>
+
+<script>
+    const swup = new Swup({
+        plugins: [
+            new SwupScriptsPlugin({
+                optin: true,
+            }),
+            new SwupProgressPlugin(),
+            new SwupScrollPlugin({
+                offset: 80,
+            }),
+            new SwupSlideTheme({
+                mainElement: ".main-content-body",
+            }),
+            new SwupPreloadPlugin(),
+        ],
+        containers: ["#swup"],
+    });
+</script>
+
+
+
+
+	
+<script src="/js/build/tools/imageViewer.js" type="module"></script>
+
+<script src="/js/build/utils.js" type="module"></script>
+
+<script src="/js/build/main.js" type="module"></script>
+
+<script src="/js/build/layouts/navbarShrink.js" type="module"></script>
+
+<script src="/js/build/tools/scrollTopBottom.js" type="module"></script>
+
+<script src="/js/build/tools/lightDarkSwitch.js" type="module"></script>
+
+<script src="/js/build/layouts/categoryList.js" type="module"></script>
+
+
+
+
+
+    
+<script src="/js/build/tools/codeBlock.js" type="module"></script>
+
+
+
+
+    
+<script src="/js/build/layouts/lazyload.js" type="module"></script>
+
+
+
+
+    
+<script src="/js/build/tools/runtime.js"></script>
+
+    
+<script src="/js/build/libs/odometer.min.js"></script>
+
+    
+<link rel="stylesheet" href="/assets/odometer-theme-minimal.css">
+
+
+
+
+  
+<script src="/js/build/libs/Typed.min.js"></script>
+
+  
+<script src="/js/build/plugins/typed.js" type="module"></script>
+
+
+
+
+
+
+    
+<script src="/js/build/libs/minimasonry.min.js"></script>
+
+    
+<script src="/js/build/plugins/masonry.js" type="module"></script>
+
+
+
+
+
+
+
+    
+<script src="/js/build/tools/tocToggle.js" type="module" data-swup-reload-script=""></script>
+
+<script src="/js/build/layouts/toc.js" type="module" data-swup-reload-script=""></script>
+
+<script src="/js/build/plugins/tabs.js" type="module" data-swup-reload-script=""></script>
+
+
+
+
+<script src="/js/build/libs/moment-with-locales.min.js" data-swup-reload-script=""></script>
+
+
+<script src="/js/build/layouts/essays.js" type="module" data-swup-reload-script=""></script>
+
+
+
+
+
+    
+<script src="/js/build/layouts/bookmarkNav.js" type="module"></script>
+
+
+	
+</body>
+
+</html>

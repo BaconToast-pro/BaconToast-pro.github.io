@@ -1,0 +1,1646 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="keywords" content="Hexo Theme Redefine">
+    
+    <meta name="author" content="BaconToast">
+    
+    <!-- Completely eliminate flash of wrong theme -->
+    <script>
+        (function() {
+            const THEME_KEY = "REDEFINE-THEME-STATUS";
+            const DARK = "dark", LIGHT = "light";
+            
+            // Get preferred theme
+            function getTheme() {
+                try {
+                    const saved = localStorage.getItem(THEME_KEY);
+                    if (saved) {
+                        const { isDark } = JSON.parse(saved);
+                        return isDark ? DARK : LIGHT;
+                    }
+                } catch (e) {}
+                
+                return matchMedia("(prefers-color-scheme: dark)").matches ? DARK : LIGHT;
+            }
+            
+            // Apply theme to document
+            function applyTheme(theme) {
+                const isDark = theme === DARK;
+                const root = document.documentElement;
+                
+                // Set data attribute for CSS variables
+                root.setAttribute("data-theme", theme);
+                
+                // Set classes for compatibility
+                root.classList.add(theme);
+                root.classList.remove(isDark ? LIGHT : DARK);
+                root.style.colorScheme = theme;
+            }
+            
+            // Initial application
+            const theme = getTheme();
+            applyTheme(theme);
+            
+            // Listen for system preference changes
+            matchMedia("(prefers-color-scheme: dark)").addEventListener("change", ({ matches }) => {
+                // Only update if using system preference (no localStorage entry)
+                if (!localStorage.getItem(THEME_KEY)) {
+                    applyTheme(matches ? DARK : LIGHT);
+                }
+            });
+            
+            // Set body classes once DOM is ready
+            if (document.readyState !== "loading") {
+                document.body.classList.add(theme + "-mode");
+            } else {
+                document.addEventListener("DOMContentLoaded", () => {
+                    document.body.classList.add(theme + "-mode");
+                    document.body.classList.remove((theme === DARK ? LIGHT : DARK) + "-mode");
+                });
+            }
+        })();
+    </script>
+    
+    <!-- Critical CSS to prevent flash -->
+    <style>
+        :root[data-theme="dark"] {
+            --background-color: #202124;
+            --background-color-transparent: rgba(32, 33, 36, 0.6);
+            --second-background-color: #2d2e32;
+            --third-background-color: #34353a;
+            --third-background-color-transparent: rgba(32, 33, 36, 0.6);
+            --primary-color: #0066CC;
+            --first-text-color: #ffffff;
+            --second-text-color: #eeeeee;
+            --third-text-color: #bebec6;
+            --fourth-text-color: #999999;
+            --default-text-color: #bebec6;
+            --invert-text-color: #373D3F;
+            --border-color: rgba(255, 255, 255, 0.08);
+            --selection-color: #0066CC;
+            --shadow-color-1: rgba(255, 255, 255, 0.08);
+            --shadow-color-2: rgba(255, 255, 255, 0.05);
+        }
+        
+        :root[data-theme="light"] {
+            --background-color: #fff;
+            --background-color-transparent: rgba(255, 255, 255, 0.6);
+            --second-background-color: #f8f8f8;
+            --third-background-color: #f2f2f2;
+            --third-background-color-transparent: rgba(241, 241, 241, 0.6);
+            --primary-color: #0066CC;
+            --first-text-color: #16171a;
+            --second-text-color: #2f3037;
+            --third-text-color: #5e5e5e;
+            --fourth-text-color: #eeeeee;
+            --default-text-color: #373D3F;
+            --invert-text-color: #bebec6;
+            --border-color: rgba(0, 0, 0, 0.08);
+            --selection-color: #0066CC;
+            --shadow-color-1: rgba(0, 0, 0, 0.08);
+            --shadow-color-2: rgba(0, 0, 0, 0.05);
+        }
+        
+        body {
+            background-color: var(--background-color);
+            color: var(--default-text-color);
+        }
+        
+        /* Apply body classes as soon as DOM is ready */
+        :root[data-theme="dark"] body {
+            background-color: var(--background-color);
+            color: var(--default-text-color);
+        }
+    </style>
+    
+    <!-- preconnect -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    
+    <!--- Seo Part-->
+    
+    <link rel="canonical" href="https://BaconToast-pro.github.io/2025/11/18/co/p7/"/>
+    <meta name="robots" content="index,follow">
+    <meta name="googlebot" content="index,follow">
+    <meta name="revisit-after" content="1 days">
+    
+    
+    
+        
+        <meta name="description" content="Hexo Theme Redefine, Redefine Your Hexo Journey.">
+<meta property="og:type" content="article">
+<meta property="og:title" content="P7课下-MIPS微系统设计">
+<meta property="og:url" content="https://bacontoast-pro.github.io/2025/11/18/co/p7/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="Hexo Theme Redefine, Redefine Your Hexo Journey.">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://bacontoast-pro.github.io/images/redefine-og.webp">
+<meta property="article:published_time" content="2025-11-18T03:20:49.389Z">
+<meta property="article:modified_time" content="2025-11-18T03:23:59.137Z">
+<meta property="article:author" content="BaconToast">
+<meta property="article:tag" content="CO">
+<meta property="article:tag" content="MIPS">
+<meta property="article:tag" content="Verilog">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://bacontoast-pro.github.io/images/redefine-og.webp">
+    
+    
+    <!--- Icon Part-->
+    <link rel="icon" type="image/png" href="/images/public/toast.svg" sizes="192x192">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/public/toast.svg">
+    <meta name="theme-color" content="#A31F34">
+    <link rel="shortcut icon" href="/images/public/toast.svg">
+    <!--- Page Info-->
+    
+    <title>
+        
+            P7课下-MIPS微系统设计 | BaconToast&#39;s Shop
+        
+    </title>
+
+    
+<link rel="stylesheet" href="/fonts/Chillax/chillax.css">
+
+
+    <!--- Inject Part-->
+    
+
+    
+<link rel="stylesheet" href="/css/style.css">
+
+
+    
+        
+<link rel="stylesheet" href="/css/build/tailwind.css">
+
+    
+
+    
+<link rel="stylesheet" href="/fonts/GeistMono/geist-mono.css">
+
+    
+<link rel="stylesheet" href="/fonts/Geist/geist.css">
+
+    <!--- Font Part-->
+    
+    
+    
+    
+    
+    
+        
+<script src="/js/build/libs/anime.min.js"></script>
+
+    
+
+    <script id="hexo-configurations">
+    window.config = {"hostname":"bacontoast-pro.github.io","root":"/","language":"en"};
+    window.theme = {"articles":{"style":{"font_size":"16px","line_height":1.5,"image_border_radius":"14px","image_alignment":"center","image_caption":false,"link_icon":true,"delete_mask":false,"title_alignment":"left","headings_top_spacing":{"h1":"3.2rem","h2":"2.4rem","h3":"1.9rem","h4":"1.6rem","h5":"1.4rem","h6":"1.3rem"}},"word_count":{"enable":true,"count":true,"min2read":true},"author_label":{"enable":true,"auto":false,"list":[]},"code_block":{"copy":true,"style":"mac","highlight_theme":{"light":"github","dark":"vs2015"},"font":{"enable":false,"family":null,"url":null}},"toc":{"enable":true,"max_depth":3,"number":false,"expand":true,"init_open":true},"copyright":{"enable":true,"default":"cc_by_nc_sa"},"lazyload":true,"pangu_js":false,"recommendation":{"enable":false,"title":"推荐阅读","limit":3,"mobile_limit":2,"placeholder":"/images/wallhaven-wqery6-light.webp","skip_dirs":[]}},"colors":{"primary":"#A31F34","secondary":null,"default_mode":"light"},"global":{"fonts":{"chinese":{"enable":false,"family":null,"url":null},"english":{"enable":false,"family":null,"url":null},"title":{"enable":false,"family":null,"url":null}},"content_max_width":"1000px","sidebar_width":"210px","hover":{"shadow":true,"scale":true},"scroll_progress":{"bar":false,"percentage":true},"website_counter":{"url":"https://cn.vercount.one/js","enable":true,"site_pv":true,"site_uv":true,"post_pv":true},"single_page":true,"preloader":{"enable":true,"custom_message":null},"side_tools":{"gear_rotation":true,"auto_expand":true},"open_graph":{"enable":true,"image":"/images/redefine-og.webp","description":"Hexo Theme Redefine, Redefine Your Hexo Journey."},"google_analytics":{"enable":false,"id":null}},"home_banner":{"enable":true,"style":"fixed","image":{"light":"/images/wallhaven-wqery6-light.webp","dark":"/images/wallhaven-wqery6-dark.webp"},"title":"BaconToast Blog","subtitle":{"text":["欢迎来到BaconToast小商店~","We can be the light upon the day."],"hitokoto":{"enable":false,"show_author":false,"api":"https://v1.hitokoto.cn"},"typing_speed":100,"backing_speed":80,"starting_delay":500,"backing_delay":1500,"loop":true,"smart_backspace":true},"text_color":{"light":"#fff","dark":"#d1d1b6"},"text_style":{"title_size":"2.8rem","subtitle_size":"1.5rem","line_height":1.2},"custom_font":{"enable":false,"family":null,"url":null},"social_links":{"enable":true,"style":"default","links":{"github":"https://github.com/BaconToast-pro","instagram":null,"zhihu":null,"twitter":null,"email":"zhouzq@buaa.edu.cn"},"qrs":{"weixin":"images/public/wechat.jpg"}}},"plugins":{"feed":{"enable":false},"aplayer":{"enable":false,"type":"fixed","audios":[{"name":null,"artist":null,"url":null,"cover":null,"lrc":null}]},"mermaid":{"enable":false,"version":"11.4.1"}},"version":"2.8.5","navbar":{"auto_hide":true,"color":{"left":"#f78736","right":"#367df7","transparency":35},"width":{"home":"1200px","pages":"1000px"},"links":{"Home":{"path":"/","icon":"fa-regular fa-house"},"Archives":{"path":"/archives","icon":"fa-regular fa-archive"},"Friends":{"icon":"fa-solid fa-link","path":"/links/"},"About":{"icon":"fa-regular fa-user","submenus":{"Github":"https://github.com/BaconToast-pro","Friends":"/links/"}}},"search":{"enable":false,"preload":true}},"page_templates":{"friends_column":2,"tags_style":"blur"},"home":{"sidebar":{"enable":true,"position":"left","first_item":"menu","announcement":"~o(^_^)o~","show_on_mobile":true,"links":{"Archives":{"path":"/archives","icon":"fa-regular fa-archive"},"Tags":{"path":"/tags","icon":"fa-regular fa-tags"},"Categories":{"path":"/categories","icon":"fa-regular fa-folder"}}},"article_date_format":"auto","excerpt_length":200,"categories":{"enable":true,"limit":3},"tags":{"enable":true,"limit":3}},"footerStart":"2025/11/11 17:20:00"};
+    window.lang_ago = {"second":"%s seconds ago","minute":"%s minutes ago","hour":"%s hours ago","day":"%s days ago","week":"%s weeks ago","month":"%s months ago","year":"%s years ago"};
+    window.data = {"masonry":true};
+  </script>
+    
+    <!--- Fontawesome Part-->
+    
+<link rel="stylesheet" href="/fontawesome/fontawesome.min.css">
+
+    
+<link rel="stylesheet" href="/fontawesome/brands.min.css">
+
+    
+<link rel="stylesheet" href="/fontawesome/solid.min.css">
+
+    
+<link rel="stylesheet" href="/fontawesome/regular.min.css">
+
+    
+    
+    
+    
+<meta name="generator" content="Hexo 8.1.1"></head>
+
+
+
+<body>
+	<div class="progress-bar-container">
+	
+
+	
+	<span class="pjax-progress-bar"></span>
+	<!--        <span class="swup-progress-icon">-->
+	<!--            <i class="fa-solid fa-circle-notch fa-spin"></i>-->
+	<!--        </span>-->
+	
+</div>
+
+<style>
+    :root {
+        --preloader-background-color: #fff;
+        --preloader-text-color: #000;
+    }
+
+    @media (prefers-color-scheme: dark) {
+        :root {
+            --preloader-background-color: #202124;
+            --preloader-text-color: #fff;
+        }
+    }
+
+    @media (prefers-color-scheme: light) {
+        :root {
+            --preloader-background-color: #fff;
+            --preloader-text-color: #000;
+        }
+    }
+
+    @media (max-width: 600px) {
+        .ml13 {
+            font-size: 2.6rem !important; /* Adjust this value as needed */
+        }
+    }
+
+    .preloader {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem; /* Tailwind 'gap-4' is 1rem */
+        align-items: center;
+        justify-content: center;
+        position: fixed;
+        padding: 12px;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh; /* 'h-screen' is 100% of the viewport height */
+        background-color: var(--preloader-background-color);
+        z-index: 1100; /* 'z-[1100]' sets the z-index */
+        transition: opacity 0.2s ease-in-out;
+    }
+
+    .ml13 {
+        font-size: 3.2rem;
+        /* text-transform: uppercase; */
+        color: var(--preloader-text-color);
+        letter-spacing: -1px;
+        font-weight: 500;
+        font-family: 'Chillax-Variable', sans-serif;
+        text-align: center;
+    }
+
+    .ml13 .word {
+        display: inline-flex;
+        flex-wrap: wrap;
+        white-space: nowrap;
+    }
+
+    .ml13 .letter {
+        display: inline-block;
+        line-height: 1em;
+    }
+</style>
+
+<div class="preloader">
+    <h2 class="ml13">
+        BaconToast&#39;s Shop
+    </h2>
+    <script>
+        var textWrapper = document.querySelector('.ml13');
+        // Split text into words
+        var words = textWrapper.textContent.trim().split(' ');
+
+        // Clear the existing content
+        textWrapper.innerHTML = '';
+
+        // Wrap each word and its letters in spans
+        words.forEach(function(word) {
+            var wordSpan = document.createElement('span');
+            wordSpan.classList.add('word');
+            wordSpan.innerHTML = word.replace(/\S/g, "<span class='letter'>$&</span>");
+            textWrapper.appendChild(wordSpan);
+            textWrapper.appendChild(document.createTextNode(' ')); // Add space between words
+        });
+
+        var animation = anime.timeline({ loop: true })
+            .add({
+                targets: '.ml13 .letter',
+                translateY: [20, 0],
+                translateZ: 0,
+                opacity: [0, 1],
+                filter: ['blur(5px)', 'blur(0px)'],
+                easing: "easeOutExpo",
+                duration: 1200,
+                delay: (el, i) => 300 + 20 * i,
+            })
+            .add({
+                targets: '.ml13 .letter',
+                translateY: [0, -20],
+                opacity: [1, 0],
+                filter: ['blur(0px)', 'blur(5px)'],
+                easing: "easeInExpo",
+                duration: 1000,
+                delay: (el, i) => 15 * i,
+                complete: function() {
+                    hidePreloader();
+                }
+            }, '-=700');
+
+
+        let themeStatus = JSON.parse(localStorage.getItem('REDEFINE-THEME-STATUS'))?.isDark;
+
+        // If the theme status is not found in local storage, check the preferred color scheme
+        if (themeStatus === undefined || themeStatus === null) {
+            if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                themeStatus = 'dark';
+            } else {
+                themeStatus = 'light';
+            }
+        }
+
+        // Now you can use the themeStatus variable in your code
+        if (themeStatus) {
+            document.documentElement.style.setProperty('--preloader-background-color', '#202124');
+            document.documentElement.style.setProperty('--preloader-text-color', '#fff');
+        } else {
+            document.documentElement.style.setProperty('--preloader-background-color', '#fff');
+            document.documentElement.style.setProperty('--preloader-text-color', '#000');
+        }
+
+        window.addEventListener('load', function () {
+            setTimeout(hidePreloader, 5000); // Call hidePreloader after 5000 milliseconds if not already called by animation
+        });
+
+        function hidePreloader() {
+            var preloader = document.querySelector('.preloader');
+            preloader.style.opacity = '0';
+            setTimeout(function () {
+                preloader.style.display = 'none';
+            }, 200);
+        }
+    </script>
+</div>
+
+<main class="page-container" id="swup">
+
+	
+
+	<div class="main-content-container flex flex-col justify-between min-h-dvh">
+		<div class="main-content-header">
+			<header class="navbar-container px-6 md:px-12">
+    <div class="navbar-content transition-navbar ">
+        <div class="left">
+            
+            <a class="logo-title" href="/">
+                
+                BaconToast&#39;s Shop
+                
+            </a>
+        </div>
+
+        <div class="right">
+            <!-- PC -->
+            <div class="desktop">
+                <ul class="navbar-list">
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/"
+                                        >
+                                    <i class="fa-regular fa-house fa-fw"></i>
+                                    HOME
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/archives"
+                                        >
+                                    <i class="fa-regular fa-archive fa-fw"></i>
+                                    ARCHIVES
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/links/"
+                                        >
+                                    <i class="fa-solid fa-link fa-fw"></i>
+                                    FRIENDS
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class="has-dropdown"
+                                   href="#"
+                                        onClick=&#34;return false;&#34;>
+                                    <i class="fa-regular fa-user fa-fw"></i>
+                                    ABOUT
+                                    <i class="fa-solid fa-chevron-down fa-fw"></i>
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                                    <ul class="sub-menu">
+                                        
+                                            <li>
+                                                <a target="_blank" rel="noopener" href="https://github.com/BaconToast-pro">
+                                                    GITHUB
+                                                </a>
+                                            </li>
+                                        
+                                            <li>
+                                                <a href="/links/">
+                                                    FRIENDS
+                                                </a>
+                                            </li>
+                                        
+                                    </ul>
+                                
+                            </li>
+                    
+                    
+                </ul>
+            </div>
+            <!-- Mobile -->
+            <div class="mobile">
+                
+                <div class="icon-item navbar-bar">
+                    <div class="navbar-bar-middle"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mobile sheet -->
+    <div class="navbar-drawer h-dvh w-full absolute top-0 left-0 bg-background-color flex flex-col justify-between">
+        <ul class="drawer-navbar-list flex flex-col px-4 justify-center items-start">
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/"
+                        >
+                            <span>
+                                HOME
+                            </span>
+                            
+                                <i class="fa-regular fa-house fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/archives"
+                        >
+                            <span>
+                                ARCHIVES
+                            </span>
+                            
+                                <i class="fa-regular fa-archive fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/links/"
+                        >
+                            <span>
+                                FRIENDS
+                            </span>
+                            
+                                <i class="fa-solid fa-link fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+                
+                    
+
+                    <li class="drawer-navbar-item-sub text-base my-1.5 flex flex-col w-full">
+                        
+                        <div class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary cursor-pointer text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                             navbar-data-toggle="submenu-About"
+                        >
+                            <span>
+                                ABOUT
+                            </span>
+                            
+                                <i class="fa-solid fa-chevron-right fa-sm fa-fw transition-all"></i>
+                            
+                        </div>
+                        
+
+                        
+                            <div class="flex-col items-start px-2 py-2 hidden" data-target="submenu-About">
+                                
+                                    <div class="drawer-navbar-item text-base flex flex-col justify-center items-start hover:underline active:underline hover:underline-offset-1 rounded-3xl">
+                                        <a class=" text-third-text-color text-xl"
+                                           target="_blank" rel="noopener" href="https://github.com/BaconToast-pro">GITHUB</a>
+                                    </div>
+                                
+                                    <div class="drawer-navbar-item text-base flex flex-col justify-center items-start hover:underline active:underline hover:underline-offset-1 rounded-3xl">
+                                        <a class=" text-third-text-color text-xl"
+                                           href="/links/">FRIENDS</a>
+                                    </div>
+                                
+                            </div>
+                        
+                    </li>
+            
+
+            
+            
+                
+                    
+                    
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full active"
+                           href="/tags"
+                        >
+                            <span>Tags</span>
+                            <i class="fa-regular fa-tags fa-sm fa-fw"></i>
+                        </a>
+                    </li>
+                
+                    
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full active"
+                           href="/categories"
+                        >
+                            <span>Categories</span>
+                            <i class="fa-regular fa-folder fa-sm fa-fw"></i>
+                        </a>
+                    </li>
+                
+            
+        </ul>
+
+        <div class="statistics flex justify-around my-2.5">
+    <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/tags">
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">10</div>
+        <div class="label text-third-text-color text-sm">Tags</div>
+    </a>
+    <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/categories">
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">3</div>
+        <div class="label text-third-text-color text-sm">Categories</div>
+    </a>
+    <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/archives">
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">10</div>
+        <div class="label text-third-text-color text-sm">Posts</div>
+    </a>
+</div>
+    </div>
+
+    <div class="window-mask"></div>
+
+</header>
+
+
+		</div>
+
+		<div class="main-content-body transition-fade-up">
+			
+
+			<div class="main-content">
+				<div class="post-page-container flex relative justify-between box-border w-full h-full">
+	<div class="article-content-container">
+
+		<div class="article-title relative w-full">
+			
+			
+			
+			<img src="/images/public/sakura.jpg" alt="P7课下-MIPS微系统设计" class="w-full h-60 sm:h-72 md:h-80 object-cover sm:rounded-t-large dark:brightness-75" />
+			
+			<div class="w-full flex items-center absolute bottom-0 justify-start">
+				<h1 class="article-title-cover text-center mx-6 my-6 text-second-text-color bg-background-color-transparent px-4 py-3 text-3xl sm:text-4xl md:text-5xl font-semibold backdrop-blur-lg rounded-xl border border-border-color ">P7课下-MIPS微系统设计</h1>
+			</div>
+			
+		</div>
+
+		
+		<div class="article-header flex flex-row gap-2 items-center px-2 sm:px-6 md:px-8">
+			<div class="avatar w-[46px] h-[46px] flex-shrink-0 rounded-medium border border-border-color p-[1px]">
+				<img src="/images/public/avatar.jpg">
+			</div>
+			<div class="info flex flex-col justify-between">
+				<div class="author flex items-center">
+					<span class="name text-default-text-color text-lg font-semibold">BaconToast</span>
+					
+					<span class="author-label ml-1.5 text-xs px-2 py-0.5 rounded-small text-third-text-color border border-shadow-color-1">Lv2</span>
+					
+				</div>
+				<div class="meta-info">
+					<div class="article-meta-info">
+    <span class="article-date article-meta-item">
+        <i class="fa-regular fa-pen-fancy"></i>&nbsp;
+        <span class="desktop">2025-11-18 11:20:49</span>
+        <span class="mobile">2025-11-18 11:20:49</span>
+        <span class="hover-info">Created</span>
+    </span>
+    
+        <span class="article-date article-meta-item">
+            <i class="fa-regular fa-wrench"></i>&nbsp;
+            <span class="desktop">2025-11-18 11:23:59</span>
+            <span class="mobile">2025-11-18 11:23:59</span>
+            <span class="hover-info">Updated</span>
+        </span>
+    
+
+    
+        <span class="article-categories article-meta-item">
+            <i class="fa-regular fa-folders"></i>&nbsp;
+            <ul>
+                
+                
+                    
+                        
+                        <li>
+                            <a href="/categories/CO/">CO</a>&nbsp;
+                        </li>
+                    
+                    
+                
+            </ul>
+        </span>
+    
+    
+        <span class="article-tags article-meta-item">
+            <i class="fa-regular fa-tags"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/tags/CO/">CO</a>&nbsp;
+                    </li>
+                
+                    <li>
+                        | <a href="/tags/Verilog/">Verilog</a>&nbsp;
+                    </li>
+                
+                    <li>
+                        | <a href="/tags/MIPS/">MIPS</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+
+    
+    
+    
+    
+        <span class="article-pv article-meta-item">
+            <i class="fa-regular fa-eye"></i>&nbsp;<span id="busuanzi_value_page_pv"></span>
+        </span>
+    
+</div>
+
+				</div>
+			</div>
+		</div>
+		
+
+		
+
+
+		<div class="article-content markdown-body px-2 sm:px-6 md:px-8 pb-8">
+			<h2 id="产生异常"><a href="#产生异常" class="headerlink" title="产生异常"></a>产生异常</h2><p>异常指的是<strong>内部异常</strong>和<strong>外部中断</strong>，前者是<strong>由于指令执行错误导致的“事件”</strong>，后者是<strong>由于外部设备信号导致的“事件”</strong>。为了响应异常，CPU 会自动跳转到某一特定地点（修改 PC 值），然后进行异常处理（由软件实现，不属于 MIPS 微系统）。</p>
+<h3 id="异常码-ExcCode"><a href="#异常码-ExcCode" class="headerlink" title="异常码 ExcCode"></a>异常码 ExcCode</h3><p>通过访问 CP0 的相应寄存器，可以获得 ExcCode 码（关于 CP0 之后再说），在本次 Project 中，需要实现的异常码有：</p>
+<table>
+<thead>
+<tr>
+<th align="center">异常与中断码</th>
+<th align="center">助记符与名称</th>
+<th align="center">指令与指令类型</th>
+<th align="center">描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">0</td>
+<td align="center"><code>Int</code>（外部中断）</td>
+<td align="center">所有指令</td>
+<td align="center">中断请求，来源于计时器与外部中断。</td>
+</tr>
+<tr>
+<td align="center">4</td>
+<td align="center"><code>AdEL</code>（取指异常）</td>
+<td align="center">所有指令</td>
+<td align="center">PC 地址未字对齐。</td>
+</tr>
+<tr>
+<td align="center">4</td>
+<td align="center"><code>AdEL</code>（取指异常）</td>
+<td align="center">所有指令</td>
+<td align="center">PC 地址超过 <code>0x3000 ~ 0x6ffc</code> 。</td>
+</tr>
+<tr>
+<td align="center">4</td>
+<td align="center"><code>AdEL</code>（取数异常）</td>
+<td align="center"><code>lw</code></td>
+<td align="center">取数地址未与 4 字节对齐。</td>
+</tr>
+<tr>
+<td align="center">4</td>
+<td align="center"><code>AdEL</code>（取数异常）</td>
+<td align="center"><code>lh</code></td>
+<td align="center">取数地址未与 2 字节对齐。</td>
+</tr>
+<tr>
+<td align="center">4</td>
+<td align="center"><code>AdEL</code>（取数异常）</td>
+<td align="center"><code>lh, lb</code></td>
+<td align="center">取 Timer 寄存器的值。</td>
+</tr>
+<tr>
+<td align="center">4</td>
+<td align="center"><code>AdEL</code>（取数异常）</td>
+<td align="center">Load 型指令</td>
+<td align="center">计算地址时加法溢出。</td>
+</tr>
+<tr>
+<td align="center">4</td>
+<td align="center"><code>AdEL</code>（取数异常）</td>
+<td align="center">Load 型指令</td>
+<td align="center">取数地址超出 DM、Timer0、Timer1、中断发生器的范围。</td>
+</tr>
+<tr>
+<td align="center">5</td>
+<td align="center"><code>AdES</code>（存数异常）</td>
+<td align="center"><code>sw</code></td>
+<td align="center">存数地址未 4 字节对齐。</td>
+</tr>
+<tr>
+<td align="center">5</td>
+<td align="center"><code>AdES</code>（存数异常）</td>
+<td align="center"><code>sh</code></td>
+<td align="center">存数地址未 2 字节对齐。</td>
+</tr>
+<tr>
+<td align="center">5</td>
+<td align="center"><code>AdES</code>（存数异常）</td>
+<td align="center"><code>sh, sb</code></td>
+<td align="center">存 Timer 寄存器的值。</td>
+</tr>
+<tr>
+<td align="center">5</td>
+<td align="center"><code>AdES</code>（存数异常）</td>
+<td align="center">Store 型指令</td>
+<td align="center">计算地址加法溢出。</td>
+</tr>
+<tr>
+<td align="center">5</td>
+<td align="center"><code>AdES</code>（存数异常）</td>
+<td align="center">Store 型指令</td>
+<td align="center">向计时器的 Count 寄存器存值。</td>
+</tr>
+<tr>
+<td align="center">5</td>
+<td align="center"><code>AdES</code>（存数异常）</td>
+<td align="center">Store 型指令</td>
+<td align="center">存数地址超出 DM、Timer0、Timer1、中断发生器的范围。</td>
+</tr>
+<tr>
+<td align="center">8</td>
+<td align="center"><code>Syscall</code>（系统调用）</td>
+<td align="center"><code>syscall</code></td>
+<td align="center">系统调用。</td>
+</tr>
+<tr>
+<td align="center">10</td>
+<td align="center"><code>RI</code>（未知指令）</td>
+<td align="center">-</td>
+<td align="center">未知的指令码。</td>
+</tr>
+<tr>
+<td align="center">12</td>
+<td align="center"><code>Ov</code>（溢出异常）</td>
+<td align="center"><code>add, addi, sub</code></td>
+<td align="center">算术溢出。</td>
+</tr>
+</tbody></table>
+<ul>
+<li>异常与中断码为 <code>Int</code> 时，表示此时没有<strong>异常</strong>发生，仅考虑<strong>中断</strong>，因此在没有异常产生时，考虑给 CP0 传入 <code>Int</code> ，再根据中断信号判断中断，无需考虑异常；</li>
+<li><strong>除以 0 是未定义行为，不算异常</strong>，即数据中不应该出现除以 0 的情况；</li>
+<li><strong>优先处理最早可以探查到的异常</strong>。</li>
+</ul>
+<h2 id="处理异常中断"><a href="#处理异常中断" class="headerlink" title="处理异常中断"></a>处理异常中断</h2><p>在一个时间周期内，</p>
+<ul>
+<li>CP0 先检查现在是否处理异常中断，再检查 CP0 所在流水级指令是否异常，以及外部是否有未禁用的中断（如有，考虑中断处理而非异常）；</li>
+<li>如果现在没有处理异常中断，且 CP0 所在流水级存在异常或外部产生了未被禁用的中断，CP0 将向 CPU 发送“跳转到异常中断处理”的信号；</li>
+<li>CPU 接收到这个信号后，对 CP0 所在流水级及之前的流水级进行“清空”，让 PC 跳转到异常中断处理地址 <code>0x4180</code> ，CP0 记录下处理完异常后需要返回的地址，以及出现异常的指令是否是延迟槽指令。</li>
+</ul>
+<p>完成异常中断处理后，通过 <code>eret</code> 回到需要返回的地址（存在 CP0 中）。</p>
+<blockquote>
+<p>其实CP0就是一个大号的处于M级的分支判断模块，实际上所有工作都是你原先设计的CPU在做，只是CP0这个东西可以帮你保存一些异常中断的状态信息（包含处理完之后回到哪一条指令），以及帮你判断当前时刻是否需要处理一个异常&#x2F;中断而已。</p>
+</blockquote>
+<h3 id="CP0-（协处理器）的实现"><a href="#CP0-（协处理器）的实现" class="headerlink" title="CP0 （协处理器）的实现"></a>CP0 （协处理器）的实现</h3><p>CP0 的任务是<strong>对异常进行配置</strong>，以及<strong>记录异常的信息</strong>，因此需要一些寄存器（32 位）：</p>
+<table>
+<thead>
+<tr>
+<th align="center">寄存器</th>
+<th align="center">编号</th>
+<th align="center">功能</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">SR</td>
+<td align="center">12</td>
+<td align="center">配置异常的功能。</td>
+</tr>
+<tr>
+<td align="center">Cause</td>
+<td align="center">13</td>
+<td align="center">记录异常发生的原因和情况。</td>
+</tr>
+<tr>
+<td align="center">EPC</td>
+<td align="center">14</td>
+<td align="center">记录异常处理结束后需要返回的 PC 。</td>
+</tr>
+</tbody></table>
+<p>这些寄存器只有特定的位发挥作用：</p>
+<table>
+<thead>
+<tr>
+<th align="center">寄存器</th>
+<th align="center">功能域</th>
+<th align="center">位域</th>
+<th align="center">解释</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">SR（State Register）</td>
+<td align="center">IM（Interrupt Mask）</td>
+<td align="center">15:10</td>
+<td align="center">分别对应六个外部中断，1 表示允许中断，0 表示禁止中断。只能通过 <code>mtc0</code> 这个指令修改，通过修改这个功能域来屏蔽一些中断。</td>
+</tr>
+<tr>
+<td align="center">SR（State Register）</td>
+<td align="center">EXL（Exception Level）</td>
+<td align="center">1</td>
+<td align="center">异常发生时置位，强制进入核心态（进入异常处理程序），禁止中断。</td>
+</tr>
+<tr>
+<td align="center">SR（State Register）</td>
+<td align="center">IE（Interrupt Enable）</td>
+<td align="center">0</td>
+<td align="center">全局中断使能，1 表示允许中断，0 表示禁止中断。</td>
+</tr>
+<tr>
+<td align="center">Cause</td>
+<td align="center">BD（Branch Delay）</td>
+<td align="center">31</td>
+<td align="center">置 1 表示 EPC 指向当前指令的前一条指令（一定为跳转），否则指向当前指令。</td>
+</tr>
+<tr>
+<td align="center">Cause</td>
+<td align="center">IP（Interrupt Pending）</td>
+<td align="center">15:10</td>
+<td align="center">6 位待决的中断位，分别对应 6 个外部中断，1 表示有中断，0 表示无中断，每个周期修改一次，修改的内容来自计时器和外部中断。</td>
+</tr>
+<tr>
+<td align="center">Cause</td>
+<td align="center">ExcCode</td>
+<td align="center">6:2</td>
+<td align="center">异常编码，记录当前发生什么异常。</td>
+</tr>
+<tr>
+<td align="center">EPC</td>
+<td align="center">-</td>
+<td align="center">-</td>
+<td align="center">记录异常处理结束后需要返回的 PC。</td>
+</tr>
+</tbody></table>
+<p>CP0 模块的端口定义如下：</p>
+<table>
+<thead>
+<tr>
+<th align="center">端口</th>
+<th align="center">方向</th>
+<th align="center">位数</th>
+<th align="center">解释</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">clk</td>
+<td align="center">I</td>
+<td align="center">1</td>
+<td align="center">时钟信号</td>
+</tr>
+<tr>
+<td align="center">reset</td>
+<td align="center">I</td>
+<td align="center">1</td>
+<td align="center">复位信号</td>
+</tr>
+<tr>
+<td align="center">en</td>
+<td align="center">I</td>
+<td align="center">1</td>
+<td align="center">写使能信号</td>
+</tr>
+<tr>
+<td align="center">CP0Add</td>
+<td align="center">I</td>
+<td align="center">5</td>
+<td align="center">寄存器地址</td>
+</tr>
+<tr>
+<td align="center">CP0In</td>
+<td align="center">I</td>
+<td align="center">32</td>
+<td align="center">CP0 写入数据</td>
+</tr>
+<tr>
+<td align="center">CP0Out</td>
+<td align="center">O</td>
+<td align="center">32</td>
+<td align="center">CP0 读出数据</td>
+</tr>
+<tr>
+<td align="center">VPC</td>
+<td align="center">I</td>
+<td align="center">32</td>
+<td align="center">受害 PC</td>
+</tr>
+<tr>
+<td align="center">BDIn</td>
+<td align="center">I</td>
+<td align="center">1</td>
+<td align="center">是否是延迟槽指令</td>
+</tr>
+<tr>
+<td align="center">ExcCodeIn</td>
+<td align="center">I</td>
+<td align="center">5</td>
+<td align="center">记录异常类型</td>
+</tr>
+<tr>
+<td align="center">HWInt</td>
+<td align="center">I</td>
+<td align="center">6</td>
+<td align="center">输入中断信号</td>
+</tr>
+<tr>
+<td align="center">EXLClr</td>
+<td align="center">I</td>
+<td align="center">1</td>
+<td align="center">复位 EXL</td>
+</tr>
+<tr>
+<td align="center">EPCOut</td>
+<td align="center">O</td>
+<td align="center">32</td>
+<td align="center">EPC 的值</td>
+</tr>
+<tr>
+<td align="center">Req</td>
+<td align="center">O</td>
+<td align="center">1</td>
+<td align="center">进入处理程序请求</td>
+</tr>
+</tbody></table>
+<h4 id="读写状态寄存器"><a href="#读写状态寄存器" class="headerlink" title="读写状态寄存器"></a>读写状态寄存器</h4><p>用来实现 <code>mfc0, mtc0</code> 。<br>CP0 的读写功能使用 <code>en</code>, <code>CP0Add</code>, <code>CP0In</code>, <code>CP0Out</code> 端口完成，仿照 GRF。<br>CP0 的三个状态寄存器仅有部分位有用，对于无用位初始化置 0，后续不对其操作。</p>
+<h4 id="进入异常中断处理程序"><a href="#进入异常中断处理程序" class="headerlink" title="进入异常中断处理程序"></a>进入异常中断处理程序</h4><p>用来实现异常中断处理。<br><code>VPC, BDIn, ExcCodeIn, HWInt</code> 是用来判断是否进入异常中断处理程序的所有输入端口。</p>
+<ul>
+<li>CP0 先检查 <code>EXL</code> 是否为 1 （正在处理异常中断），再检查 <code>ExcCodeIn</code> 是否不为 0 （当前是否存在异常）和 <code>HWInt &amp; IM</code> 是否不为 0 且 <code>IE</code> 不为 0 （存在未被禁用的中断）；</li>
+<li>如果现在 <code>EXL</code> 为 0 ，并且 <code>ExcCodeIn</code> 不为 0 或“ <code>HWInt &amp; IM</code> 不为 0 且 <code>IE</code> 不为 0”，那么将 <code>Req</code> 置 1 ，同时记录 <code>EPC, BD, EXL, ExcCode</code> 的值，否则置 0；</li>
+<li>CPU 接收到 <code>Req</code> 为 1 后，对 CP0 所在流水级及之前流水级清空（之后的流水级正常进行），让 PC 直接跳转到异常中断处理地址 <code>0x4180</code>（这是软件决定的功能，即该地址之后的指令是外部写好的，用于处理异常）。</li>
+</ul>
+<p>除此之外，只要没有 <code>reset</code> 信号，每个时钟周期都要记录一次 <code>IP</code> 。</p>
+<p>这里的 <code>VPC</code> 接入的是“宏观 PC”，即 CPU 在外部表现为“一个有延迟槽的单周期 CPU”，每条指令只有两个状态：执行完了和没执行。由于 CP0 设置在了 M 级，异常处理由 M 级来做，因此宏观 PC 的值等于 M 级 PC 的值，也即是 <code>VPC</code> 的来源。（宏观 PC 具体在下面讲到）</p>
+<p>CP0 记录什么值？</p>
+<ul>
+<li>记录 <code>ExcCode</code> 时，如果当前有中断，不应该直接记录 <code>ExcCodeIn</code> ，而是记录 <code>Int</code> ；</li>
+<li>当 <code>BDIn</code> 为 1 时，说明发生异常中断的指令是延迟槽内的指令，让 <code>EPC</code> 记录 <code>VPC - 4</code> ，即延迟槽前一条指令（某个分支跳转指令），否则记录 <code>VPC</code> ；</li>
+<li><code>EXL</code> 置为 1 ；</li>
+<li><code>BD</code> 置为 <code>BDIn</code> 。</li>
+</ul>
+<h4 id="退出异常中断处理程序"><a href="#退出异常中断处理程序" class="headerlink" title="退出异常中断处理程序"></a>退出异常中断处理程序</h4><p>用来实现 <code>eret</code> 。<br>该指令需要产生一个信号，将 <code>EXLClr</code> 置 1 ，此时在 CP0 中，<code>EXL</code> 修改为 0 .这样便解除了 <code>EXL</code> 记录的异常中断处理状态。<br>在 D 级判断，需要置位 PC。</p>
+<h2 id="封装成单周期-CPU"><a href="#封装成单周期-CPU" class="headerlink" title="封装成单周期 CPU"></a>封装成单周期 CPU</h2><h3 id="宏观-PC"><a href="#宏观-PC" class="headerlink" title="宏观 PC"></a>宏观 PC</h3><p>以某一个流水级为界限，作为输出端口输出出来，一般为 CP0 所在的流水级（M 级）。</p>
+<h3 id="精确异常"><a href="#精确异常" class="headerlink" title="精确异常"></a>精确异常</h3><p>精确指出哪一条指令导致了异常，称为<strong>异常受害指令</strong>。</p>
+<h4 id="清空流水线"><a href="#清空流水线" class="headerlink" title="清空流水线"></a>清空流水线</h4><p>在异常发生时，需要清空流水线，避免宏观 PC 之后的指令被执行。清空宏观 PC 之后的指令所在的流水线寄存器，即插入 <code>nop</code> 。<br>信号优先级如下：</p>
+<table>
+<thead>
+<tr>
+<th align="center">信号</th>
+<th align="center">优先级</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">reset</td>
+<td align="center">最高，复位大于一切</td>
+</tr>
+<tr>
+<td align="center">Req</td>
+<td align="center">次高，中断请求比内部阻塞重要</td>
+</tr>
+<tr>
+<td align="center">flush &#x2F; Stall</td>
+<td align="center">最低，流水线信号，外部人员看不到</td>
+</tr>
+</tbody></table>
+<h4 id="确定-CP0-的位置"><a href="#确定-CP0-的位置" class="headerlink" title="确定 CP0 的位置"></a>确定 CP0 的位置</h4><p>E、M 级都可以，这里采用 M 级。</p>
+<h4 id="流水异常码"><a href="#流水异常码" class="headerlink" title="流水异常码"></a>流水异常码</h4><p>异常信号 ExcCode 应该流水到 CP0 所在流水级，而不能直接提交到 CP0 。</p>
+<h4 id="写入-EPC"><a href="#写入-EPC" class="headerlink" title="写入 EPC"></a>写入 EPC</h4><p>发生异常的重要行为是将中断指令的 PC 写入 EPC ，如果是延迟槽指令就写入 PC - 4，如果不是就写入 PC。这里的 PC 是宏观 PC ，在上面处理异常部分也提到了。<br>这样，返回的时候将重新执行异常指令。</p>
+<h2 id="异常处理程序"><a href="#异常处理程序" class="headerlink" title="异常处理程序"></a>异常处理程序</h2><p>异常处理程序由软件实现，该项目只需要提供接口。</p>
+<h3 id="新指令"><a href="#新指令" class="headerlink" title="新指令"></a>新指令</h3><p>针对异常处理以及其他需求，需要增加几条指令：<code>mfc0, mtc0, syscall, eret</code></p>
+<ul>
+<li><code>mfc0</code>：读 CP0 寄存器，<code>mfc0 rt, rd</code> ；GPR[rt] &lt;- CP0[rd] ；（COP0+rs）</li>
+<li><code>mtc0</code>：写 CP0 寄存器，<code>mtc0 rt, rd</code> ；CP0[rd] &lt;- GPR[rt] ；（COP0+rs）</li>
+<li><code>syscall</code>：系统调用，产生系统调用异常；（special+func）</li>
+<li><code>eret</code>：异常返回，将保存在 CP0 的 EPC 寄存器中的现场（被中断的下一条地址）写入 PC，实现从异常中断处理程序返回。（COP0+func）</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th align="center">指令</th>
+<th align="center">op5</th>
+<th align="center">op4</th>
+<th align="center">op3</th>
+<th align="center">op2</th>
+<th align="center">op1</th>
+<th align="center">op0</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">“COP0”</td>
+<td align="center">0</td>
+<td align="center">1</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">0</td>
+</tr>
+<tr>
+<td align="center">“special”</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">0</td>
+</tr>
+</tbody></table>
+<table>
+<thead>
+<tr>
+<th align="center">指令</th>
+<th align="center">rs4</th>
+<th align="center">rs3</th>
+<th align="center">rs2</th>
+<th align="center">rs1</th>
+<th align="center">rs0</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">mfc0</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">0</td>
+</tr>
+<tr>
+<td align="center">mtc0</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">1</td>
+<td align="center">0</td>
+<td align="center">0</td>
+</tr>
+</tbody></table>
+<table>
+<thead>
+<tr>
+<th align="center">指令</th>
+<th align="center">func5</th>
+<th align="center">func4</th>
+<th align="center">func3</th>
+<th align="center">func2</th>
+<th align="center">func1</th>
+<th align="center">func0</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">syscall</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">1</td>
+<td align="center">1</td>
+<td align="center">0</td>
+<td align="center">0</td>
+</tr>
+<tr>
+<td align="center">eret</td>
+<td align="center">0</td>
+<td align="center">1</td>
+<td align="center">1</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">0</td>
+</tr>
+</tbody></table>
+<h2 id="外设的实现"><a href="#外设的实现" class="headerlink" title="外设的实现"></a>外设的实现</h2><p>外设是独立于之前实现的 CPU （P6）的部分，最后的架构应该是这样：</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/co/p7.png"
+                      alt="p7"
+                ></p>
+<p>绿色虚线是已经实现的部分，紫色虚线是新增的部分，红色虚线为改变后的 DM 接口。</p>
+<h3 id="计时器（Timer）"><a href="#计时器（Timer）" class="headerlink" title="计时器（Timer）"></a>计时器（Timer）</h3><p>计时器的主要功能是<strong>根据设定的时间来定时产生中断信号</strong>，是系统中断的来源之一。<br>课程组给出了标准实现代码：</p>
+<div class="code-container" data-rel="Verilog"><figure class="iseeu highlight verilog"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">`<span class="keyword">timescale</span> 1ns / 1ps</span></span><br><span class="line"><span class="meta">`<span class="keyword">define</span> IDLE 2&#x27;b00</span></span><br><span class="line"><span class="meta">`<span class="keyword">define</span> LOAD 2&#x27;b01</span></span><br><span class="line"><span class="meta">`<span class="keyword">define</span> CNT  2&#x27;b10</span></span><br><span class="line"><span class="meta">`<span class="keyword">define</span> INT  2&#x27;b11</span></span><br><span class="line"></span><br><span class="line"><span class="meta">`<span class="keyword">define</span> ctrl   mem[0]</span></span><br><span class="line"><span class="meta">`<span class="keyword">define</span> preset mem[1]</span></span><br><span class="line"><span class="meta">`<span class="keyword">define</span> count  mem[2]</span></span><br><span class="line"><span class="comment">//////////////////////////////////////////////////////////////////////////////////</span></span><br><span class="line"><span class="comment">// Company: </span></span><br><span class="line"><span class="comment">// Engineer: </span></span><br><span class="line"><span class="comment">// </span></span><br><span class="line"><span class="comment">// Create Date:    21:43:39 12/28/2017 </span></span><br><span class="line"><span class="comment">// Design Name: </span></span><br><span class="line"><span class="comment">// Module Name:    TC </span></span><br><span class="line"><span class="comment">// Project Name: </span></span><br><span class="line"><span class="comment">// Target Devices: </span></span><br><span class="line"><span class="comment">// Tool versions: </span></span><br><span class="line"><span class="comment">// Description: </span></span><br><span class="line"><span class="comment">//</span></span><br><span class="line"><span class="comment">// Dependencies: </span></span><br><span class="line"><span class="comment">//</span></span><br><span class="line"><span class="comment">// Revision: </span></span><br><span class="line"><span class="comment">// Revision 0.01 - File Created</span></span><br><span class="line"><span class="comment">// Additional Comments: </span></span><br><span class="line"><span class="comment">//</span></span><br><span class="line"><span class="comment">//////////////////////////////////////////////////////////////////////////////////</span></span><br><span class="line"><span class="keyword">module</span> TC(</span><br><span class="line">    <span class="keyword">input</span> clk,</span><br><span class="line">    <span class="keyword">input</span> reset,</span><br><span class="line">    <span class="keyword">input</span> [<span class="number">31</span>:<span class="number">2</span>] Addr,</span><br><span class="line">    <span class="keyword">input</span> WE,</span><br><span class="line">    <span class="keyword">input</span> [<span class="number">31</span>:<span class="number">0</span>] Din,</span><br><span class="line">    <span class="keyword">output</span> [<span class="number">31</span>:<span class="number">0</span>] Dout,</span><br><span class="line">    <span class="keyword">output</span> IRQ</span><br><span class="line">    );</span><br><span class="line"></span><br><span class="line">	<span class="keyword">reg</span> [<span class="number">1</span>:<span class="number">0</span>] state;</span><br><span class="line">	<span class="keyword">reg</span> [<span class="number">31</span>:<span class="number">0</span>] mem [<span class="number">2</span>:<span class="number">0</span>];</span><br><span class="line">	</span><br><span class="line">	<span class="keyword">reg</span> _IRQ;</span><br><span class="line">	<span class="keyword">assign</span> IRQ = `ctrl[<span class="number">3</span>] &amp; _IRQ;</span><br><span class="line">	</span><br><span class="line">	<span class="keyword">assign</span> Dout = mem[Addr[<span class="number">3</span>:<span class="number">2</span>]];</span><br><span class="line">	</span><br><span class="line">	<span class="keyword">wire</span> [<span class="number">31</span>:<span class="number">0</span>] load = Addr[<span class="number">3</span>:<span class="number">2</span>] == <span class="number">0</span> ? &#123;<span class="number">28&#x27;h0</span>, Din[<span class="number">3</span>:<span class="number">0</span>]&#125; : Din;</span><br><span class="line">	</span><br><span class="line">	<span class="keyword">integer</span> i;</span><br><span class="line">	<span class="keyword">always</span> @(<span class="keyword">posedge</span> clk) <span class="keyword">begin</span></span><br><span class="line">		<span class="keyword">if</span>(reset) <span class="keyword">begin</span></span><br><span class="line">			state &lt;= <span class="number">0</span>; </span><br><span class="line">			<span class="keyword">for</span>(i = <span class="number">0</span>; i &lt; <span class="number">3</span>; i = i+<span class="number">1</span>) mem[i] &lt;= <span class="number">0</span>;</span><br><span class="line">			_IRQ &lt;= <span class="number">0</span>;</span><br><span class="line">		<span class="keyword">end</span></span><br><span class="line">		<span class="keyword">else</span> <span class="keyword">if</span>(WE) <span class="keyword">begin</span></span><br><span class="line">			<span class="comment">// $display(&quot;%d@: *%h &lt;= %h&quot;, $time, &#123;Addr, 2&#x27;b00&#125;, load);</span></span><br><span class="line">			mem[Addr[<span class="number">3</span>:<span class="number">2</span>]] &lt;= load;</span><br><span class="line">		<span class="keyword">end</span></span><br><span class="line">		<span class="keyword">else</span> <span class="keyword">begin</span></span><br><span class="line">			<span class="keyword">case</span>(state)</span><br><span class="line">				`IDLE : <span class="keyword">if</span>(`ctrl[<span class="number">0</span>]) <span class="keyword">begin</span></span><br><span class="line">					state &lt;= `LOAD;</span><br><span class="line">					_IRQ &lt;= <span class="number">1&#x27;b0</span>;</span><br><span class="line">				<span class="keyword">end</span></span><br><span class="line">				`LOAD : <span class="keyword">begin</span></span><br><span class="line">					`count &lt;= `preset;</span><br><span class="line">					state &lt;= `CNT;</span><br><span class="line">				<span class="keyword">end</span></span><br><span class="line">				`CNT  : </span><br><span class="line">					<span class="keyword">if</span>(`ctrl[<span class="number">0</span>]) <span class="keyword">begin</span></span><br><span class="line">						<span class="keyword">if</span>(`count &gt; <span class="number">1</span>) `count &lt;= `count-<span class="number">1</span>;</span><br><span class="line">						<span class="keyword">else</span> <span class="keyword">begin</span></span><br><span class="line">							`count &lt;= <span class="number">0</span>;</span><br><span class="line">							state &lt;= `INT;</span><br><span class="line">							_IRQ &lt;= <span class="number">1&#x27;b1</span>;</span><br><span class="line">						<span class="keyword">end</span></span><br><span class="line">					<span class="keyword">end</span></span><br><span class="line">					<span class="keyword">else</span> state &lt;= `IDLE;</span><br><span class="line">				<span class="keyword">default</span> : <span class="keyword">begin</span></span><br><span class="line">					<span class="keyword">if</span>(`ctrl[<span class="number">2</span>:<span class="number">1</span>] == <span class="number">2&#x27;b00</span>) `ctrl[<span class="number">0</span>] &lt;= <span class="number">1&#x27;b0</span>;</span><br><span class="line">					<span class="keyword">else</span> _IRQ &lt;= <span class="number">1&#x27;b0</span>;</span><br><span class="line">					state &lt;= `IDLE;</span><br><span class="line">				<span class="keyword">end</span></span><br><span class="line">			<span class="keyword">endcase</span></span><br><span class="line">		<span class="keyword">end</span></span><br><span class="line">	<span class="keyword">end</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">endmodule</span></span><br></pre></td></tr></table></figure></div>
+<h3 id="中断发生器（InterruptGenerator）"><a href="#中断发生器（InterruptGenerator）" class="headerlink" title="中断发生器（InterruptGenerator）"></a>中断发生器（InterruptGenerator）</h3><p>这是本课程抽象简化现实外设后得到的一种外设（键盘、鼠标等的抽象），会在不确定的时刻产生中断信号，并持续置高，直到微系统做出响应，变回低位。<br>对中断发生器的响应通过系统桥实现，通过 Store 类指令访问地址 <code>0x7F20</code> 。<br>中断发生器在测试 tb 上实现，无需自己实现，只需要通过以下功能：</p>
+<ul>
+<li>微系统可以通过外部端口接受外部中断信号（在计时器部分已经实现了）。</li>
+<li>微系统可以通过访问地址 <code>0x7F20</code> 的 <code>store</code> 类指令，改变对应的微系统输出信号（<code>m_int_addr</code>，<code>m_int_byteen</code>），即系统桥实现正确。</li>
+</ul>
+<h3 id="系统桥（Bridge）"><a href="#系统桥（Bridge）" class="headerlink" title="系统桥（Bridge）"></a>系统桥（Bridge）</h3><p>系统桥传入对地址的访问请求，通过系统桥内部的转换代码，将请求转变为对应寄存器的读写操作。</p>
+<h2 id="思考题"><a href="#思考题" class="headerlink" title="思考题"></a>思考题</h2><blockquote>
+<p>1、请查阅相关资料，说明鼠标和键盘的输入信号是如何被 CPU 知晓的？</p>
+</blockquote>
+<p>鼠标和键盘产生中断信号，进入中断处理区的对应位置，将输入信号从鼠标和键盘中读入寄存器。</p>
+<blockquote>
+<p>2、请思考为什么我们的 CPU 处理中断异常必须是已经指定好的地址？如果你的 CPU 支持用户自定义入口地址，即处理中断异常的程序由用户提供，其还能提供我们所希望的功能吗？如果可以，请说明这样可能会出现什么问题？否则举例说明。（假设用户提供的中断处理程序合法）</p>
+</blockquote>
+<p>因为中断异常处理程序是独立于其他正常部分的，因此需要单独一块地址空间，避免错误访问。应该是可以的，但要保证接入地址仍然是 0x4180 ，即接口一致，且异常处理方式合理。</p>
+<blockquote>
+<p>3、为何与外设通信需要 Bridge？</p>
+</blockquote>
+<p>系统桥是连接 CPU 和外设的功能设备，它会给 CPU 提供一种接口，使得 CPU 可以像读写普通存储器一样（即按地址读写）来读写复杂多变的外设。系统桥统一且简化了 CPU 的对外接口，CPU 不必为每种外设单独提供接口，符合高内聚，低耦合的设计思想。</p>
+<blockquote>
+<p>4、请阅读官方提供的定时器源代码，阐述两种中断模式的异同，并分别针对每一种模式绘制状态移图。</p>
+</blockquote>
+<p>略（）</p>
+<blockquote>
+<p>5、倘若中断信号流入的时候，在检测宏观 PC 的一级如果是一条空泡（你的 CPU 该级所有信息均为空）指令，此时会发生什么问题？在此例基础上请思考：在 P7 中，清空流水线产生的空泡指令应该保留原指令的哪些信息？</p>
+</blockquote>
+<blockquote>
+<p>6、为什么 <code>jalr</code> 指令为什么不能写成 <code>jalr $31, $31</code>？</p>
+</blockquote>
+<h2 id="测试数据（神中神！）"><a href="#测试数据（神中神！）" class="headerlink" title="测试数据（神中神！）"></a>测试数据（神中神！）</h2><div class="code-container" data-rel="Mips"><figure class="iseeu highlight mips"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br><span class="line">196</span><br><span class="line">197</span><br><span class="line">198</span><br><span class="line">199</span><br><span class="line">200</span><br><span class="line">201</span><br><span class="line">202</span><br><span class="line">203</span><br><span class="line">204</span><br><span class="line">205</span><br><span class="line">206</span><br><span class="line">207</span><br><span class="line">208</span><br><span class="line">209</span><br><span class="line">210</span><br><span class="line">211</span><br><span class="line">212</span><br><span class="line">213</span><br><span class="line">214</span><br><span class="line">215</span><br><span class="line">216</span><br><span class="line">217</span><br><span class="line">218</span><br><span class="line">219</span><br><span class="line">220</span><br><span class="line">221</span><br><span class="line">222</span><br><span class="line">223</span><br><span class="line">224</span><br><span class="line">225</span><br><span class="line">226</span><br><span class="line">227</span><br><span class="line">228</span><br><span class="line">229</span><br><span class="line">230</span><br><span class="line">231</span><br><span class="line">232</span><br><span class="line">233</span><br><span class="line">234</span><br><span class="line">235</span><br><span class="line">236</span><br><span class="line">237</span><br><span class="line">238</span><br><span class="line">239</span><br><span class="line">240</span><br><span class="line">241</span><br><span class="line">242</span><br><span class="line">243</span><br><span class="line">244</span><br><span class="line">245</span><br><span class="line">246</span><br><span class="line">247</span><br><span class="line">248</span><br><span class="line">249</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">.text</span></span><br><span class="line">    <span class="comment"># 允许外部中断，Timer中断</span></span><br><span class="line">    <span class="keyword">ori </span>$<span class="built_in">t0</span>, $<span class="number">0</span>, <span class="number">0x1c01</span></span><br><span class="line">    <span class="keyword">mtc0 </span>$<span class="built_in">t0</span>, $<span class="number">12</span></span><br><span class="line">    <span class="comment"># 请在宏观PC为30c0和30d0的时候设置两次中断</span></span><br><span class="line">    </span><br><span class="line">    <span class="comment">#lw取数地址未字对齐</span></span><br><span class="line">    <span class="keyword">addi </span>$<span class="built_in">t1</span> $<span class="number">0</span> <span class="number">0x3333</span></span><br><span class="line">    <span class="keyword">sw </span>$<span class="built_in">t1</span> <span class="number">0</span>($<span class="number">0</span>)</span><br><span class="line">    <span class="keyword">lw </span>$<span class="built_in">t1</span> <span class="number">3</span>($<span class="number">0</span>)</span><br><span class="line">    </span><br><span class="line">    <span class="comment">#lh取数未半字对齐</span></span><br><span class="line">    <span class="keyword">lh </span>$<span class="built_in">t1</span> <span class="number">3</span>($<span class="number">0</span>)</span><br><span class="line">    </span><br><span class="line">    <span class="comment">#lh、lb取Timer寄存器的值</span></span><br><span class="line">    <span class="keyword">lh </span>$<span class="built_in">t1</span> <span class="number">0x7F00</span>($<span class="number">0</span>)</span><br><span class="line">    <span class="keyword">lb </span>$<span class="built_in">t2</span> <span class="number">0x7F02</span>($<span class="number">0</span>)</span><br><span class="line">    </span><br><span class="line">    <span class="comment">#load类指令计算地址加法溢出</span></span><br><span class="line">    <span class="keyword">lui </span>$<span class="built_in">t1</span> <span class="number">0xf000</span></span><br><span class="line">    <span class="keyword">lw </span>$<span class="built_in">t2</span> -<span class="number">0x7fff</span>($<span class="built_in">t1</span>)</span><br><span class="line">    <span class="keyword">lh </span>$<span class="built_in">t2</span> -<span class="number">0x7fff</span>($<span class="built_in">t1</span>)</span><br><span class="line">    <span class="keyword">lb </span>$<span class="built_in">t2</span> -<span class="number">0x7fff</span>($<span class="built_in">t1</span>)</span><br><span class="line">    </span><br><span class="line">    <span class="comment">#load类指令取数地址越界</span></span><br><span class="line">    <span class="keyword">ori </span>$<span class="built_in">t1</span> $<span class="number">0</span> <span class="number">0x7F1C</span></span><br><span class="line">    <span class="keyword">lw </span>$<span class="built_in">t2</span> <span class="number">0</span>($<span class="built_in">t1</span>)</span><br><span class="line">    <span class="keyword">lh </span>$<span class="built_in">t2</span> <span class="number">0</span>($<span class="built_in">t1</span>)</span><br><span class="line">    <span class="keyword">lb </span>$<span class="built_in">t2</span> <span class="number">0</span>($<span class="built_in">t1</span>)</span><br><span class="line">    </span><br><span class="line">    <span class="comment">#sw存数地址未字对齐</span></span><br><span class="line">    <span class="keyword">addi </span>$<span class="built_in">t1</span> $<span class="number">0</span> <span class="number">0x4444</span></span><br><span class="line">    <span class="keyword">sw </span>$<span class="built_in">t1</span> <span class="number">2</span>($<span class="number">0</span>)</span><br><span class="line">    </span><br><span class="line">    <span class="comment">#sh存数未半字对齐</span></span><br><span class="line">    <span class="keyword">sh </span>$<span class="built_in">t1</span> <span class="number">3</span>($<span class="number">0</span>)</span><br><span class="line">    </span><br><span class="line">    <span class="comment">#sh、sb存Timer寄存器的值</span></span><br><span class="line">    <span class="keyword">sh </span>$<span class="built_in">t1</span> <span class="number">0x7F00</span>($<span class="number">0</span>)</span><br><span class="line">    <span class="keyword">sb </span>$<span class="built_in">t2</span> <span class="number">0x7F02</span>($<span class="number">0</span>)</span><br><span class="line">    </span><br><span class="line">    <span class="comment">#store类指令计算地址加法溢出</span></span><br><span class="line">    <span class="keyword">lui </span>$<span class="built_in">t1</span> <span class="number">0xf000</span></span><br><span class="line">    <span class="keyword">sw </span>$<span class="built_in">t2</span> -<span class="number">0x7fff</span>($<span class="number">0</span>)</span><br><span class="line">    <span class="keyword">sh </span>$<span class="built_in">t2</span> -<span class="number">0x7fff</span>($<span class="number">0</span>)</span><br><span class="line">    <span class="keyword">sb </span>$<span class="built_in">t2</span> -<span class="number">0x7fff</span>($<span class="number">0</span>)</span><br><span class="line">    </span><br><span class="line">    <span class="comment">#store类指令存数地址越界</span></span><br><span class="line">    <span class="keyword">ori </span>$<span class="built_in">t1</span> $<span class="number">0</span> <span class="number">0x7F0C</span></span><br><span class="line">    <span class="keyword">sw </span>$<span class="built_in">t2</span> <span class="number">0</span>($<span class="built_in">t1</span>)</span><br><span class="line">    <span class="keyword">sh </span>$<span class="built_in">t2</span> <span class="number">0</span>($<span class="built_in">t1</span>)</span><br><span class="line">    <span class="keyword">sb </span>$<span class="built_in">t2</span> <span class="number">0</span>($<span class="built_in">t1</span>)</span><br><span class="line">    </span><br><span class="line">    <span class="comment">#store类指令向计时器的 Count 寄存器存值</span></span><br><span class="line">    <span class="keyword">sw </span>$<span class="built_in">t1</span> <span class="number">0x7F08</span>($<span class="number">0</span>)</span><br><span class="line">    </span><br><span class="line">    <span class="comment">#系统调用</span></span><br><span class="line">    <span class="keyword">ori </span>$<span class="built_in">v0</span> $<span class="number">0</span> <span class="number">1</span></span><br><span class="line">    <span class="keyword">syscall</span></span><br><span class="line"><span class="keyword"></span>    </span><br><span class="line">    <span class="comment">#未知指令</span></span><br><span class="line">    <span class="keyword">addu </span>$<span class="built_in">t1</span> $<span class="built_in">t2</span> $<span class="built_in">t3</span></span><br><span class="line">    </span><br><span class="line">    <span class="comment">#溢出异常</span></span><br><span class="line">    <span class="keyword">lui </span>$<span class="built_in">t1</span> <span class="number">0x7fff</span></span><br><span class="line">    <span class="keyword">lui </span>$<span class="built_in">t2</span> <span class="number">0x7fff</span></span><br><span class="line">    <span class="keyword">add </span>$<span class="built_in">t3</span> $<span class="built_in">t1</span> $<span class="built_in">t2</span></span><br><span class="line">    <span class="keyword">lui </span>$<span class="built_in">t1</span> <span class="number">0xf000</span></span><br><span class="line">    <span class="keyword">addi </span>$<span class="built_in">t2</span> $<span class="built_in">t1</span> -<span class="number">0x7000</span></span><br><span class="line">    <span class="keyword">lui </span>$<span class="built_in">t1</span> <span class="number">0x7fff</span></span><br><span class="line">    <span class="keyword">lui </span>$<span class="built_in">t2</span> <span class="number">0xf000</span></span><br><span class="line">    <span class="keyword">sub </span>$<span class="built_in">t3</span> $<span class="built_in">t1</span> $<span class="built_in">t2</span></span><br><span class="line">    </span><br><span class="line">    <span class="comment">#正好处于E级的乘除法指令是否开始</span></span><br><span class="line">    <span class="keyword">lw </span>$<span class="built_in">t3</span> <span class="number">1</span>($<span class="number">0</span>)</span><br><span class="line">    <span class="keyword">mult </span>$<span class="built_in">t1</span> $<span class="built_in">t2</span></span><br><span class="line">    </span><br><span class="line">    <span class="comment">#已经开始的乘除法是否未受影响</span></span><br><span class="line">    <span class="keyword">mult </span>$<span class="built_in">t1</span> $<span class="built_in">t2</span></span><br><span class="line">    <span class="keyword">lw </span>$<span class="built_in">t3</span> <span class="number">1</span>($<span class="number">0</span>)</span><br><span class="line">    <span class="keyword">mflo </span>$<span class="built_in">t4</span></span><br><span class="line">    </span><br><span class="line">    <span class="comment">#正好处于E级的mthi与mtlo是否写入</span></span><br><span class="line">    <span class="keyword">lw </span>$<span class="built_in">t3</span> <span class="number">1</span>($<span class="number">0</span>)</span><br><span class="line">    <span class="keyword">mthi </span>$<span class="built_in">t4</span></span><br><span class="line">    <span class="keyword">mfhi </span>$<span class="built_in">t4</span></span><br><span class="line">    </span><br><span class="line">    <span class="comment">#阻塞的时候发生中断(请在宏观PC为0x30c0的时候中断)</span></span><br><span class="line">    <span class="keyword">lw </span>$<span class="built_in">t1</span> <span class="number">0</span>($<span class="number">0</span>)</span><br><span class="line">    <span class="keyword">jal </span>kk1</span><br><span class="line">    <span class="keyword">nop </span></span><br><span class="line"><span class="symbol"> </span></span><br><span class="line"><span class="symbol">kk1:</span>   </span><br><span class="line">    <span class="comment">#检测到异常时发生中断(请在宏观PC为0x30d0时发生中断)</span></span><br><span class="line">    <span class="keyword">lw </span>$<span class="built_in">t3</span> <span class="number">2</span>($<span class="number">0</span>)</span><br><span class="line">    </span><br><span class="line">    <span class="comment">#阻塞过程中发生异常</span></span><br><span class="line">    <span class="keyword">lw </span>$<span class="built_in">t3</span> <span class="number">3</span>($<span class="number">0</span>)</span><br><span class="line">    <span class="keyword">lw </span>$<span class="built_in">t1</span> <span class="number">3</span>($<span class="number">0</span>)</span><br><span class="line">    <span class="keyword">lw </span>$<span class="built_in">t2</span> <span class="number">0</span>($<span class="built_in">t1</span>)</span><br><span class="line">    </span><br><span class="line">    <span class="comment">#测试Timer的中断功能及其响应是否正确、中断优先级是否正确</span></span><br><span class="line">    <span class="keyword">ori </span>$<span class="built_in">t1</span> $<span class="number">0</span> <span class="number">9</span> <span class="comment">#设置计时使能和中断屏蔽</span></span><br><span class="line">    <span class="keyword">sw </span>$<span class="built_in">t1</span> <span class="number">0x7F00</span>($<span class="number">0</span>)</span><br><span class="line">    <span class="keyword">ori </span>$<span class="built_in">t1</span> $<span class="number">0</span> <span class="number">1</span> <span class="comment">#设置计时数</span></span><br><span class="line">    <span class="keyword">sw </span>$<span class="built_in">t1</span> <span class="number">0x7F04</span>($<span class="number">0</span>)</span><br><span class="line">    <span class="keyword">nop</span></span><br><span class="line"><span class="keyword"></span>    <span class="keyword">nop</span></span><br><span class="line"><span class="keyword"></span>    <span class="keyword">lw </span>$<span class="built_in">t1</span> <span class="number">2</span>($<span class="number">0</span>)</span><br><span class="line">    <span class="keyword">nop</span></span><br><span class="line"><span class="keyword"></span>    <span class="keyword">nop</span></span><br><span class="line"><span class="keyword"></span>    <span class="keyword">nop</span></span><br><span class="line"><span class="keyword"></span>    <span class="keyword">nop</span></span><br><span class="line"><span class="keyword"></span>    </span><br><span class="line">    <span class="comment">#测试mtc0和eret指令的转发、以及清空延迟槽</span></span><br><span class="line">    <span class="keyword">ori </span>$<span class="built_in">t1</span> $<span class="number">0</span> <span class="number">0x3120</span></span><br><span class="line">    <span class="keyword">mtc0 </span>$<span class="built_in">t1</span> $<span class="number">14</span></span><br><span class="line">    <span class="keyword">nop</span></span><br><span class="line"><span class="keyword"></span>    <span class="keyword">eret</span></span><br><span class="line"><span class="keyword"></span>    <span class="keyword">ori </span>$<span class="built_in">t1</span> $<span class="number">0</span> <span class="number">0x444</span></span><br><span class="line">    <span class="keyword">ori </span>$<span class="built_in">t1</span> $<span class="number">0</span> <span class="number">0x3138</span></span><br><span class="line">    <span class="keyword">sw </span>$<span class="built_in">t1</span> <span class="number">0</span>($<span class="number">0</span>)</span><br><span class="line">    <span class="keyword">lw </span>$<span class="built_in">t2</span> <span class="number">0</span>($<span class="number">0</span>)</span><br><span class="line">    <span class="keyword">mtc0 </span>$<span class="built_in">t2</span> $<span class="number">14</span></span><br><span class="line">    <span class="keyword">eret</span></span><br><span class="line"><span class="keyword"></span>    <span class="keyword">ori </span>$<span class="built_in">t1</span> $<span class="number">0</span> <span class="number">0x444</span></span><br><span class="line">    </span><br><span class="line">    <span class="comment">#延迟槽指令出错时是否正确存入EPC（如果处理不对，会在这两条指令死循环）</span></span><br><span class="line">    <span class="keyword">beq </span>$<span class="built_in">t1</span> $<span class="built_in">t1</span> <span class="keyword">jump1</span></span><br><span class="line"><span class="keyword"></span>    <span class="keyword">lw </span>$<span class="built_in">t2</span> <span class="number">1</span>($<span class="number">0</span>)</span><br><span class="line"><span class="keyword">jump1:</span></span><br><span class="line"><span class="keyword"></span>    </span><br><span class="line">    <span class="comment">#跳转到不对齐地址时，EPC是否正确（pc地址未字对齐、越界）</span></span><br><span class="line">    <span class="keyword">ori </span>$<span class="built_in">t1</span> $<span class="number">0</span> <span class="number">0x1111</span></span><br><span class="line">    <span class="keyword">jr </span>$<span class="built_in">t1</span></span><br><span class="line">    <span class="keyword">nop</span></span><br><span class="line"><span class="keyword"></span>    <span class="keyword">ori </span>$<span class="built_in">s0</span> $<span class="number">0</span> <span class="number">0x4444</span></span><br><span class="line">    </span><br><span class="line">    <span class="comment">#未达到条件跳转时是否正确存入EPC</span></span><br><span class="line">    <span class="keyword">beq </span>$<span class="number">0</span> $<span class="built_in">t1</span> <span class="keyword">jump2</span></span><br><span class="line"><span class="keyword"></span>    <span class="keyword">lw </span>$<span class="built_in">t2</span> <span class="number">1</span>($<span class="number">0</span>)</span><br><span class="line"><span class="keyword">jump2:</span></span><br><span class="line"><span class="keyword"></span><span class="symbol"></span></span><br><span class="line"><span class="symbol">    </span></span><br><span class="line"><span class="symbol">end:</span></span><br><span class="line">    <span class="keyword">beq </span>$<span class="number">0</span>, $<span class="number">0</span>, end</span><br><span class="line">    <span class="keyword">nop</span></span><br><span class="line"><span class="keyword"></span><span class="symbol">_bad:</span></span><br><span class="line">    <span class="keyword">ori </span>$<span class="built_in">s2</span> $<span class="number">0</span> <span class="number">0x4444</span></span><br><span class="line">    <span class="keyword">beq </span>$<span class="number">0</span>, $<span class="number">0</span>, end</span><br><span class="line">    <span class="keyword">nop</span></span><br><span class="line"><span class="keyword"></span>    </span><br><span class="line"><span class="comment">## 中间省略很多个nop</span></span><br><span class="line"><span class="comment">## 直到地址 0x4180 处</span></span><br><span class="line"></span><br><span class="line">.ktext <span class="number">0x4180</span></span><br><span class="line"><span class="symbol">_entry:</span></span><br><span class="line"><span class="symbol"></span></span><br><span class="line"><span class="symbol">_main_handler:</span></span><br><span class="line">    <span class="comment"># 取出 ExcCode</span></span><br><span class="line">    <span class="keyword">mfc0 </span>$<span class="built_in">k0</span>, $<span class="number">13</span></span><br><span class="line">    <span class="keyword">ori </span>$<span class="built_in">k1</span>, $<span class="number">0</span>, <span class="number">0x7c</span></span><br><span class="line">    <span class="keyword">and </span>$<span class="built_in">k0</span>, $<span class="built_in">k0</span>, $<span class="built_in">k1</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># 如果是中断，对$s1寄存器赋值0x222，并且响应中断</span></span><br><span class="line">    <span class="keyword">beq </span>$<span class="built_in">k0</span>, $<span class="number">0</span>, zhongduan</span><br><span class="line">    <span class="keyword">nop</span></span><br><span class="line"><span class="keyword"></span>    <span class="comment">#j _error</span></span><br><span class="line">    <span class="keyword">beq </span>$<span class="number">0</span> $<span class="number">0</span> _error</span><br><span class="line">    <span class="keyword">nop</span></span><br><span class="line"><span class="keyword"></span><span class="symbol">    </span></span><br><span class="line"><span class="symbol">zhongduan:</span></span><br><span class="line">    <span class="keyword">ori </span>$<span class="built_in">s1</span> $<span class="number">0</span> <span class="number">0x222</span></span><br><span class="line">    <span class="keyword">mfc0 </span>$<span class="built_in">t1</span> $<span class="number">13</span></span><br><span class="line">    <span class="keyword">andi </span>$<span class="built_in">t1</span> $<span class="built_in">t1</span> <span class="number">0x0400</span></span><br><span class="line">    <span class="keyword">beq </span>$<span class="built_in">t1</span> $<span class="number">0</span> _waibuzhongduan  <span class="comment">#处理外部中断</span></span><br><span class="line">    <span class="keyword">nop</span></span><br><span class="line"><span class="keyword"></span>    <span class="comment">#处理计时器1中断(同时测试对计时器读写是否正常)</span></span><br><span class="line">    <span class="keyword">lw </span>$<span class="built_in">t1</span> <span class="number">0x7F00</span>($<span class="number">0</span>)</span><br><span class="line">    <span class="keyword">andi </span>$<span class="built_in">t1</span> $<span class="built_in">t1</span> <span class="number">0xfff7</span></span><br><span class="line">    <span class="keyword">sw </span>$<span class="built_in">t1</span> <span class="number">0x7F00</span>($<span class="number">0</span>)</span><br><span class="line">    <span class="comment">#j _exception_return</span></span><br><span class="line">    <span class="keyword">beq </span>$<span class="number">0</span> $<span class="number">0</span> _exception_return</span><br><span class="line">    <span class="keyword">nop</span></span><br><span class="line"><span class="keyword"></span><span class="symbol">    </span></span><br><span class="line"><span class="symbol">_waibuzhongduan:</span></span><br><span class="line">    <span class="keyword">sb </span>$<span class="number">0</span>, <span class="number">0x7f20</span>($<span class="number">0</span>)</span><br><span class="line">    <span class="comment">#j _exception_return</span></span><br><span class="line">    <span class="keyword">beq </span>$<span class="number">0</span> $<span class="number">0</span> _exception_return</span><br><span class="line">    <span class="keyword">nop</span></span><br><span class="line"><span class="keyword"></span><span class="symbol"></span></span><br><span class="line"><span class="symbol">_error:</span>  </span><br><span class="line">    <span class="comment">#判断是否是pc地址未对齐</span></span><br><span class="line">    <span class="keyword">mfc0 </span>$<span class="built_in">t1</span> $<span class="number">14</span></span><br><span class="line">    <span class="keyword">ori </span>$<span class="built_in">t2</span> $<span class="number">0</span> <span class="number">4</span></span><br><span class="line">    <span class="keyword">div </span>$<span class="built_in">t1</span> $<span class="built_in">t2</span></span><br><span class="line">    <span class="keyword">mfhi </span>$<span class="built_in">t1</span> </span><br><span class="line">    <span class="keyword">beq </span>$<span class="built_in">t1</span> $<span class="number">0</span> _other_error <span class="comment">#其他错误</span></span><br><span class="line">    <span class="keyword">nop</span></span><br><span class="line"><span class="keyword"></span>    <span class="keyword">mfc0 </span>$<span class="built_in">t1</span> $<span class="number">14</span></span><br><span class="line">    <span class="keyword">ori </span>$<span class="built_in">t2</span> $<span class="number">0</span> <span class="number">0x1111</span></span><br><span class="line">    <span class="keyword">bne </span>$<span class="built_in">t1</span> $<span class="built_in">t2</span> _bad <span class="comment">#如果出错会写入0x4444</span></span><br><span class="line">    <span class="keyword">nop</span></span><br><span class="line"><span class="keyword"></span>    <span class="keyword">ori </span>$<span class="built_in">t1</span> $<span class="number">0</span> <span class="number">0x3150</span> <span class="comment">#注意这个地方是特判，如果修改了之前的代码，会出错</span></span><br><span class="line">    <span class="keyword">mtc0 </span>$<span class="built_in">t1</span> $<span class="number">14</span></span><br><span class="line">    <span class="keyword">beq </span>$<span class="number">0</span> $<span class="number">0</span> _exception_return</span><br><span class="line">    <span class="keyword">nop</span></span><br><span class="line"><span class="keyword"></span><span class="symbol">    </span></span><br><span class="line"><span class="symbol"></span></span><br><span class="line"><span class="symbol">_other_error:</span></span><br><span class="line">    <span class="comment">#判断是否为延迟槽指令</span></span><br><span class="line">    <span class="keyword">mfc0 </span>$<span class="built_in">t1</span> $<span class="number">13</span></span><br><span class="line">    <span class="keyword">lui </span>$<span class="built_in">t2</span> <span class="number">0x8000</span></span><br><span class="line">    <span class="keyword">and </span>$<span class="built_in">t1</span> $<span class="built_in">t1</span> $<span class="built_in">t2</span></span><br><span class="line">    <span class="keyword">beq </span>$<span class="number">0</span> $<span class="built_in">t1</span> _not_BD_error</span><br><span class="line">    <span class="keyword">nop</span></span><br><span class="line"><span class="keyword"></span>    <span class="keyword">mfc0 </span>$<span class="built_in">t1</span> $<span class="number">14</span></span><br><span class="line">    <span class="keyword">ori </span>$<span class="built_in">t2</span> $<span class="number">0</span> <span class="number">0x3138</span></span><br><span class="line">    <span class="keyword">beq </span>$<span class="built_in">t1</span> $<span class="built_in">t2</span> _right1</span><br><span class="line">    <span class="keyword">nop</span></span><br><span class="line"><span class="keyword"></span>    <span class="keyword">ori </span>$<span class="built_in">t2</span> $<span class="number">0</span> <span class="number">0x3150</span></span><br><span class="line">    <span class="keyword">beq </span>$<span class="built_in">t1</span> $<span class="built_in">t2</span> _right2</span><br><span class="line">    <span class="keyword">nop</span></span><br><span class="line"><span class="keyword"></span>    <span class="keyword">beq </span>$<span class="number">0</span> $<span class="number">0</span> _not_BD_error <span class="comment">#如果BD的记录error,会陷入死循环</span></span><br><span class="line">    <span class="keyword">nop</span></span><br><span class="line"><span class="keyword"></span><span class="symbol">_right1:</span></span><br><span class="line">    <span class="keyword">ori </span>$<span class="built_in">t1</span> $<span class="number">0</span> <span class="number">0x3140</span></span><br><span class="line">    <span class="keyword">mtc0 </span>$<span class="built_in">t1</span> $<span class="number">14</span></span><br><span class="line">    <span class="keyword">beq </span>$<span class="number">0</span> $<span class="number">0</span> _exception_return</span><br><span class="line">    <span class="keyword">nop </span></span><br><span class="line"><span class="symbol">_right2:</span></span><br><span class="line">    <span class="keyword">ori </span>$<span class="built_in">t1</span> $<span class="number">0</span> <span class="number">0x3158</span></span><br><span class="line">    <span class="keyword">mtc0 </span>$<span class="built_in">t1</span> $<span class="number">14</span></span><br><span class="line">    <span class="keyword">beq </span>$<span class="number">0</span> $<span class="number">0</span> _exception_return</span><br><span class="line">    <span class="keyword">nop</span></span><br><span class="line"><span class="keyword"></span></span><br><span class="line">    <span class="comment"># 将 EPC + 4，即处理异常的方法就是跳过当前指令,并且对$s1寄存器赋值0x111</span></span><br><span class="line"><span class="symbol">_not_BD_error:</span></span><br><span class="line">    <span class="keyword">ori </span>$<span class="built_in">s1</span> $<span class="number">0</span> <span class="number">0x111</span></span><br><span class="line">    <span class="keyword">mfc0 </span>$<span class="built_in">k0</span>, $<span class="number">14</span></span><br><span class="line">    <span class="keyword">addi </span>$<span class="built_in">k0</span>, $<span class="built_in">k0</span>, <span class="number">4</span></span><br><span class="line">    <span class="keyword">mtc0 </span>$<span class="built_in">k0</span>, $<span class="number">14</span></span><br><span class="line">    <span class="keyword">beq </span>$<span class="number">0</span> $<span class="number">0</span> _exception_return</span><br><span class="line">    <span class="keyword">nop</span></span><br><span class="line"><span class="keyword"></span><span class="symbol"></span></span><br><span class="line"><span class="symbol">_exception_return:</span></span><br><span class="line">    <span class="keyword">eret</span></span><br><span class="line"><span class="keyword"></span>    <span class="comment"># 测试eret后的指令是否会被执行</span></span><br><span class="line">    <span class="keyword">ori </span>$<span class="built_in">s0</span> $<span class="number">0</span> <span class="number">0x444</span></span><br></pre></td></tr></table></figure></div>
+
+<p>机器码：</p>
+<div class="code-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br></pre></td><td class="code"><pre><span class="line">34081c01</span><br><span class="line">40886000</span><br><span class="line">20093333</span><br><span class="line">ac090000</span><br><span class="line">8c090003</span><br><span class="line">84090003</span><br><span class="line">84097f00</span><br><span class="line">800a7f02</span><br><span class="line">3c09f000</span><br><span class="line">8d2a8001</span><br><span class="line">852a8001</span><br><span class="line">812a8001</span><br><span class="line">34097f1c</span><br><span class="line">8d2a0000</span><br><span class="line">852a0000</span><br><span class="line">812a0000</span><br><span class="line">20094444</span><br><span class="line">ac090002</span><br><span class="line">a4090003</span><br><span class="line">a4097f00</span><br><span class="line">a00a7f02</span><br><span class="line">3c09f000</span><br><span class="line">ac0a8001</span><br><span class="line">a40a8001</span><br><span class="line">a00a8001</span><br><span class="line">34097f0c</span><br><span class="line">ad2a0000</span><br><span class="line">a52a0000</span><br><span class="line">a12a0000</span><br><span class="line">ac097f08</span><br><span class="line">34020001</span><br><span class="line">0000000c</span><br><span class="line">014b4821</span><br><span class="line">3c097fff</span><br><span class="line">3c0a7fff</span><br><span class="line">012a5820</span><br><span class="line">3c09f000</span><br><span class="line">212a9000</span><br><span class="line">3c097fff</span><br><span class="line">3c0af000</span><br><span class="line">012a5822</span><br><span class="line">8c0b0001</span><br><span class="line">012a0018</span><br><span class="line">012a0018</span><br><span class="line">8c0b0001</span><br><span class="line">00006012</span><br><span class="line">8c0b0001</span><br><span class="line">01800011</span><br><span class="line">00006010</span><br><span class="line">8c090000</span><br><span class="line">0c000c34</span><br><span class="line">00000000</span><br><span class="line">8c0b0002</span><br><span class="line">8c0b0003</span><br><span class="line">8c090003</span><br><span class="line">8d2a0000</span><br><span class="line">34090009</span><br><span class="line">ac097f00</span><br><span class="line">34090001</span><br><span class="line">ac097f04</span><br><span class="line">00000000</span><br><span class="line">00000000</span><br><span class="line">8c090002</span><br><span class="line">00000000</span><br><span class="line">00000000</span><br><span class="line">00000000</span><br><span class="line">00000000</span><br><span class="line">34093120</span><br><span class="line">40897000</span><br><span class="line">00000000</span><br><span class="line">42000018</span><br><span class="line">34090444</span><br><span class="line">34093138</span><br><span class="line">ac090000</span><br><span class="line">8c0a0000</span><br><span class="line">408a7000</span><br><span class="line">42000018</span><br><span class="line">34090444</span><br><span class="line">11290001</span><br><span class="line">8c0a0001</span><br><span class="line">34091111</span><br><span class="line">01200008</span><br><span class="line">00000000</span><br><span class="line">34104444</span><br><span class="line">10090001</span><br><span class="line">8c0a0001</span><br><span class="line">1000ffff</span><br><span class="line">00000000</span><br><span class="line">34124444</span><br><span class="line">1000fffc</span><br><span class="line"></span><br><span class="line">// 很多个 00000000</span><br><span class="line"></span><br><span class="line">401a6800</span><br><span class="line">341b007c</span><br><span class="line">035bd024</span><br><span class="line">13400003</span><br><span class="line">00000000</span><br><span class="line">1000000e</span><br><span class="line">00000000</span><br><span class="line">34110222</span><br><span class="line">40096800</span><br><span class="line">31290400</span><br><span class="line">11200006</span><br><span class="line">00000000</span><br><span class="line">8c097f00</span><br><span class="line">3129fff7</span><br><span class="line">ac097f00</span><br><span class="line">1000002e</span><br><span class="line">00000000</span><br><span class="line">a0007f20</span><br><span class="line">1000002b</span><br><span class="line">00000000</span><br><span class="line">40097000</span><br><span class="line">340a0004</span><br><span class="line">012a001a</span><br><span class="line">00004810</span><br><span class="line">11200009</span><br><span class="line">00000000</span><br><span class="line">40097000</span><br><span class="line">340a1111</span><br><span class="line">152afbdb</span><br><span class="line">00000000</span><br><span class="line">34093150</span><br><span class="line">40897000</span><br><span class="line">1000001d</span><br><span class="line">00000000</span><br><span class="line">40096800</span><br><span class="line">3c0a8000</span><br><span class="line">012a4824</span><br><span class="line">10090012</span><br><span class="line">00000000</span><br><span class="line">40097000</span><br><span class="line">340a3138</span><br><span class="line">112a0006</span><br><span class="line">00000000</span><br><span class="line">340a3150</span><br><span class="line">112a0007</span><br><span class="line">00000000</span><br><span class="line">10000009</span><br><span class="line">00000000</span><br><span class="line">34093140</span><br><span class="line">40897000</span><br><span class="line">1000000b</span><br><span class="line">00000000</span><br><span class="line">34093158</span><br><span class="line">40897000</span><br><span class="line">10000007</span><br><span class="line">00000000</span><br><span class="line">34110111</span><br><span class="line">401a7000</span><br><span class="line">235a0004</span><br><span class="line">409a7000</span><br><span class="line">10000001</span><br><span class="line">00000000</span><br><span class="line">42000018</span><br><span class="line">34100444</span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
+		</div>
+
+		
+		<div class="post-copyright-info w-full my-8 px-2 sm:px-6 md:px-8">
+			<div class="article-copyright-info-container">
+    <ul>
+        <li><strong>Title:</strong> P7课下-MIPS微系统设计</li>
+        <li><strong>Author:</strong> BaconToast</li>
+        <li><strong>Created at
+                :</strong> 2025-11-18 11:20:49</li>
+        
+            <li>
+                <strong>Updated at
+                    :</strong> 2025-11-18 11:23:59
+            </li>
+        
+        <li>
+            <strong>Link:</strong> https://bacontoast-pro.github.io/2025/11/18/co/p7/
+        </li>
+        <li>
+            <strong>
+                License:
+            </strong>
+            
+
+            
+                This work is licensed under <a class="license" target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0">CC BY-NC-SA 4.0</a>.
+            
+        </li>
+    </ul>
+</div>
+
+		</div>
+		
+
+		
+		<ul class="post-tags-box text-lg mt-1.5 flex-wrap justify-center flex md:hidden">
+			
+			<li class="tag-item mx-0.5">
+				<a href="/tags/CO/">#CO</a>&nbsp;
+			</li>
+			
+			<li class="tag-item mx-0.5">
+				<a href="/tags/Verilog/">#Verilog</a>&nbsp;
+			</li>
+			
+			<li class="tag-item mx-0.5">
+				<a href="/tags/MIPS/">#MIPS</a>&nbsp;
+			</li>
+			
+		</ul>
+		
+
+		
+
+		
+		<div class="article-nav my-8 flex justify-between items-center px-2 sm:px-6 md:px-8">
+			
+			
+			<div class="article-next border-border-color shadow-redefine-flat shadow-shadow-color-2 rounded-medium px-4 py-2 hover:shadow-redefine-flat-hover hover:shadow-shadow-color-2">
+				<a class="next" rel="next" href="/2025/11/18/co/p6/">
+					<span class="title flex justify-center items-center">
+						<span class="post-nav-title-item truncate max-w-48">P6课下-Verilog搭建流水线CPU-2</span>
+						<span class="post-nav-item">Next posts</span>
+					</span>
+					<span class="right arrow-icon flex justify-center items-center">
+						<i class="fa-solid fa-chevron-right"></i>
+					</span>
+				</a>
+			</div>
+			
+		</div>
+		
+
+
+		
+		<div class="comment-container px-2 sm:px-6 md:px-8 pb-8">
+			<div class="comments-container mt-10 w-full ">
+    <div id="comment-anchor" class="w-full h-2.5"></div>
+    <div class="comment-area-title w-full my-1.5 md:my-2.5 text-xl md:text-3xl font-bold">
+        Comments
+    </div>
+    
+
+        
+            
+    <div id="waline"></div>
+    <script type="module" data-swup-reload-script>
+      import { init } from '/js/libs/waline.mjs';
+
+      function loadWaline() {
+        init({
+          el: '#waline',
+          serverURL: 'https://example.example.com',
+          dark: 'body[class~="dark-mode"]',
+          reaction: false,
+          requiredMeta: ['nick', 'mail'],
+          emoji: [],
+                    lang: 'zh-CN',
+        });
+      }
+
+      if (typeof swup !== 'undefined') {
+        loadWaline();
+      } else {
+        window.addEventListener('DOMContentLoaded', loadWaline);
+      }
+    </script>
+
+
+
+        
+    
+</div>
+
+		</div>
+		
+	</div>
+
+	
+	<div class="toc-content-container">
+		<div class="post-toc-wrap">
+	<div class="post-toc">
+		<div class="toc-title">On this page</div>
+		<div class="page-title">P7课下-MIPS微系统设计</div>
+		<ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%A7%E7%94%9F%E5%BC%82%E5%B8%B8"><span class="nav-text">产生异常</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BC%82%E5%B8%B8%E7%A0%81-ExcCode"><span class="nav-text">异常码 ExcCode</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A4%84%E7%90%86%E5%BC%82%E5%B8%B8%E4%B8%AD%E6%96%AD"><span class="nav-text">处理异常中断</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#CP0-%EF%BC%88%E5%8D%8F%E5%A4%84%E7%90%86%E5%99%A8%EF%BC%89%E7%9A%84%E5%AE%9E%E7%8E%B0"><span class="nav-text">CP0 （协处理器）的实现</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B0%81%E8%A3%85%E6%88%90%E5%8D%95%E5%91%A8%E6%9C%9F-CPU"><span class="nav-text">封装成单周期 CPU</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%8F%E8%A7%82-PC"><span class="nav-text">宏观 PC</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%B2%BE%E7%A1%AE%E5%BC%82%E5%B8%B8"><span class="nav-text">精确异常</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BC%82%E5%B8%B8%E5%A4%84%E7%90%86%E7%A8%8B%E5%BA%8F"><span class="nav-text">异常处理程序</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%96%B0%E6%8C%87%E4%BB%A4"><span class="nav-text">新指令</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A4%96%E8%AE%BE%E7%9A%84%E5%AE%9E%E7%8E%B0"><span class="nav-text">外设的实现</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%AE%A1%E6%97%B6%E5%99%A8%EF%BC%88Timer%EF%BC%89"><span class="nav-text">计时器（Timer）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%AD%E6%96%AD%E5%8F%91%E7%94%9F%E5%99%A8%EF%BC%88InterruptGenerator%EF%BC%89"><span class="nav-text">中断发生器（InterruptGenerator）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%B3%BB%E7%BB%9F%E6%A1%A5%EF%BC%88Bridge%EF%BC%89"><span class="nav-text">系统桥（Bridge）</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%9D%E8%80%83%E9%A2%98"><span class="nav-text">思考题</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B5%8B%E8%AF%95%E6%95%B0%E6%8D%AE%EF%BC%88%E7%A5%9E%E4%B8%AD%E7%A5%9E%EF%BC%81%EF%BC%89"><span class="nav-text">测试数据（神中神！）</span></a></li></ol>
+
+	</div>
+</div>
+	</div>
+	
+</div>
+			</div>
+
+			
+		</div>
+
+		<div class="main-content-footer">
+			<footer class="footer mt-5 py-5 h-auto text-base text-third-text-color relative border-t-2 border-t-border-color">
+    <div class="info-container py-3 text-center">
+        
+        <div class="text-center">
+            &copy;
+            
+              <span>2025</span>
+              -
+            
+            2025&nbsp;&nbsp;<i class="fa-solid fa-heart fa-beat" style="--fa-animation-duration: 0.5s; color: #f54545"></i>&nbsp;&nbsp;<a href="/">BaconToast</a>
+            
+                
+                <p class="post-count space-x-0.5">
+                    <span>
+                        10 posts in total
+                    </span>
+                    
+                </p>
+            
+        </div>
+        
+            <script data-swup-reload-script src="https://cn.vercount.one/js"></script>
+            <div class="relative text-center lg:absolute lg:right-[20px] lg:top-1/2 lg:-translate-y-1/2 lg:text-right">
+                
+                    <span id="busuanzi_container_site_uv" class="lg:!block">
+                        <span class="text-sm">VISITOR COUNT</span>
+                        <span id="busuanzi_value_site_uv"></span>
+                    </span>
+                
+                
+                    <span id="busuanzi_container_site_pv" class="lg:!block">
+                        <span class="text-sm">TOTAL PAGE VIEWS</span>
+                        <span id="busuanzi_value_site_pv"></span>
+                    </span>
+                
+            </div>
+        
+        <div class="relative text-center lg:absolute lg:left-[20px] lg:top-1/2 lg:-translate-y-1/2 lg:text-left">
+            <span class="lg:block text-sm">POWERED BY <?xml version="1.0" encoding="utf-8"?><!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"><svg class="relative top-[2px] inline-block align-baseline" version="1.1" id="圖層_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="1rem" height="1rem" viewBox="0 0 512 512" enable-background="new 0 0 512 512" xml:space="preserve"><path fill="#0E83CD" d="M256.4,25.8l-200,115.5L56,371.5l199.6,114.7l200-115.5l0.4-230.2L256.4,25.8z M349,354.6l-18.4,10.7l-18.6-11V275H200v79.6l-18.4,10.7l-18.6-11v-197l18.5-10.6l18.5,10.8V237h112v-79.6l18.5-10.6l18.5,10.8V354.6z"/></svg><a target="_blank" class="text-base" href="https://hexo.io">Hexo</a></span>
+            <span class="text-sm lg:block">THEME&nbsp;<a class="text-base" target="_blank" href="https://github.com/EvanNotFound/hexo-theme-redefine">Redefine v2.8.5</a></span>
+        </div>
+        
+        
+            <div>
+                Blog up for <span class="odometer" id="runtime_days" ></span> days <span class="odometer" id="runtime_hours"></span> hrs <span class="odometer" id="runtime_minutes"></span> Min <span class="odometer" id="runtime_seconds"></span> Sec
+            </div>
+        
+        
+            <script data-swup-reload-script>
+                try {
+                    function odometer_init() {
+                    const elements = document.querySelectorAll('.odometer');
+                    elements.forEach(el => {
+                        new Odometer({
+                            el,
+                            format: '( ddd).dd',
+                            duration: 200
+                        });
+                    });
+                    }
+                    odometer_init();
+                } catch (error) {}
+            </script>
+        
+        
+        
+    </div>  
+</footer>
+		</div>
+	</div>
+
+	
+	<div class="post-tools">
+		<div class="post-tools-container">
+	<ul class="article-tools-list">
+		<!-- TOC aside toggle -->
+		
+		<li class="right-bottom-tools page-aside-toggle">
+			<i class="fa-regular fa-outdent"></i>
+		</li>
+		
+
+		<!-- go comment -->
+		
+		<li class="go-comment">
+			<i class="fa-regular fa-comments"></i>
+		</li>
+		
+	</ul>
+</div>
+	</div>
+	
+
+	<div class="right-side-tools-container">
+		<div class="side-tools-container">
+	<ul class="hidden-tools-list">
+		<li class="right-bottom-tools tool-font-adjust-plus flex justify-center items-center">
+			<i class="fa-regular fa-magnifying-glass-plus"></i>
+		</li>
+
+		<li class="right-bottom-tools tool-font-adjust-minus flex justify-center items-center">
+			<i class="fa-regular fa-magnifying-glass-minus"></i>
+		</li>
+
+		<li class="right-bottom-tools tool-dark-light-toggle flex justify-center items-center">
+			<i class="fa-regular fa-moon"></i>
+		</li>
+
+		<!-- rss -->
+		
+
+		
+
+		<li class="right-bottom-tools tool-scroll-to-bottom flex justify-center items-center">
+			<i class="fa-regular fa-arrow-down"></i>
+		</li>
+	</ul>
+
+	<ul class="visible-tools-list">
+		<li class="right-bottom-tools toggle-tools-list flex justify-center items-center">
+			<i class="fa-regular fa-cog fa-spin"></i>
+		</li>
+		
+		<li class="right-bottom-tools tool-scroll-to-top flex justify-center items-center">
+			<i class="arrow-up fas fa-arrow-up"></i>
+			<span class="percent"></span>
+		</li>
+		
+		
+	</ul>
+</div>
+	</div>
+
+	<div class="image-viewer-container">
+	<img src="">
+</div>
+
+	
+
+</main>
+
+
+
+<script src="/js/build/libs/Swup.min.js"></script>
+
+<script src="/js/build/libs/SwupSlideTheme.min.js"></script>
+
+<script src="/js/build/libs/SwupScriptsPlugin.min.js"></script>
+
+<script src="/js/build/libs/SwupProgressPlugin.min.js"></script>
+
+<script src="/js/build/libs/SwupScrollPlugin.min.js"></script>
+
+<script src="/js/build/libs/SwupPreloadPlugin.min.js"></script>
+
+<script>
+    const swup = new Swup({
+        plugins: [
+            new SwupScriptsPlugin({
+                optin: true,
+            }),
+            new SwupProgressPlugin(),
+            new SwupScrollPlugin({
+                offset: 80,
+            }),
+            new SwupSlideTheme({
+                mainElement: ".main-content-body",
+            }),
+            new SwupPreloadPlugin(),
+        ],
+        containers: ["#swup"],
+    });
+</script>
+
+
+
+
+	
+<script src="/js/build/tools/imageViewer.js" type="module"></script>
+
+<script src="/js/build/utils.js" type="module"></script>
+
+<script src="/js/build/main.js" type="module"></script>
+
+<script src="/js/build/layouts/navbarShrink.js" type="module"></script>
+
+<script src="/js/build/tools/scrollTopBottom.js" type="module"></script>
+
+<script src="/js/build/tools/lightDarkSwitch.js" type="module"></script>
+
+<script src="/js/build/layouts/categoryList.js" type="module"></script>
+
+
+
+
+
+    
+<script src="/js/build/tools/codeBlock.js" type="module"></script>
+
+
+
+
+    
+<script src="/js/build/layouts/lazyload.js" type="module"></script>
+
+
+
+
+    
+<script src="/js/build/tools/runtime.js"></script>
+
+    
+<script src="/js/build/libs/odometer.min.js"></script>
+
+    
+<link rel="stylesheet" href="/assets/odometer-theme-minimal.css">
+
+
+
+
+  
+<script src="/js/build/libs/Typed.min.js"></script>
+
+  
+<script src="/js/build/plugins/typed.js" type="module"></script>
+
+
+
+
+
+
+    
+<script src="/js/build/libs/minimasonry.min.js"></script>
+
+    
+<script src="/js/build/plugins/masonry.js" type="module"></script>
+
+
+
+
+
+
+
+    
+<script src="/js/build/tools/tocToggle.js" type="module" data-swup-reload-script=""></script>
+
+<script src="/js/build/layouts/toc.js" type="module" data-swup-reload-script=""></script>
+
+<script src="/js/build/plugins/tabs.js" type="module" data-swup-reload-script=""></script>
+
+
+
+
+<script src="/js/build/libs/moment-with-locales.min.js" data-swup-reload-script=""></script>
+
+
+<script src="/js/build/layouts/essays.js" type="module" data-swup-reload-script=""></script>
+
+
+
+
+
+    
+<script src="/js/build/layouts/bookmarkNav.js" type="module"></script>
+
+
+	
+</body>
+
+</html>
