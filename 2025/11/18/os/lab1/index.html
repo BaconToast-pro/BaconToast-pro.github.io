@@ -1,0 +1,1410 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="keywords" content="Hexo Theme Redefine">
+    
+    <meta name="author" content="BaconToast">
+    
+    <!-- Completely eliminate flash of wrong theme -->
+    <script>
+        (function() {
+            const THEME_KEY = "REDEFINE-THEME-STATUS";
+            const DARK = "dark", LIGHT = "light";
+            
+            // Get preferred theme
+            function getTheme() {
+                try {
+                    const saved = localStorage.getItem(THEME_KEY);
+                    if (saved) {
+                        const { isDark } = JSON.parse(saved);
+                        return isDark ? DARK : LIGHT;
+                    }
+                } catch (e) {}
+                
+                return matchMedia("(prefers-color-scheme: dark)").matches ? DARK : LIGHT;
+            }
+            
+            // Apply theme to document
+            function applyTheme(theme) {
+                const isDark = theme === DARK;
+                const root = document.documentElement;
+                
+                // Set data attribute for CSS variables
+                root.setAttribute("data-theme", theme);
+                
+                // Set classes for compatibility
+                root.classList.add(theme);
+                root.classList.remove(isDark ? LIGHT : DARK);
+                root.style.colorScheme = theme;
+            }
+            
+            // Initial application
+            const theme = getTheme();
+            applyTheme(theme);
+            
+            // Listen for system preference changes
+            matchMedia("(prefers-color-scheme: dark)").addEventListener("change", ({ matches }) => {
+                // Only update if using system preference (no localStorage entry)
+                if (!localStorage.getItem(THEME_KEY)) {
+                    applyTheme(matches ? DARK : LIGHT);
+                }
+            });
+            
+            // Set body classes once DOM is ready
+            if (document.readyState !== "loading") {
+                document.body.classList.add(theme + "-mode");
+            } else {
+                document.addEventListener("DOMContentLoaded", () => {
+                    document.body.classList.add(theme + "-mode");
+                    document.body.classList.remove((theme === DARK ? LIGHT : DARK) + "-mode");
+                });
+            }
+        })();
+    </script>
+    
+    <!-- Critical CSS to prevent flash -->
+    <style>
+        :root[data-theme="dark"] {
+            --background-color: #202124;
+            --background-color-transparent: rgba(32, 33, 36, 0.6);
+            --second-background-color: #2d2e32;
+            --third-background-color: #34353a;
+            --third-background-color-transparent: rgba(32, 33, 36, 0.6);
+            --primary-color: #0066CC;
+            --first-text-color: #ffffff;
+            --second-text-color: #eeeeee;
+            --third-text-color: #bebec6;
+            --fourth-text-color: #999999;
+            --default-text-color: #bebec6;
+            --invert-text-color: #373D3F;
+            --border-color: rgba(255, 255, 255, 0.08);
+            --selection-color: #0066CC;
+            --shadow-color-1: rgba(255, 255, 255, 0.08);
+            --shadow-color-2: rgba(255, 255, 255, 0.05);
+        }
+        
+        :root[data-theme="light"] {
+            --background-color: #fff;
+            --background-color-transparent: rgba(255, 255, 255, 0.6);
+            --second-background-color: #f8f8f8;
+            --third-background-color: #f2f2f2;
+            --third-background-color-transparent: rgba(241, 241, 241, 0.6);
+            --primary-color: #0066CC;
+            --first-text-color: #16171a;
+            --second-text-color: #2f3037;
+            --third-text-color: #5e5e5e;
+            --fourth-text-color: #eeeeee;
+            --default-text-color: #373D3F;
+            --invert-text-color: #bebec6;
+            --border-color: rgba(0, 0, 0, 0.08);
+            --selection-color: #0066CC;
+            --shadow-color-1: rgba(0, 0, 0, 0.08);
+            --shadow-color-2: rgba(0, 0, 0, 0.05);
+        }
+        
+        body {
+            background-color: var(--background-color);
+            color: var(--default-text-color);
+        }
+        
+        /* Apply body classes as soon as DOM is ready */
+        :root[data-theme="dark"] body {
+            background-color: var(--background-color);
+            color: var(--default-text-color);
+        }
+    </style>
+    
+    <!-- preconnect -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    
+    <!--- Seo Part-->
+    
+    <link rel="canonical" href="https://BaconToast-pro.github.io/2025/11/18/os/lab1/"/>
+    <meta name="robots" content="index,follow">
+    <meta name="googlebot" content="index,follow">
+    <meta name="revisit-after" content="1 days">
+    
+    
+    
+        
+        <meta name="description" content="Hexo Theme Redefine, Redefine Your Hexo Journey.">
+<meta property="og:type" content="article">
+<meta property="og:title" content="操作系统OS：Lab1-内核、启动和printf">
+<meta property="og:url" content="https://bacontoast-pro.github.io/2025/11/18/os/lab1/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="Hexo Theme Redefine, Redefine Your Hexo Journey.">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://bacontoast-pro.github.io/images/redefine-og.webp">
+<meta property="article:published_time" content="2025-11-18T08:00:03.220Z">
+<meta property="article:modified_time" content="2025-11-18T08:04:47.943Z">
+<meta property="article:author" content="BaconToast">
+<meta property="article:tag" content="C">
+<meta property="article:tag" content="Linux">
+<meta property="article:tag" content="OS">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://bacontoast-pro.github.io/images/redefine-og.webp">
+    
+    
+    <!--- Icon Part-->
+    <link rel="icon" type="image/png" href="/images/public/toast.svg" sizes="192x192">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/public/toast.svg">
+    <meta name="theme-color" content="#A31F34">
+    <link rel="shortcut icon" href="/images/public/toast.svg">
+    <!--- Page Info-->
+    
+    <title>
+        
+            操作系统OS：Lab1-内核、启动和printf | BaconToast&#39;s Shop
+        
+    </title>
+
+    
+<link rel="stylesheet" href="/fonts/Chillax/chillax.css">
+
+
+    <!--- Inject Part-->
+    
+
+    
+<link rel="stylesheet" href="/css/style.css">
+
+
+    
+        
+<link rel="stylesheet" href="/css/build/tailwind.css">
+
+    
+
+    
+<link rel="stylesheet" href="/fonts/GeistMono/geist-mono.css">
+
+    
+<link rel="stylesheet" href="/fonts/Geist/geist.css">
+
+    <!--- Font Part-->
+    
+    
+    
+    
+    
+    
+        
+<script src="/js/build/libs/anime.min.js"></script>
+
+    
+
+    <script id="hexo-configurations">
+    window.config = {"hostname":"bacontoast-pro.github.io","root":"/","language":"en"};
+    window.theme = {"articles":{"style":{"font_size":"16px","line_height":1.5,"image_border_radius":"14px","image_alignment":"center","image_caption":false,"link_icon":true,"delete_mask":false,"title_alignment":"left","headings_top_spacing":{"h1":"3.2rem","h2":"2.4rem","h3":"1.9rem","h4":"1.6rem","h5":"1.4rem","h6":"1.3rem"}},"word_count":{"enable":true,"count":true,"min2read":true},"author_label":{"enable":true,"auto":false,"list":[]},"code_block":{"copy":true,"style":"mac","highlight_theme":{"light":"github","dark":"vs2015"},"font":{"enable":false,"family":null,"url":null}},"toc":{"enable":true,"max_depth":3,"number":false,"expand":true,"init_open":true},"copyright":{"enable":true,"default":"cc_by_nc_sa"},"lazyload":true,"pangu_js":false,"recommendation":{"enable":false,"title":"推荐阅读","limit":3,"mobile_limit":2,"placeholder":"/images/wallhaven-wqery6-light.webp","skip_dirs":[]}},"colors":{"primary":"#A31F34","secondary":null,"default_mode":"light"},"global":{"fonts":{"chinese":{"enable":false,"family":null,"url":null},"english":{"enable":false,"family":null,"url":null},"title":{"enable":false,"family":null,"url":null}},"content_max_width":"1000px","sidebar_width":"210px","hover":{"shadow":true,"scale":true},"scroll_progress":{"bar":false,"percentage":true},"website_counter":{"url":"https://cn.vercount.one/js","enable":true,"site_pv":true,"site_uv":true,"post_pv":true},"single_page":true,"preloader":{"enable":true,"custom_message":null},"side_tools":{"gear_rotation":true,"auto_expand":true},"open_graph":{"enable":true,"image":"/images/redefine-og.webp","description":"Hexo Theme Redefine, Redefine Your Hexo Journey."},"google_analytics":{"enable":false,"id":null}},"home_banner":{"enable":true,"style":"fixed","image":{"light":"/images/wallhaven-wqery6-light.webp","dark":"/images/wallhaven-wqery6-dark.webp"},"title":"BaconToast Blog","subtitle":{"text":["欢迎来到BaconToast小商店~","We can be the light upon the day."],"hitokoto":{"enable":false,"show_author":false,"api":"https://v1.hitokoto.cn"},"typing_speed":100,"backing_speed":80,"starting_delay":500,"backing_delay":1500,"loop":true,"smart_backspace":true},"text_color":{"light":"#fff","dark":"#d1d1b6"},"text_style":{"title_size":"2.8rem","subtitle_size":"1.5rem","line_height":1.2},"custom_font":{"enable":false,"family":null,"url":null},"social_links":{"enable":true,"style":"default","links":{"github":"https://github.com/BaconToast-pro","instagram":null,"zhihu":null,"twitter":null,"email":"zhouzq@buaa.edu.cn"},"qrs":{"weixin":"images/public/wechat.jpg"}}},"plugins":{"feed":{"enable":false},"aplayer":{"enable":false,"type":"fixed","audios":[{"name":null,"artist":null,"url":null,"cover":null,"lrc":null}]},"mermaid":{"enable":false,"version":"11.4.1"}},"version":"2.8.5","navbar":{"auto_hide":true,"color":{"left":"#f78736","right":"#367df7","transparency":35},"width":{"home":"1200px","pages":"1000px"},"links":{"Home":{"path":"/","icon":"fa-regular fa-house"},"Archives":{"path":"/archives","icon":"fa-regular fa-archive"},"Friends":{"icon":"fa-solid fa-link","path":"/links/"},"About":{"icon":"fa-regular fa-user","submenus":{"Github":"https://github.com/BaconToast-pro","Friends":"/links/"}}},"search":{"enable":false,"preload":true}},"page_templates":{"friends_column":2,"tags_style":"blur"},"home":{"sidebar":{"enable":true,"position":"left","first_item":"menu","announcement":"~o(^_^)o~","show_on_mobile":true,"links":{"Archives":{"path":"/archives","icon":"fa-regular fa-archive"},"Tags":{"path":"/tags","icon":"fa-regular fa-tags"},"Categories":{"path":"/categories","icon":"fa-regular fa-folder"}}},"article_date_format":"auto","excerpt_length":200,"categories":{"enable":true,"limit":3},"tags":{"enable":true,"limit":3}},"footerStart":"2025/11/11 17:20:00"};
+    window.lang_ago = {"second":"%s seconds ago","minute":"%s minutes ago","hour":"%s hours ago","day":"%s days ago","week":"%s weeks ago","month":"%s months ago","year":"%s years ago"};
+    window.data = {"masonry":true};
+  </script>
+    
+    <!--- Fontawesome Part-->
+    
+<link rel="stylesheet" href="/fontawesome/fontawesome.min.css">
+
+    
+<link rel="stylesheet" href="/fontawesome/brands.min.css">
+
+    
+<link rel="stylesheet" href="/fontawesome/solid.min.css">
+
+    
+<link rel="stylesheet" href="/fontawesome/regular.min.css">
+
+    
+    
+    
+    
+<meta name="generator" content="Hexo 8.1.1"><style>mjx-container[jax="SVG"] {
+  direction: ltr;
+}
+
+mjx-container[jax="SVG"] > svg {
+  overflow: visible;
+}
+
+mjx-container[jax="SVG"][display="true"] {
+  display: block;
+  text-align: center;
+  margin: 1em 0;
+}
+
+mjx-container[jax="SVG"][justify="left"] {
+  text-align: left;
+}
+
+mjx-container[jax="SVG"][justify="right"] {
+  text-align: right;
+}
+
+g[data-mml-node="merror"] > g {
+  fill: red;
+  stroke: red;
+}
+
+g[data-mml-node="merror"] > rect[data-background] {
+  fill: yellow;
+  stroke: none;
+}
+
+g[data-mml-node="mtable"] > line[data-line] {
+  stroke-width: 70px;
+  fill: none;
+}
+
+g[data-mml-node="mtable"] > rect[data-frame] {
+  stroke-width: 70px;
+  fill: none;
+}
+
+g[data-mml-node="mtable"] > .mjx-dashed {
+  stroke-dasharray: 140;
+}
+
+g[data-mml-node="mtable"] > .mjx-dotted {
+  stroke-linecap: round;
+  stroke-dasharray: 0,140;
+}
+
+g[data-mml-node="mtable"] > svg {
+  overflow: visible;
+}
+
+[jax="SVG"] mjx-tool {
+  display: inline-block;
+  position: relative;
+  width: 0;
+  height: 0;
+}
+
+[jax="SVG"] mjx-tool > mjx-tip {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+mjx-tool > mjx-tip {
+  display: inline-block;
+  padding: .2em;
+  border: 1px solid #888;
+  font-size: 70%;
+  background-color: #F8F8F8;
+  color: black;
+  box-shadow: 2px 2px 5px #AAAAAA;
+}
+
+g[data-mml-node="maction"][data-toggle] {
+  cursor: pointer;
+}
+
+mjx-status {
+  display: block;
+  position: fixed;
+  left: 1em;
+  bottom: 1em;
+  min-width: 25%;
+  padding: .2em .4em;
+  border: 1px solid #888;
+  font-size: 90%;
+  background-color: #F8F8F8;
+  color: black;
+}
+
+foreignObject[data-mjx-xml] {
+  font-family: initial;
+  line-height: normal;
+  overflow: visible;
+}
+
+.MathJax path {
+  stroke-width: 3;
+}
+
+mjx-container[display="true"] {
+  overflow: auto hidden;
+}
+
+mjx-container[display="true"] + br {
+  display: none;
+}
+</style></head>
+
+
+
+<body>
+	<div class="progress-bar-container">
+	
+
+	
+	<span class="pjax-progress-bar"></span>
+	<!--        <span class="swup-progress-icon">-->
+	<!--            <i class="fa-solid fa-circle-notch fa-spin"></i>-->
+	<!--        </span>-->
+	
+</div>
+
+<style>
+    :root {
+        --preloader-background-color: #fff;
+        --preloader-text-color: #000;
+    }
+
+    @media (prefers-color-scheme: dark) {
+        :root {
+            --preloader-background-color: #202124;
+            --preloader-text-color: #fff;
+        }
+    }
+
+    @media (prefers-color-scheme: light) {
+        :root {
+            --preloader-background-color: #fff;
+            --preloader-text-color: #000;
+        }
+    }
+
+    @media (max-width: 600px) {
+        .ml13 {
+            font-size: 2.6rem !important; /* Adjust this value as needed */
+        }
+    }
+
+    .preloader {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem; /* Tailwind 'gap-4' is 1rem */
+        align-items: center;
+        justify-content: center;
+        position: fixed;
+        padding: 12px;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh; /* 'h-screen' is 100% of the viewport height */
+        background-color: var(--preloader-background-color);
+        z-index: 1100; /* 'z-[1100]' sets the z-index */
+        transition: opacity 0.2s ease-in-out;
+    }
+
+    .ml13 {
+        font-size: 3.2rem;
+        /* text-transform: uppercase; */
+        color: var(--preloader-text-color);
+        letter-spacing: -1px;
+        font-weight: 500;
+        font-family: 'Chillax-Variable', sans-serif;
+        text-align: center;
+    }
+
+    .ml13 .word {
+        display: inline-flex;
+        flex-wrap: wrap;
+        white-space: nowrap;
+    }
+
+    .ml13 .letter {
+        display: inline-block;
+        line-height: 1em;
+    }
+</style>
+
+<div class="preloader">
+    <h2 class="ml13">
+        BaconToast&#39;s Shop
+    </h2>
+    <script>
+        var textWrapper = document.querySelector('.ml13');
+        // Split text into words
+        var words = textWrapper.textContent.trim().split(' ');
+
+        // Clear the existing content
+        textWrapper.innerHTML = '';
+
+        // Wrap each word and its letters in spans
+        words.forEach(function(word) {
+            var wordSpan = document.createElement('span');
+            wordSpan.classList.add('word');
+            wordSpan.innerHTML = word.replace(/\S/g, "<span class='letter'>$&</span>");
+            textWrapper.appendChild(wordSpan);
+            textWrapper.appendChild(document.createTextNode(' ')); // Add space between words
+        });
+
+        var animation = anime.timeline({ loop: true })
+            .add({
+                targets: '.ml13 .letter',
+                translateY: [20, 0],
+                translateZ: 0,
+                opacity: [0, 1],
+                filter: ['blur(5px)', 'blur(0px)'],
+                easing: "easeOutExpo",
+                duration: 1200,
+                delay: (el, i) => 300 + 20 * i,
+            })
+            .add({
+                targets: '.ml13 .letter',
+                translateY: [0, -20],
+                opacity: [1, 0],
+                filter: ['blur(0px)', 'blur(5px)'],
+                easing: "easeInExpo",
+                duration: 1000,
+                delay: (el, i) => 15 * i,
+                complete: function() {
+                    hidePreloader();
+                }
+            }, '-=700');
+
+
+        let themeStatus = JSON.parse(localStorage.getItem('REDEFINE-THEME-STATUS'))?.isDark;
+
+        // If the theme status is not found in local storage, check the preferred color scheme
+        if (themeStatus === undefined || themeStatus === null) {
+            if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                themeStatus = 'dark';
+            } else {
+                themeStatus = 'light';
+            }
+        }
+
+        // Now you can use the themeStatus variable in your code
+        if (themeStatus) {
+            document.documentElement.style.setProperty('--preloader-background-color', '#202124');
+            document.documentElement.style.setProperty('--preloader-text-color', '#fff');
+        } else {
+            document.documentElement.style.setProperty('--preloader-background-color', '#fff');
+            document.documentElement.style.setProperty('--preloader-text-color', '#000');
+        }
+
+        window.addEventListener('load', function () {
+            setTimeout(hidePreloader, 5000); // Call hidePreloader after 5000 milliseconds if not already called by animation
+        });
+
+        function hidePreloader() {
+            var preloader = document.querySelector('.preloader');
+            preloader.style.opacity = '0';
+            setTimeout(function () {
+                preloader.style.display = 'none';
+            }, 200);
+        }
+    </script>
+</div>
+
+<main class="page-container" id="swup">
+
+	
+
+	<div class="main-content-container flex flex-col justify-between min-h-dvh">
+		<div class="main-content-header">
+			<header class="navbar-container px-6 md:px-12">
+    <div class="navbar-content transition-navbar ">
+        <div class="left">
+            
+            <a class="logo-title" href="/">
+                
+                BaconToast&#39;s Shop
+                
+            </a>
+        </div>
+
+        <div class="right">
+            <!-- PC -->
+            <div class="desktop">
+                <ul class="navbar-list">
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/"
+                                        >
+                                    <i class="fa-regular fa-house fa-fw"></i>
+                                    HOME
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/archives"
+                                        >
+                                    <i class="fa-regular fa-archive fa-fw"></i>
+                                    ARCHIVES
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/links/"
+                                        >
+                                    <i class="fa-solid fa-link fa-fw"></i>
+                                    FRIENDS
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class="has-dropdown"
+                                   href="#"
+                                        onClick=&#34;return false;&#34;>
+                                    <i class="fa-regular fa-user fa-fw"></i>
+                                    ABOUT
+                                    <i class="fa-solid fa-chevron-down fa-fw"></i>
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                                    <ul class="sub-menu">
+                                        
+                                            <li>
+                                                <a target="_blank" rel="noopener" href="https://github.com/BaconToast-pro">
+                                                    GITHUB
+                                                </a>
+                                            </li>
+                                        
+                                            <li>
+                                                <a href="/links/">
+                                                    FRIENDS
+                                                </a>
+                                            </li>
+                                        
+                                    </ul>
+                                
+                            </li>
+                    
+                    
+                </ul>
+            </div>
+            <!-- Mobile -->
+            <div class="mobile">
+                
+                <div class="icon-item navbar-bar">
+                    <div class="navbar-bar-middle"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mobile sheet -->
+    <div class="navbar-drawer h-dvh w-full absolute top-0 left-0 bg-background-color flex flex-col justify-between">
+        <ul class="drawer-navbar-list flex flex-col px-4 justify-center items-start">
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/"
+                        >
+                            <span>
+                                HOME
+                            </span>
+                            
+                                <i class="fa-regular fa-house fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/archives"
+                        >
+                            <span>
+                                ARCHIVES
+                            </span>
+                            
+                                <i class="fa-regular fa-archive fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/links/"
+                        >
+                            <span>
+                                FRIENDS
+                            </span>
+                            
+                                <i class="fa-solid fa-link fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+                
+                    
+
+                    <li class="drawer-navbar-item-sub text-base my-1.5 flex flex-col w-full">
+                        
+                        <div class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary cursor-pointer text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                             navbar-data-toggle="submenu-About"
+                        >
+                            <span>
+                                ABOUT
+                            </span>
+                            
+                                <i class="fa-solid fa-chevron-right fa-sm fa-fw transition-all"></i>
+                            
+                        </div>
+                        
+
+                        
+                            <div class="flex-col items-start px-2 py-2 hidden" data-target="submenu-About">
+                                
+                                    <div class="drawer-navbar-item text-base flex flex-col justify-center items-start hover:underline active:underline hover:underline-offset-1 rounded-3xl">
+                                        <a class=" text-third-text-color text-xl"
+                                           target="_blank" rel="noopener" href="https://github.com/BaconToast-pro">GITHUB</a>
+                                    </div>
+                                
+                                    <div class="drawer-navbar-item text-base flex flex-col justify-center items-start hover:underline active:underline hover:underline-offset-1 rounded-3xl">
+                                        <a class=" text-third-text-color text-xl"
+                                           href="/links/">FRIENDS</a>
+                                    </div>
+                                
+                            </div>
+                        
+                    </li>
+            
+
+            
+            
+                
+                    
+                    
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full active"
+                           href="/tags"
+                        >
+                            <span>Tags</span>
+                            <i class="fa-regular fa-tags fa-sm fa-fw"></i>
+                        </a>
+                    </li>
+                
+                    
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full active"
+                           href="/categories"
+                        >
+                            <span>Categories</span>
+                            <i class="fa-regular fa-folder fa-sm fa-fw"></i>
+                        </a>
+                    </li>
+                
+            
+        </ul>
+
+        <div class="statistics flex justify-around my-2.5">
+    <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/tags">
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">13</div>
+        <div class="label text-third-text-color text-sm">Tags</div>
+    </a>
+    <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/categories">
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">5</div>
+        <div class="label text-third-text-color text-sm">Categories</div>
+    </a>
+    <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/archives">
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">21</div>
+        <div class="label text-third-text-color text-sm">Posts</div>
+    </a>
+</div>
+    </div>
+
+    <div class="window-mask"></div>
+
+</header>
+
+
+		</div>
+
+		<div class="main-content-body transition-fade-up">
+			
+
+			<div class="main-content">
+				<div class="post-page-container flex relative justify-between box-border w-full h-full">
+	<div class="article-content-container">
+
+		<div class="article-title relative w-full">
+			
+			
+			
+			<img src="/images/public/japan.jpg" alt="操作系统OS：Lab1-内核、启动和printf" class="w-full h-60 sm:h-72 md:h-80 object-cover sm:rounded-t-large dark:brightness-75" />
+			
+			<div class="w-full flex items-center absolute bottom-0 justify-start">
+				<h1 class="article-title-cover text-center mx-6 my-6 text-second-text-color bg-background-color-transparent px-4 py-3 text-3xl sm:text-4xl md:text-5xl font-semibold backdrop-blur-lg rounded-xl border border-border-color ">操作系统OS：Lab1-内核、启动和printf</h1>
+			</div>
+			
+		</div>
+
+		
+		<div class="article-header flex flex-row gap-2 items-center px-2 sm:px-6 md:px-8">
+			<div class="avatar w-[46px] h-[46px] flex-shrink-0 rounded-medium border border-border-color p-[1px]">
+				<img src="/images/public/avatar.jpg">
+			</div>
+			<div class="info flex flex-col justify-between">
+				<div class="author flex items-center">
+					<span class="name text-default-text-color text-lg font-semibold">BaconToast</span>
+					
+					<span class="author-label ml-1.5 text-xs px-2 py-0.5 rounded-small text-third-text-color border border-shadow-color-1">Lv3</span>
+					
+				</div>
+				<div class="meta-info">
+					<div class="article-meta-info">
+    <span class="article-date article-meta-item">
+        <i class="fa-regular fa-pen-fancy"></i>&nbsp;
+        <span class="desktop">2025-11-18 16:03</span>
+        <span class="mobile">2025-11-18 16:03</span>
+        <span class="hover-info">Created</span>
+    </span>
+    
+        <span class="article-date article-meta-item">
+            <i class="fa-regular fa-wrench"></i>&nbsp;
+            <span class="desktop">2025-11-18 16:04:47</span>
+            <span class="mobile">2025-11-18 16:04:47</span>
+            <span class="hover-info">Updated</span>
+        </span>
+    
+
+    
+        <span class="article-categories article-meta-item">
+            <i class="fa-regular fa-folders"></i>&nbsp;
+            <ul>
+                
+                
+                    
+                        
+                        <li>
+                            <a href="/categories/OS/">OS</a>&nbsp;
+                        </li>
+                    
+                    
+                
+            </ul>
+        </span>
+    
+    
+        <span class="article-tags article-meta-item">
+            <i class="fa-regular fa-tags"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/tags/C/">C</a>&nbsp;
+                    </li>
+                
+                    <li>
+                        | <a href="/tags/OS/">OS</a>&nbsp;
+                    </li>
+                
+                    <li>
+                        | <a href="/tags/Linux/">Linux</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+
+    
+    
+    
+    
+        <span class="article-pv article-meta-item">
+            <i class="fa-regular fa-eye"></i>&nbsp;<span id="busuanzi_value_page_pv"></span>
+        </span>
+    
+</div>
+
+				</div>
+			</div>
+		</div>
+		
+
+		
+
+
+		<div class="article-content markdown-body px-2 sm:px-6 md:px-8 pb-8">
+			<h2 id="零、实验目的"><a href="#零、实验目的" class="headerlink" title="零、实验目的"></a>零、实验目的</h2><ol>
+<li>从操作系统角度理解 MIPS 体系结构</li>
+<li>掌握操作系统启动的基本流程</li>
+<li>掌握 ELF 文件的结构和功能</li>
+<li>完成 <code>printk</code> 函数的编写</li>
+</ol>
+<p>在本章中，需要阅读并填写部分代码，使得 MOS 操作系统可以正常的运行起来。这一章节的难度较为简单。</p>
+<h2 id="一、思考题"><a href="#一、思考题" class="headerlink" title="一、思考题"></a>一、思考题</h2><h3 id="Thingking-1-1"><a href="#Thingking-1-1" class="headerlink" title="Thingking 1.1"></a>Thingking 1.1</h3><blockquote>
+<p>在阅读 附录中的编译链接详解 以及本章内容后，尝试分别使用实验环境中的原生 x86 工具链（<code>gcc</code>、<code>ld</code>、<code>readelf</code>、<code>objdump</code> 等）和 MIPS 交叉编译工具链（带有 <code>mips-linux-gnu-</code> 前缀，如 <code>mips-linux-gnu-gcc</code>、<code>mips-linux-gnu-ld</code>），重复其中的编译和解析过程，观察相应的结果，并解释其中向 <code>objdump</code> 传入的参数的含义。</p>
+</blockquote>
+<p><strong>编写程序 <code>hello.c</code></strong>：</p>
+<div class="code-container" data-rel="C"><figure class="iseeu highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">()</span> </span><br><span class="line">{</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"Hello World!\n"</span>);</span><br><span class="line">	<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">}</span><br></pre></td></tr></table></figure></div>
+
+<h4 id="x86-工具链："><a href="#x86-工具链：" class="headerlink" title="x86 工具链："></a>x86 工具链：</h4><p><strong>预处理不编译</strong>：执行指令 <code>gcc -E hello.c</code>。得到了 800 多行的代码，这里展示一部分：</p>
+<div class="code-container" data-rel="C"><figure class="iseeu highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="type">unsigned</span> <span class="type">char</span> __u_char;</span><br><span class="line"><span class="keyword">typedef</span> <span class="type">unsigned</span> <span class="type">short</span> <span class="type">int</span> __u_short;</span><br><span class="line"><span class="keyword">typedef</span> <span class="type">unsigned</span> <span class="type">int</span> __u_int;</span><br><span class="line"><span class="keyword">typedef</span> <span class="type">unsigned</span> <span class="type">long</span> <span class="type">int</span> __u_long;</span><br><span class="line"><span class="keyword">typedef</span> <span class="type">signed</span> <span class="type">char</span> <span class="type">__int8_t</span>;</span><br><span class="line"><span class="keyword">typedef</span> <span class="type">unsigned</span> <span class="type">char</span> <span class="type">__uint8_t</span>;</span><br><span class="line"><span class="keyword">typedef</span> <span class="type">signed</span> <span class="type">short</span> <span class="type">int</span> <span class="type">__int16_t</span>;</span><br><span class="line"><span class="keyword">typedef</span> <span class="type">unsigned</span> <span class="type">short</span> <span class="type">int</span> <span class="type">__uint16_t</span>;</span><br><span class="line"><span class="keyword">typedef</span> <span class="type">signed</span> <span class="type">int</span> <span class="type">__int32_t</span>;</span><br><span class="line"><span class="keyword">typedef</span> <span class="type">unsigned</span> <span class="type">int</span> <span class="type">__uint32_t</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">typedef</span> <span class="type">signed</span> <span class="type">long</span> <span class="type">int</span> <span class="type">__int64_t</span>;</span><br><span class="line"><span class="keyword">typedef</span> <span class="type">unsigned</span> <span class="type">long</span> <span class="type">int</span> <span class="type">__uint64_t</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">extern</span> <span class="class"><span class="keyword">struct</span> _<span class="title">IO_FILE</span> *<span class="title">stdin</span>;</span></span><br><span class="line"><span class="keyword">extern</span> <span class="class"><span class="keyword">struct</span> _<span class="title">IO_FILE</span> *<span class="title">stdout</span>;</span></span><br><span class="line"><span class="keyword">extern</span> <span class="class"><span class="keyword">struct</span> _<span class="title">IO_FILE</span> *<span class="title">stderr</span>;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">extern</span> <span class="type">int</span> <span class="title function_">printf</span> <span class="params">(<span class="type">const</span> <span class="type">char</span> *__restrict __format, ...)</span>;</span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">()</span></span><br><span class="line">{</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"Hello World!\n"</span>);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">}</span><br></pre></td></tr></table></figure></div>
+
+<p><strong>编译不链接</strong>：执行指令 <code>gcc -c hello.c</code>，产生目标文件 <code>hello.o</code></p>
+<p><strong>反汇编</strong>：执行指令 <code>objdump -DS hello.o</code>，产生 96 行的汇编代码：</p>
+<div class="code-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">hello.o: file format elf64-x86-64</span><br><span class="line"></span><br><span class="line">Disassembly of section .text:</span><br><span class="line"></span><br><span class="line">0000000000000000 &lt;main&gt;:</span><br><span class="line">0:  55                push %rbp</span><br><span class="line">1:  48 89 e5          mov %rsp,%rbp</span><br><span class="line">4:  bf 00 00 00 00    mov $0x0,%edi</span><br><span class="line">9:  e8 00 00 00 00    callq e &lt;main+0xe&gt;   </span><br><span class="line">                      #本该填写 printf 地址的位置上被填写了一串 0。</span><br><span class="line">e:  b8 00 00 00 00    mov $0x0,%eax</span><br><span class="line">13: 5d                pop %rbp</span><br><span class="line">14: c3                retq</span><br></pre></td></tr></table></figure></div>
+
+<p><strong>编译链接</strong>：执行 <code>gcc -o hello hello.c</code>，得到可执行文件 <code>hello</code>。<br><strong>反汇编</strong>：执行 <code>objdump -DS hello</code>：</p>
+<div class="code-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">hello: file format elf64-x86-64</span><br><span class="line"></span><br><span class="line">Disassembly of section .init:</span><br><span class="line"></span><br><span class="line">00000000004003a8 &lt;_init&gt;:</span><br><span class="line">4003a8: 48 83 ec 08             sub $0x8,%rsp</span><br><span class="line">4003ac: 48 8b 05 0d 05 20 00    mov 0x20050d(%rip),%rax</span><br><span class="line">4003b3: 48 85 c0                test %rax,%rax</span><br><span class="line">4003b6: 74 05                   je 4003bd &lt;_init+0x15&gt;</span><br><span class="line">4003b8: e8 43 00 00 00          callq 400400 &lt;__gmon_start__@plt&gt;</span><br><span class="line">                                #填写printf地址处填写了puts@plt标记的位置</span><br><span class="line">4003bd: 48 83 c4 08             add $0x8,%rsp</span><br><span class="line">4003c1: c3                      retq</span><br><span class="line"></span><br><span class="line">Disassembly of section .plt:</span><br><span class="line"></span><br><span class="line">00000000004003d0 &lt;puts@plt-0x10&gt;:</span><br><span class="line">4003d0: ff 35 fa 04 20 00       pushq 0x2004fa(%rip)</span><br><span class="line">4003d6: ff 25 fc 04 20 00       jmpq *0x2004fc(%rip)</span><br><span class="line">4003dc: 0f 1f 40 00             nopl 0x0(%rax)</span><br><span class="line">#......</span><br></pre></td></tr></table></figure></div>
+
+<p>可以推断，<code>printf</code> 的实现在“链接”这一步被插入可执行文件，链接器会将所有编译好的目标文件链接在一起，填入地址信息，形成最终的可执行文件。</p>
+<h4 id="MIPS-交叉编译工具链"><a href="#MIPS-交叉编译工具链" class="headerlink" title="MIPS 交叉编译工具链"></a>MIPS 交叉编译工具链</h4><p><strong>预处理</strong>：执行 <code>mips-linux-gnu-gcc -E hello.c</code>，依然是头文件被展开，但代码有所不同。也是 800 多行。<br><strong>编译不链接+反汇编</strong>：执行 <code>mips-linux-gnu-gcc -c hello.c</code> 以及 <code>mips-linux-gnu-objdump -DS hello.o</code></p>
+<div class="code-container" data-rel="Mips"><figure class="iseeu highlight mips"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"> <span class="number">7</span> <span class="number">00000000</span> &lt;main&gt;:</span><br><span class="line"> <span class="number">8</span>    <span class="number">0</span>:   <span class="number">27</span>bdffe0        <span class="keyword">addiu </span>  <span class="built_in">sp</span>,<span class="built_in">sp</span>,-<span class="number">32</span></span><br><span class="line"> <span class="number">9</span>    <span class="number">4</span>:   afbf001c        <span class="keyword">sw </span>     <span class="built_in">ra</span>,<span class="number">28</span>(<span class="built_in">sp</span>)</span><br><span class="line"><span class="number">10</span>    <span class="number">8</span>:   afbe0018        <span class="keyword">sw </span>     <span class="built_in">s8</span>,<span class="number">24</span>(<span class="built_in">sp</span>)</span><br><span class="line"><span class="number">11</span>    c:   <span class="number">03</span>a<span class="symbol">0f</span>025        <span class="keyword">move </span>   <span class="built_in">s8</span>,<span class="built_in">sp</span></span><br><span class="line"><span class="number">12</span>   <span class="number">10</span>:   <span class="number">3</span>c1c0000        <span class="keyword">lui </span>    <span class="built_in">gp</span>,<span class="number">0x0</span></span><br><span class="line"><span class="number">13</span>   <span class="number">14</span>:   <span class="number">279</span>c0000        <span class="keyword">addiu </span>  <span class="built_in">gp</span>,<span class="built_in">gp</span>,<span class="number">0</span></span><br><span class="line"><span class="number">14</span>   <span class="number">18</span>:   afbc0010        <span class="keyword">sw </span>     <span class="built_in">gp</span>,<span class="number">16</span>(<span class="built_in">sp</span>)</span><br><span class="line"><span class="number">15</span>   <span class="number">1</span>c:   <span class="number">3</span>c020000        <span class="keyword">lui </span>    <span class="built_in">v0</span>,<span class="number">0x0</span></span><br><span class="line"><span class="number">16</span>   <span class="number">20</span>:   <span class="number">24440000</span>        <span class="keyword">addiu </span>  <span class="built_in">a0</span>,<span class="built_in">v0</span>,<span class="number">0</span></span><br><span class="line"><span class="number">17</span>   <span class="number">24</span>:   <span class="number">8</span>f820000        <span class="keyword">lw </span>     <span class="built_in">v0</span>,<span class="number">0</span>(<span class="built_in">gp</span>)</span><br><span class="line"><span class="number">18</span>   <span class="number">28</span>:   <span class="number">0040</span>c825        <span class="keyword">move </span>   <span class="built_in">t9</span>,<span class="built_in">v0</span></span><br><span class="line"><span class="number">19</span>   <span class="number">2</span>c:   <span class="number">0320</span>f809        <span class="keyword">jalr </span>   <span class="built_in">t9</span></span><br><span class="line"><span class="number">20</span>   <span class="number">30</span>:   <span class="number">00000000</span>        <span class="keyword">nop</span></span><br><span class="line"><span class="keyword"></span><span class="number">21</span>   <span class="number">34</span>:   <span class="number">8</span>fdc0010        <span class="keyword">lw </span>     <span class="built_in">gp</span>,<span class="number">16</span>(<span class="built_in">s8</span>)</span><br><span class="line"><span class="number">22</span>   <span class="number">38</span>:   <span class="number">00001025</span>        <span class="keyword">move </span>   <span class="built_in">v0</span>,<span class="built_in">zero</span></span><br><span class="line"><span class="number">23</span>   <span class="number">3</span>c:   <span class="number">03</span>c0e825        <span class="keyword">move </span>   <span class="built_in">sp</span>,<span class="built_in">s8</span></span><br><span class="line"><span class="number">24</span>   <span class="number">40</span>:   <span class="number">8</span>fbf001c        <span class="keyword">lw </span>     <span class="built_in">ra</span>,<span class="number">28</span>(<span class="built_in">sp</span>)</span><br><span class="line"><span class="number">25</span>   <span class="number">44</span>:   <span class="number">8</span>fbe0018        <span class="keyword">lw </span>     <span class="built_in">s8</span>,<span class="number">24</span>(<span class="built_in">sp</span>)</span><br><span class="line"><span class="number">26</span>   <span class="number">48</span>:   <span class="number">27</span>bd0020        <span class="keyword">addiu </span>  <span class="built_in">sp</span>,<span class="built_in">sp</span>,<span class="number">32</span></span><br><span class="line"><span class="number">27</span>   <span class="number">4</span>c:   <span class="number">03</span>e00008        <span class="keyword">jr </span>     <span class="built_in">ra</span></span><br><span class="line"><span class="number">28</span>   <span class="number">50</span>:   <span class="number">00000000</span>        <span class="keyword">nop</span></span><br><span class="line"><span class="keyword"></span><span class="number">29</span>         ...</span><br></pre></td></tr></table></figure></div>
+
+<p>是计组课学过的 MIPS 汇编语言。（把行号也复制进来啦，实在不知道 vim 编辑器怎么和系统剪切板交互……）<br><strong>编译链接+反汇编</strong>：执行 <code>mips-linux-gnu-gcc -o hello hello.c</code> 以及 <code>mips-linux-gnu-objdump -DS hello</code></p>
+<div class="code-container" data-rel="Mips"><figure class="iseeu highlight mips"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">345</span> <span class="number">00400650</span> &lt;main&gt;:</span><br><span class="line"><span class="number">346</span>   <span class="number">400650</span>:       <span class="number">27</span>bdffe0        <span class="keyword">addiu </span>  <span class="built_in">sp</span>,<span class="built_in">sp</span>,-<span class="number">32</span></span><br><span class="line"><span class="number">347</span>   <span class="number">400654</span>:       afbf001c        <span class="keyword">sw </span>     <span class="built_in">ra</span>,<span class="number">28</span>(<span class="built_in">sp</span>)</span><br><span class="line"><span class="number">348</span>   <span class="number">400658</span>:       afbe0018        <span class="keyword">sw </span>     <span class="built_in">s8</span>,<span class="number">24</span>(<span class="built_in">sp</span>)</span><br><span class="line"><span class="number">349</span>   <span class="number">40065</span>c:       <span class="number">03</span>a<span class="symbol">0f</span>025        <span class="keyword">move </span>   <span class="built_in">s8</span>,<span class="built_in">sp</span></span><br><span class="line"><span class="number">350</span>   <span class="number">400660</span>:       <span class="number">3</span>c1c0043        <span class="keyword">lui </span>    <span class="built_in">gp</span>,<span class="number">0x43</span></span><br><span class="line"><span class="number">351</span>   <span class="number">400664</span>:       <span class="number">279</span>c8010        <span class="keyword">addiu </span>  <span class="built_in">gp</span>,<span class="built_in">gp</span>,-<span class="number">32752</span></span><br><span class="line"><span class="number">352</span>   <span class="number">400668</span>:       afbc0010        <span class="keyword">sw </span>     <span class="built_in">gp</span>,<span class="number">16</span>(<span class="built_in">sp</span>)</span><br><span class="line"><span class="number">353</span>   <span class="number">40066</span>c:       <span class="number">3</span>c020040        <span class="keyword">lui </span>    <span class="built_in">v0</span>,<span class="number">0x40</span></span><br><span class="line"><span class="number">354</span>   <span class="number">400670</span>:       <span class="number">24440720</span>        <span class="keyword">addiu </span>  <span class="built_in">a0</span>,<span class="built_in">v0</span>,<span class="number">1824</span></span><br><span class="line"><span class="number">355</span>   <span class="number">400674</span>:       <span class="number">8</span>f828024        <span class="keyword">lw </span>     <span class="built_in">v0</span>,-<span class="number">32732</span>(<span class="built_in">gp</span>)</span><br><span class="line"><span class="number">356</span>   <span class="number">400678</span>:       <span class="number">0040</span>c825        <span class="keyword">move </span>   <span class="built_in">t9</span>,<span class="built_in">v0</span></span><br><span class="line"><span class="number">357</span>   <span class="number">40067</span>c:       <span class="number">0320</span>f809        <span class="keyword">jalr </span>   <span class="built_in">t9</span></span><br><span class="line"><span class="number">358</span>   <span class="number">400680</span>:       <span class="number">00000000</span>        <span class="keyword">nop</span></span><br><span class="line"><span class="keyword"></span><span class="number">359</span>   <span class="number">400684</span>:       <span class="number">8</span>fdc0010        <span class="keyword">lw </span>     <span class="built_in">gp</span>,<span class="number">16</span>(<span class="built_in">s8</span>)</span><br><span class="line"><span class="number">360</span>   <span class="number">400688</span>:       <span class="number">00001025</span>        <span class="keyword">move </span>   <span class="built_in">v0</span>,<span class="built_in">zero</span></span><br><span class="line"><span class="number">361</span>   <span class="number">40068</span>c:       <span class="number">03</span>c0e825        <span class="keyword">move </span>   <span class="built_in">sp</span>,<span class="built_in">s8</span></span><br><span class="line"><span class="number">362</span>   <span class="number">400690</span>:       <span class="number">8</span>fbf001c        <span class="keyword">lw </span>     <span class="built_in">ra</span>,<span class="number">28</span>(<span class="built_in">sp</span>)</span><br><span class="line"><span class="number">363</span>   <span class="number">400694</span>:       <span class="number">8</span>fbe0018        <span class="keyword">lw </span>     <span class="built_in">s8</span>,<span class="number">24</span>(<span class="built_in">sp</span>)</span><br><span class="line"><span class="number">364</span>   <span class="number">400698</span>:       <span class="number">27</span>bd0020        <span class="keyword">addiu </span>  <span class="built_in">sp</span>,<span class="built_in">sp</span>,<span class="number">32</span></span><br><span class="line"><span class="number">365</span>   <span class="number">40069</span>c:       <span class="number">03</span>e00008        <span class="keyword">jr </span>     <span class="built_in">ra</span></span><br><span class="line"><span class="number">366</span>   <span class="number">4006</span><span class="built_in">a0</span>:       <span class="number">00000000</span>        <span class="keyword">nop</span></span><br><span class="line"><span class="keyword"></span><span class="number">367</span>         ...</span><br></pre></td></tr></table></figure></div>
+
+<p>发现不链接的时候一些立即数为 0 的位置被填上数字啦，说明所有目标文件都被链接在一起了。<br><strong><code>objdump</code> 传入参数的含义</strong>：</p>
+<ul>
+<li><code>-D</code>：反汇编所有的 section；</li>
+<li><code>-d</code>：反汇编特定指令机器码的 section；</li>
+<li><code>-S</code>：尽可能反汇编出源代码；</li>
+<li><code>-s</code>：显示指定 section 的完整内容。</li>
+</ul>
+<h3 id="Thinking-1-2"><a href="#Thinking-1-2" class="headerlink" title="Thinking 1.2"></a>Thinking 1.2</h3><blockquote>
+<p>思考下述问题：<br>• 尝试使用我们编写的 <code>readelf</code> 程序，解析之前在 <code>target</code> 目录下生成的内核 ELF 文件。</p>
+</blockquote>
+<p>在 <code>tools/readelf</code> 目录下，执行命令：</p>
+<div class="code-container" data-rel="Shell"><figure class="iseeu highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./readelf ../../target/mos</span><br></pre></td></tr></table></figure></div>
+
+<p>解析内核 ELF 文件，结果如下：</p>
+<div class="code-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">0:0x0</span><br><span class="line">1:0x80400000</span><br><span class="line">2:0x804016f0</span><br><span class="line">3:0x80401708</span><br><span class="line">4:0x80401720</span><br><span class="line">5:0x0</span><br><span class="line">// ...</span><br><span class="line">17:0x0</span><br></pre></td></tr></table></figure></div>
+
+<blockquote>
+<p>• 也许你会发现我们编写的 <code>readelf</code> 程序是不能解析 <code>readelf</code> 文件本身的，而我们刚才介绍的系统工具 <code>readelf</code> 则可以解析，这是为什么呢？（提示：尝试使用 <code>readelf -h</code>，并阅读 <code>tools/readelf</code> 目录下的 <code>Makefile</code>，观察 <code>readelf</code> 与 <code>hello</code> 的不同）</p>
+</blockquote>
+<p><strong>解析我们编写的 <code>readelf</code></strong>：<code>readelf -h readelf</code> （参数说明：<code>-h --file-header       Display the ELF file header</code>）</p>
+<div class="code-container" data-rel="Shell"><figure class="iseeu highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">ELF 头：</span><br><span class="line">  Magic：   7f 45 4c 46 02 01 01 00 00 00 00 00 00 00 00 00 </span><br><span class="line">  类别:                              ELF64</span><br><span class="line">  数据:                              2 补码，小端序 (little endian)</span><br><span class="line">  Version:                           1 (current)</span><br><span class="line">  OS/ABI:                            UNIX - System V</span><br><span class="line">  ABI 版本:                          0</span><br><span class="line">  类型:                              DYN (Position-Independent Executable file)</span><br><span class="line">  系统架构:                          Advanced Micro Devices X86-64</span><br><span class="line">  版本:                              0x1</span><br><span class="line">  入口点地址：               0x1180</span><br><span class="line">  程序头起点：          64 (bytes into file)</span><br><span class="line">  Start of section headers:          14488 (bytes into file)</span><br><span class="line">  标志：             0x0</span><br><span class="line">  Size of this header:               64 (bytes)</span><br><span class="line">  Size of program headers:           56 (bytes)</span><br><span class="line">  Number of program headers:         13</span><br><span class="line">  Size of section headers:           64 (bytes)</span><br><span class="line">  Number of section headers:         31</span><br><span class="line">  Section header string table index: 30</span><br></pre></td></tr></table></figure></div>
+
+<p><strong>解析 <code>hello</code></strong>：<code>readelf -h hello</code></p>
+<div class="code-container" data-rel="Shell"><figure class="iseeu highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">ELF 头：</span><br><span class="line">  Magic：   7f 45 4c 46 01 01 01 03 00 00 00 00 00 00 00 00 </span><br><span class="line">  类别:                              ELF32</span><br><span class="line">  数据:                              2 补码，小端序 (little endian)</span><br><span class="line">  Version:                           1 (current)</span><br><span class="line">  OS/ABI:                            UNIX - GNU</span><br><span class="line">  ABI 版本:                          0</span><br><span class="line">  类型:                              EXEC (可执行文件)</span><br><span class="line">  系统架构:                          Intel 80386</span><br><span class="line">  版本:                              0x1</span><br><span class="line">  入口点地址：               0x8049750</span><br><span class="line">  程序头起点：          52 (bytes into file)</span><br><span class="line">  Start of section headers:          707128 (bytes into file)</span><br><span class="line">  标志：             0x0</span><br><span class="line">  Size of this header:               52 (bytes)</span><br><span class="line">  Size of program headers:           32 (bytes)</span><br><span class="line">  Number of program headers:         8</span><br><span class="line">  Size of section headers:           40 (bytes)</span><br><span class="line">  Number of section headers:         30</span><br><span class="line">  Section header string table index: 29</span><br></pre></td></tr></table></figure></div>
+
+<p><strong>用我们编写的 <code>readelf</code> 解析 <code>readelf</code></strong>：<code>./readelf readelf</code>，没有输出。<br><strong>观察 Makefile</strong>：</p>
+<div class="code-container" data-rel="Makefile"><figure class="iseeu highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"> 6 readelf: main.o readelf.o</span><br><span class="line"> 7         <span class="variable">$(CC)</span> <span class="variable">$^</span> -o <span class="variable">$@</span></span><br><span class="line"> 8 </span><br><span class="line"> 9 hello: hello.c</span><br><span class="line">10         <span class="variable">$(CC)</span> <span class="variable">$^</span> -o <span class="variable">$@</span> -m32 -static -g</span><br></pre></td></tr></table></figure></div>
+
+<blockquote>
+<p>看不懂这个 Makefile，喂给 DeepSeek 看看！</p>
+</blockquote>
+<ul>
+<li><code>$(CC)</code> 是 Makefile 的预定义变量，默认值为 <code>cc</code> （为 <code>gcc</code> 或 <code>clang</code> 的别名）</li>
+<li><code>$^</code> 是自动变量，表示所有的依赖项（<code>main.o readelf.o</code>）</li>
+<li><code>$@</code> 是自动变量，表示当前目标（<code>readelf</code>）</li>
+</ul>
+<p>其实就是 <code>gcc main.o readelf.o -o readelf</code> 。我勒个豆啊，装什么啊（x）。<br>那么下面的额外参数是什么？</p>
+<ul>
+<li><code>-m32</code> 表示生成 32 位程序（默认 64 位）</li>
+<li><code>-static</code> 静态链接（将所有依赖库打包到可执行文件中，文件会更大，但无需动态库即可执行（看不懂））</li>
+<li><code>-g</code> 包含调试信息（方便 <code>gdb</code> 调试）</li>
+</ul>
+<p>在上面用系统 <code>readelf</code> 的解析结果中，发现 <code>readelf</code> 的类别是 ELF64，而 <code>hello</code> 的类别是 ELF32。在 Makefile 中，使用了 <code>-m32</code> 参数来生成 32 位的 <code>hello</code> 可执行文件，而 <code>readelf</code> 没有这个参数。说明我们编写的 <code>readelf</code> 是 64 位的，不能解析；<code>hello</code> 是 32 位的，可以解析。（也有博客说是静态链接的原因）</p>
+<h3 id="Thinking-1-3"><a href="#Thinking-1-3" class="headerlink" title="Thinking 1.3"></a>Thinking 1.3</h3><blockquote>
+<p>在理论课上我们了解到，MIPS 体系结构上电时，启动入口地址为 <code>0xBFC00000</code> （其实启动入口地址是根据具体型号而定的，由硬件逻辑确定，也有可能不是这个地址，但一定是一个确定的地址），但实验操作系统的内核入口并没有放在上电启动地址，而是按照内存布局图放置。思考为什么这样放置内核还能保证内核入口被正确跳转到？<br>（提示：思考实验中启动过程的两阶段分别由谁执行。）</p>
+</blockquote>
+<p>操作系统设计人员一般会将硬件初始化工作作为 bootloader 程序放在非易失存储器，因此启动流程被简化为加载内核到内存，跳转到内核的入口。启动流程分为两个阶段：</p>
+<ul>
+<li>stage1，进行初始化硬件设备，加载 stage2 到 RAM 空间，并设置堆栈最后跳转到 stage2 的入口函数。</li>
+<li>stage2，初始化这一阶段需要用到的硬件设备及其他功能，将内核镜像从存储器读到 RAM，为内核设置启动参数，最后将 CPU 指令存储器的内容设置为内核入口函数的地址，将控制权转交给系统内核，保证了内核地址被正确跳转到。</li>
+</ul>
+<p>我们的 QEMU 中，stage2 中，<code>kernel.lds</code> 中设置了程序各个生成地址，使得 section 的位置被调整到了我们指定的地址上。通过 lds 文件控制各段（包括内核）被加载到我们预期的位置。把内核入口定为 <code>_start</code> 函数。</p>
+<p>在 <code>init/start.S</code> 中通过对 <code>_start</code> 函数的设置，就可以正确的跳转到 <code>mips_init</code> 函数。</p>
+<div class="code-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">// init/start.S</span><br><span class="line">  5 EXPORT(_start)</span><br><span class="line">  6 .set at</span><br><span class="line">  7 .set reorder</span><br><span class="line">  8 /* Lab 1 Key Code "enter-kernel" */</span><br><span class="line">  9         /* clear .bss segment */</span><br><span class="line"> 10         la      v0, bss_start</span><br><span class="line"> 11         la      v1, bss_end</span><br><span class="line"> 12 clear_bss_loop:</span><br><span class="line"> 13         beq     v0, v1, clear_bss_done</span><br><span class="line"> 14         sb      zero, 0(v0)</span><br><span class="line"> 15         addiu   v0, v0, 1</span><br><span class="line"> 16         j       clear_bss_loop</span><br><span class="line"> 17 /* End of Key Code "enter-kernel" */</span><br><span class="line">// ...</span><br><span class="line"> 19 clear_bss_done:</span><br><span class="line"> 20         /* disable interrupts */</span><br><span class="line"> 21         mtc0    zero, CP0_STATUS</span><br><span class="line"> 22 </span><br><span class="line"> 23         /* hint: you can refer to the memory layout in include/mmu.h */</span><br><span class="line"> 24         /* set up the kernel stack */</span><br><span class="line">// ...</span><br></pre></td></tr></table></figure></div>
+<h2 id="二、难点分析"><a href="#二、难点分析" class="headerlink" title="二、难点分析"></a>二、难点分析</h2><p><img lazyload="" src="/images/loading.svg" data-src="/images/os/lab1.png" alt="lab1"></p>
+<h3 id="项目结构"><a href="#项目结构" class="headerlink" title="项目结构"></a>项目结构</h3><div class="code-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line">.</span><br><span class="line">├── include // 存放系统头文件</span><br><span class="line">│   ├── elf.h // 内含 ELF 段节</span><br><span class="line">│   ├── mmu.h // 内含 MIPS 内存布局</span><br><span class="line">│   ├── print.h</span><br><span class="line">│   ├── printk.h</span><br><span class="line">│   ├── string.h</span><br><span class="line">├── include.mk</span><br><span class="line">├── init // 内核初始化相关代码</span><br><span class="line">│   ├── init.c</span><br><span class="line">│   ├── init.o</span><br><span class="line">│   ├── Makefile</span><br><span class="line">│   ├── start.o</span><br><span class="line">│   └── start.S</span><br><span class="line">├── kern // 存放内核的主体代码</span><br><span class="line">│   ├── include.mk</span><br><span class="line">│   ├── machine.c</span><br><span class="line">│   ├── Makefile</span><br><span class="line">│   ├── panic.c</span><br><span class="line">│   ├── printk.c</span><br><span class="line">├── kernel.lds</span><br><span class="line">├── lib // 存放一些常用的库函数，包括 vprintfmt</span><br><span class="line">├── Makefile // 用于编译 MOS 内核的 Makefile 文件</span><br><span class="line">├── target // 存放编译的产物</span><br><span class="line">│   └── mos // 最终的 MOS 的可执行文件</span><br><span class="line">├── tests // 存放测试程序</span><br><span class="line">└── tools // 存放一些实用工具，包括 readelf</span><br><span class="line">    ├── include.mk</span><br><span class="line">    ├── Makefile</span><br><span class="line">    ├── readelf</span><br><span class="line">    │   ├── elf.h</span><br><span class="line">    │   ├── hello.c</span><br><span class="line">    │   ├── main.c</span><br><span class="line">    │   ├── Makefile</span><br><span class="line">    │   └── readelf.c</span><br><span class="line">    └── run_bg.sh</span><br></pre></td></tr></table></figure></div>
+
+<h3 id="QEMU-模拟器"><a href="#QEMU-模拟器" class="headerlink" title="QEMU 模拟器"></a>QEMU 模拟器</h3><p>在本课程实验中，编写代码的环境是 Linux 系统，进行实验的硬件仿真平台是 QEMU 模拟器。</p>
+<p><strong>QEMU 中的启动流程</strong>：QEMU 模拟器直接加载 ELF 格式的内核，启动流程被简化为加载内核到内存，之后跳转到内核的入口，启动完成。因此我们需要<strong>将内核编译成正确的 ELF 可执行文件</strong>（我们的目标）</p>
+<h3 id="MIPS-内存布局——内核运行的正确位置"><a href="#MIPS-内存布局——内核运行的正确位置" class="headerlink" title="MIPS 内存布局——内核运行的正确位置"></a>MIPS 内存布局——内核运行的正确位置</h3><p><img lazyload="" src="/images/loading.svg" data-src="/images/os/lab1_2.png" alt="lab1_2"></p>
+<h3 id="printk"><a href="#printk" class="headerlink" title="printk"></a><code>printk</code></h3><p>在 <code>kern/printk.c</code> 中：</p>
+<div class="code-container" data-rel="C"><figure class="iseeu highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">void</span> <span class="title function_">printk</span><span class="params">(<span class="type">const</span> <span class="type">char</span> *fmt, ...)</span> {</span><br><span class="line">	va_list ap;</span><br><span class="line">	va_start(ap, fmt);</span><br><span class="line">	vprintfmt(outputk, <span class="literal">NULL</span>, fmt, ap);</span><br><span class="line">	va_end(ap);</span><br><span class="line">}</span><br></pre></td></tr></table></figure></div>
+
+<p><strong>变长参数</strong>：函数参数列表末尾有省略号，有至少一个固定参数，变长参数在参数表的末尾。在 <code>stdarg.h</code> 头文件中有如下定义：</p>
+<ul>
+<li><code>va_list</code>：变长参数表的变量类型</li>
+<li><code>va_start(va_list ap, lastarg)</code>：初始化变长参数表的宏</li>
+<li><code>va_arg(va_list ap, 类型)</code>：取变长参数表下一个参数的宏</li>
+<li><code>va_end(va_list ap)</code>：结束变长参数表的宏</li>
+</ul>
+<p>在带变长参数表的函数内使用变长参数表前，需声明变长参数表类型，并进行初始化：</p>
+<div class="code-container" data-rel="C"><figure class="iseeu highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">va_list ap;</span><br><span class="line">va_start(ap, lastarg);</span><br></pre></td></tr></table></figure></div>
+
+<p><code>lastarg</code> 是该函数最后一个命名的形式参数。初始化后，每次用 <code>va_arg</code> 取一个形式参数，如：</p>
+<div class="code-container" data-rel="C"><figure class="iseeu highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> num;</span><br><span class="line">num = va_arg(ap, <span class="type">int</span>);</span><br></pre></td></tr></table></figure></div>
+
+<p>退出函数前，调用 <code>va_end</code> 宏来结束变长参数表的使用。</p>
+<p><strong><code>vprintfmt</code> 函数</strong>：<br><img lazyload="" src="/images/loading.svg" data-src="/images/os/lab1_vprintfmt.png" alt="lab1_vprintfmt"></p>
+<h2 id="三、实验体会"><a href="#三、实验体会" class="headerlink" title="三、实验体会"></a>三、实验体会</h2><p>一上来就处理这么复杂的项目是有些难以把握的，并且不懂 Makefile 的高级语法也是困难之一。在实验过程中，为了能尽可能理解指导书想告诉我的，我一边阅读指导书一边写了很多笔记。但是限于实验报告篇幅，我把它们全删了，换成了更多可视化。</p>
+<p>在完成实验题目的时候，我将我的思考过程尽可能完整地写下来了，但也不想放在实验报告里面（不然太臃肿了），也全删了。</p>
+<h2 id="四、原创说明"><a href="#四、原创说明" class="headerlink" title="四、原创说明"></a>四、原创说明</h2><p>该报告参考了以下资料或博客：</p>
+<ol>
+<li><a class="link" target="_blank" rel="noopener" href="https://yanna-zy.github.io/2023/03/19/BUAA-OS-1/">BUAA-OS-lab1 | YannaのBlog<i class="fa-solid fa-arrow-up-right ml-[0.2em] font-light align-text-top text-[0.7em] link-icon"></i></a></li>
+<li><a class="link" target="_blank" rel="noopener" href="https://www.hugohealthy.top/2024/04/24/os-lab1%E5%AE%9E%E9%AA%8C%E6%8A%A5%E5%91%8A/">os-lab1实验报告 | hugo<i class="fa-solid fa-arrow-up-right ml-[0.2em] font-light align-text-top text-[0.7em] link-icon"></i></a></li>
+<li><a class="link" target="_blank" rel="noopener" href="https://alkaid-zhong.github.io/posts/os/os-lab1/">OS Lab1 - 内核，启动与printf - Alkaid<i class="fa-solid fa-arrow-up-right ml-[0.2em] font-light align-text-top text-[0.7em] link-icon"></i></a></li>
+<li><a class="link" target="_blank" rel="noopener" href="https://seafoodfat1ger.github.io/2024/03/27/OS/OS_Lab1/">OS_Lab1_实验报告 | 水货不水<i class="fa-solid fa-arrow-up-right ml-[0.2em] font-light align-text-top text-[0.7em] link-icon"></i></a></li>
+<li><a class="link" target="_blank" rel="noopener" href="https://www.deepseek.com/">https://www.deepseek.com/<i class="fa-solid fa-arrow-up-right ml-[0.2em] font-light align-text-top text-[0.7em] link-icon"></i></a></li>
+</ol>
+
+		</div>
+
+		
+		<div class="post-copyright-info w-full my-8 px-2 sm:px-6 md:px-8">
+			<div class="article-copyright-info-container">
+    <ul>
+        <li><strong>Title:</strong> 操作系统OS：Lab1-内核、启动和printf</li>
+        <li><strong>Author:</strong> BaconToast</li>
+        <li><strong>Created at
+                :</strong> 2025-11-18 16:00:03</li>
+        
+            <li>
+                <strong>Updated at
+                    :</strong> 2025-11-18 16:04:47
+            </li>
+        
+        <li>
+            <strong>Link:</strong> https://bacontoast-pro.github.io/2025/11/18/os/lab1/
+        </li>
+        <li>
+            <strong>
+                License:
+            </strong>
+            
+
+            
+                This work is licensed under <a class="license" target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0">CC BY-NC-SA 4.0</a>.
+            
+        </li>
+    </ul>
+</div>
+
+		</div>
+		
+
+		
+		<ul class="post-tags-box text-lg mt-1.5 flex-wrap justify-center flex md:hidden">
+			
+			<li class="tag-item mx-0.5">
+				<a href="/tags/C/">#C</a>&nbsp;
+			</li>
+			
+			<li class="tag-item mx-0.5">
+				<a href="/tags/OS/">#OS</a>&nbsp;
+			</li>
+			
+			<li class="tag-item mx-0.5">
+				<a href="/tags/Linux/">#Linux</a>&nbsp;
+			</li>
+			
+		</ul>
+		
+
+		
+
+		
+		<div class="article-nav my-8 flex justify-between items-center px-2 sm:px-6 md:px-8">
+			
+			<div class="article-prev border-border-color shadow-redefine-flat shadow-shadow-color-2 rounded-medium px-4 py-2 hover:shadow-redefine-flat-hover hover:shadow-shadow-color-2">
+				<a class="prev" rel="prev" href="/2025/11/18/os/lab2/">
+					<span class="left arrow-icon flex justify-center items-center">
+						<i class="fa-solid fa-chevron-left"></i>
+					</span>
+					<span class="title flex justify-center items-center">
+						<span class="post-nav-title-item truncate max-w-48">操作系统OS：Lab2-内存管理</span>
+						<span class="post-nav-item">Prev posts</span>
+					</span>
+				</a>
+			</div>
+			
+			
+			<div class="article-next border-border-color shadow-redefine-flat shadow-shadow-color-2 rounded-medium px-4 py-2 hover:shadow-redefine-flat-hover hover:shadow-shadow-color-2">
+				<a class="next" rel="next" href="/2025/11/18/os/lab0/">
+					<span class="title flex justify-center items-center">
+						<span class="post-nav-title-item truncate max-w-48">操作系统OS：Lab0-初识操作系统</span>
+						<span class="post-nav-item">Next posts</span>
+					</span>
+					<span class="right arrow-icon flex justify-center items-center">
+						<i class="fa-solid fa-chevron-right"></i>
+					</span>
+				</a>
+			</div>
+			
+		</div>
+		
+
+
+		
+		<div class="comment-container px-2 sm:px-6 md:px-8 pb-8">
+			<div class="comments-container mt-10 w-full ">
+    <div id="comment-anchor" class="w-full h-2.5"></div>
+    <div class="comment-area-title w-full my-1.5 md:my-2.5 text-xl md:text-3xl font-bold">
+        Comments
+    </div>
+    
+
+        
+            
+    <div id="waline"></div>
+    <script type="module" data-swup-reload-script>
+      import { init } from '/js/libs/waline.mjs';
+
+      function loadWaline() {
+        init({
+          el: '#waline',
+          serverURL: 'https://example.example.com',
+          dark: 'body[class~="dark-mode"]',
+          reaction: false,
+          requiredMeta: ['nick', 'mail'],
+          emoji: [],
+                    lang: 'zh-CN',
+        });
+      }
+
+      if (typeof swup !== 'undefined') {
+        loadWaline();
+      } else {
+        window.addEventListener('DOMContentLoaded', loadWaline);
+      }
+    </script>
+
+
+
+        
+    
+</div>
+
+		</div>
+		
+	</div>
+
+	
+	<div class="toc-content-container">
+		<div class="post-toc-wrap">
+	<div class="post-toc">
+		<div class="toc-title">On this page</div>
+		<div class="page-title">操作系统OS：Lab1-内核、启动和printf</div>
+		<ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%9B%B6%E3%80%81%E5%AE%9E%E9%AA%8C%E7%9B%AE%E7%9A%84"><span class="nav-text">零、实验目的</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80%E3%80%81%E6%80%9D%E8%80%83%E9%A2%98"><span class="nav-text">一、思考题</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Thingking-1-1"><span class="nav-text">Thingking 1.1</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Thinking-1-2"><span class="nav-text">Thinking 1.2</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Thinking-1-3"><span class="nav-text">Thinking 1.3</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C%E3%80%81%E9%9A%BE%E7%82%B9%E5%88%86%E6%9E%90"><span class="nav-text">二、难点分析</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%A1%B9%E7%9B%AE%E7%BB%93%E6%9E%84"><span class="nav-text">项目结构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#QEMU-%E6%A8%A1%E6%8B%9F%E5%99%A8"><span class="nav-text">QEMU 模拟器</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#MIPS-%E5%86%85%E5%AD%98%E5%B8%83%E5%B1%80%E2%80%94%E2%80%94%E5%86%85%E6%A0%B8%E8%BF%90%E8%A1%8C%E7%9A%84%E6%AD%A3%E7%A1%AE%E4%BD%8D%E7%BD%AE"><span class="nav-text">MIPS 内存布局——内核运行的正确位置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#printk"><span class="nav-text">printk</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%89%E3%80%81%E5%AE%9E%E9%AA%8C%E4%BD%93%E4%BC%9A"><span class="nav-text">三、实验体会</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9B%9B%E3%80%81%E5%8E%9F%E5%88%9B%E8%AF%B4%E6%98%8E"><span class="nav-text">四、原创说明</span></a></li></ol>
+
+	</div>
+</div>
+	</div>
+	
+</div>
+			</div>
+
+			
+		</div>
+
+		<div class="main-content-footer">
+			<footer class="footer mt-5 py-5 h-auto text-base text-third-text-color relative border-t-2 border-t-border-color">
+    <div class="info-container py-3 text-center">
+        
+        <div class="text-center">
+            &copy;
+            
+              <span>2025</span>
+              -
+            
+            2025&nbsp;&nbsp;<i class="fa-solid fa-heart fa-beat" style="--fa-animation-duration: 0.5s; color: #f54545"></i>&nbsp;&nbsp;<a href="/">BaconToast</a>
+            
+                
+                <p class="post-count space-x-0.5">
+                    <span>
+                        21 posts in total
+                    </span>
+                    
+                </p>
+            
+        </div>
+        
+            <script data-swup-reload-script src="https://cn.vercount.one/js"></script>
+            <div class="relative text-center lg:absolute lg:right-[20px] lg:top-1/2 lg:-translate-y-1/2 lg:text-right">
+                
+                    <span id="busuanzi_container_site_uv" class="lg:!block">
+                        <span class="text-sm">VISITOR COUNT</span>
+                        <span id="busuanzi_value_site_uv"></span>
+                    </span>
+                
+                
+                    <span id="busuanzi_container_site_pv" class="lg:!block">
+                        <span class="text-sm">TOTAL PAGE VIEWS</span>
+                        <span id="busuanzi_value_site_pv"></span>
+                    </span>
+                
+            </div>
+        
+        <div class="relative text-center lg:absolute lg:left-[20px] lg:top-1/2 lg:-translate-y-1/2 lg:text-left">
+            <span class="lg:block text-sm">POWERED BY <?xml version="1.0" encoding="utf-8"?><!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"><svg class="relative top-[2px] inline-block align-baseline" version="1.1" id="圖層_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="1rem" height="1rem" viewBox="0 0 512 512" enable-background="new 0 0 512 512" xml:space="preserve"><path fill="#0E83CD" d="M256.4,25.8l-200,115.5L56,371.5l199.6,114.7l200-115.5l0.4-230.2L256.4,25.8z M349,354.6l-18.4,10.7l-18.6-11V275H200v79.6l-18.4,10.7l-18.6-11v-197l18.5-10.6l18.5,10.8V237h112v-79.6l18.5-10.6l18.5,10.8V354.6z"/></svg><a target="_blank" class="text-base" href="https://hexo.io">Hexo</a></span>
+            <span class="text-sm lg:block">THEME&nbsp;<a class="text-base" target="_blank" href="https://github.com/EvanNotFound/hexo-theme-redefine">Redefine v2.8.5</a></span>
+        </div>
+        
+        
+            <div>
+                Blog up for <span class="odometer" id="runtime_days" ></span> days <span class="odometer" id="runtime_hours"></span> hrs <span class="odometer" id="runtime_minutes"></span> Min <span class="odometer" id="runtime_seconds"></span> Sec
+            </div>
+        
+        
+            <script data-swup-reload-script>
+                try {
+                    function odometer_init() {
+                    const elements = document.querySelectorAll('.odometer');
+                    elements.forEach(el => {
+                        new Odometer({
+                            el,
+                            format: '( ddd).dd',
+                            duration: 200
+                        });
+                    });
+                    }
+                    odometer_init();
+                } catch (error) {}
+            </script>
+        
+        
+        
+    </div>  
+</footer>
+		</div>
+	</div>
+
+	
+	<div class="post-tools">
+		<div class="post-tools-container">
+	<ul class="article-tools-list">
+		<!-- TOC aside toggle -->
+		
+		<li class="right-bottom-tools page-aside-toggle">
+			<i class="fa-regular fa-outdent"></i>
+		</li>
+		
+
+		<!-- go comment -->
+		
+		<li class="go-comment">
+			<i class="fa-regular fa-comments"></i>
+		</li>
+		
+	</ul>
+</div>
+	</div>
+	
+
+	<div class="right-side-tools-container">
+		<div class="side-tools-container">
+	<ul class="hidden-tools-list">
+		<li class="right-bottom-tools tool-font-adjust-plus flex justify-center items-center">
+			<i class="fa-regular fa-magnifying-glass-plus"></i>
+		</li>
+
+		<li class="right-bottom-tools tool-font-adjust-minus flex justify-center items-center">
+			<i class="fa-regular fa-magnifying-glass-minus"></i>
+		</li>
+
+		<li class="right-bottom-tools tool-dark-light-toggle flex justify-center items-center">
+			<i class="fa-regular fa-moon"></i>
+		</li>
+
+		<!-- rss -->
+		
+
+		
+
+		<li class="right-bottom-tools tool-scroll-to-bottom flex justify-center items-center">
+			<i class="fa-regular fa-arrow-down"></i>
+		</li>
+	</ul>
+
+	<ul class="visible-tools-list">
+		<li class="right-bottom-tools toggle-tools-list flex justify-center items-center">
+			<i class="fa-regular fa-cog fa-spin"></i>
+		</li>
+		
+		<li class="right-bottom-tools tool-scroll-to-top flex justify-center items-center">
+			<i class="arrow-up fas fa-arrow-up"></i>
+			<span class="percent"></span>
+		</li>
+		
+		
+	</ul>
+</div>
+	</div>
+
+	<div class="image-viewer-container">
+	<img src="">
+</div>
+
+	
+
+</main>
+
+
+
+<script src="/js/build/libs/Swup.min.js"></script>
+
+<script src="/js/build/libs/SwupSlideTheme.min.js"></script>
+
+<script src="/js/build/libs/SwupScriptsPlugin.min.js"></script>
+
+<script src="/js/build/libs/SwupProgressPlugin.min.js"></script>
+
+<script src="/js/build/libs/SwupScrollPlugin.min.js"></script>
+
+<script src="/js/build/libs/SwupPreloadPlugin.min.js"></script>
+
+<script>
+    const swup = new Swup({
+        plugins: [
+            new SwupScriptsPlugin({
+                optin: true,
+            }),
+            new SwupProgressPlugin(),
+            new SwupScrollPlugin({
+                offset: 80,
+            }),
+            new SwupSlideTheme({
+                mainElement: ".main-content-body",
+            }),
+            new SwupPreloadPlugin(),
+        ],
+        containers: ["#swup"],
+    });
+</script>
+
+
+
+
+	
+<script src="/js/build/tools/imageViewer.js" type="module"></script>
+
+<script src="/js/build/utils.js" type="module"></script>
+
+<script src="/js/build/main.js" type="module"></script>
+
+<script src="/js/build/layouts/navbarShrink.js" type="module"></script>
+
+<script src="/js/build/tools/scrollTopBottom.js" type="module"></script>
+
+<script src="/js/build/tools/lightDarkSwitch.js" type="module"></script>
+
+<script src="/js/build/layouts/categoryList.js" type="module"></script>
+
+
+
+
+
+    
+<script src="/js/build/tools/codeBlock.js" type="module"></script>
+
+
+
+
+    
+<script src="/js/build/layouts/lazyload.js" type="module"></script>
+
+
+
+
+    
+<script src="/js/build/tools/runtime.js"></script>
+
+    
+<script src="/js/build/libs/odometer.min.js"></script>
+
+    
+<link rel="stylesheet" href="/assets/odometer-theme-minimal.css">
+
+
+
+
+  
+<script src="/js/build/libs/Typed.min.js"></script>
+
+  
+<script src="/js/build/plugins/typed.js" type="module"></script>
+
+
+
+
+
+
+    
+<script src="/js/build/libs/minimasonry.min.js"></script>
+
+    
+<script src="/js/build/plugins/masonry.js" type="module"></script>
+
+
+
+
+
+
+
+    
+<script src="/js/build/tools/tocToggle.js" type="module" data-swup-reload-script=""></script>
+
+<script src="/js/build/layouts/toc.js" type="module" data-swup-reload-script=""></script>
+
+<script src="/js/build/plugins/tabs.js" type="module" data-swup-reload-script=""></script>
+
+
+
+
+<script src="/js/build/libs/moment-with-locales.min.js" data-swup-reload-script=""></script>
+
+
+<script src="/js/build/layouts/essays.js" type="module" data-swup-reload-script=""></script>
+
+
+
+
+
+    
+<script src="/js/build/layouts/bookmarkNav.js" type="module"></script>
+
+
+	
+</body>
+
+</html>

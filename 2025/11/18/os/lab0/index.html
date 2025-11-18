@@ -1,0 +1,1589 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="keywords" content="Hexo Theme Redefine">
+    
+    <meta name="author" content="BaconToast">
+    
+    <!-- Completely eliminate flash of wrong theme -->
+    <script>
+        (function() {
+            const THEME_KEY = "REDEFINE-THEME-STATUS";
+            const DARK = "dark", LIGHT = "light";
+            
+            // Get preferred theme
+            function getTheme() {
+                try {
+                    const saved = localStorage.getItem(THEME_KEY);
+                    if (saved) {
+                        const { isDark } = JSON.parse(saved);
+                        return isDark ? DARK : LIGHT;
+                    }
+                } catch (e) {}
+                
+                return matchMedia("(prefers-color-scheme: dark)").matches ? DARK : LIGHT;
+            }
+            
+            // Apply theme to document
+            function applyTheme(theme) {
+                const isDark = theme === DARK;
+                const root = document.documentElement;
+                
+                // Set data attribute for CSS variables
+                root.setAttribute("data-theme", theme);
+                
+                // Set classes for compatibility
+                root.classList.add(theme);
+                root.classList.remove(isDark ? LIGHT : DARK);
+                root.style.colorScheme = theme;
+            }
+            
+            // Initial application
+            const theme = getTheme();
+            applyTheme(theme);
+            
+            // Listen for system preference changes
+            matchMedia("(prefers-color-scheme: dark)").addEventListener("change", ({ matches }) => {
+                // Only update if using system preference (no localStorage entry)
+                if (!localStorage.getItem(THEME_KEY)) {
+                    applyTheme(matches ? DARK : LIGHT);
+                }
+            });
+            
+            // Set body classes once DOM is ready
+            if (document.readyState !== "loading") {
+                document.body.classList.add(theme + "-mode");
+            } else {
+                document.addEventListener("DOMContentLoaded", () => {
+                    document.body.classList.add(theme + "-mode");
+                    document.body.classList.remove((theme === DARK ? LIGHT : DARK) + "-mode");
+                });
+            }
+        })();
+    </script>
+    
+    <!-- Critical CSS to prevent flash -->
+    <style>
+        :root[data-theme="dark"] {
+            --background-color: #202124;
+            --background-color-transparent: rgba(32, 33, 36, 0.6);
+            --second-background-color: #2d2e32;
+            --third-background-color: #34353a;
+            --third-background-color-transparent: rgba(32, 33, 36, 0.6);
+            --primary-color: #0066CC;
+            --first-text-color: #ffffff;
+            --second-text-color: #eeeeee;
+            --third-text-color: #bebec6;
+            --fourth-text-color: #999999;
+            --default-text-color: #bebec6;
+            --invert-text-color: #373D3F;
+            --border-color: rgba(255, 255, 255, 0.08);
+            --selection-color: #0066CC;
+            --shadow-color-1: rgba(255, 255, 255, 0.08);
+            --shadow-color-2: rgba(255, 255, 255, 0.05);
+        }
+        
+        :root[data-theme="light"] {
+            --background-color: #fff;
+            --background-color-transparent: rgba(255, 255, 255, 0.6);
+            --second-background-color: #f8f8f8;
+            --third-background-color: #f2f2f2;
+            --third-background-color-transparent: rgba(241, 241, 241, 0.6);
+            --primary-color: #0066CC;
+            --first-text-color: #16171a;
+            --second-text-color: #2f3037;
+            --third-text-color: #5e5e5e;
+            --fourth-text-color: #eeeeee;
+            --default-text-color: #373D3F;
+            --invert-text-color: #bebec6;
+            --border-color: rgba(0, 0, 0, 0.08);
+            --selection-color: #0066CC;
+            --shadow-color-1: rgba(0, 0, 0, 0.08);
+            --shadow-color-2: rgba(0, 0, 0, 0.05);
+        }
+        
+        body {
+            background-color: var(--background-color);
+            color: var(--default-text-color);
+        }
+        
+        /* Apply body classes as soon as DOM is ready */
+        :root[data-theme="dark"] body {
+            background-color: var(--background-color);
+            color: var(--default-text-color);
+        }
+    </style>
+    
+    <!-- preconnect -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    
+    <!--- Seo Part-->
+    
+    <link rel="canonical" href="https://BaconToast-pro.github.io/2025/11/18/os/lab0/"/>
+    <meta name="robots" content="index,follow">
+    <meta name="googlebot" content="index,follow">
+    <meta name="revisit-after" content="1 days">
+    
+    
+    
+        
+        <meta name="description" content="Hexo Theme Redefine, Redefine Your Hexo Journey.">
+<meta property="og:type" content="article">
+<meta property="og:title" content="操作系统OS：Lab0-初识操作系统">
+<meta property="og:url" content="https://bacontoast-pro.github.io/2025/11/18/os/lab0/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="Hexo Theme Redefine, Redefine Your Hexo Journey.">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://bacontoast-pro.github.io/images/redefine-og.webp">
+<meta property="article:published_time" content="2025-11-18T07:44:52.477Z">
+<meta property="article:modified_time" content="2025-11-18T08:00:03.216Z">
+<meta property="article:author" content="BaconToast">
+<meta property="article:tag" content="C">
+<meta property="article:tag" content="Linux">
+<meta property="article:tag" content="OS">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://bacontoast-pro.github.io/images/redefine-og.webp">
+    
+    
+    <!--- Icon Part-->
+    <link rel="icon" type="image/png" href="/images/public/toast.svg" sizes="192x192">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/public/toast.svg">
+    <meta name="theme-color" content="#A31F34">
+    <link rel="shortcut icon" href="/images/public/toast.svg">
+    <!--- Page Info-->
+    
+    <title>
+        
+            操作系统OS：Lab0-初识操作系统 | BaconToast&#39;s Shop
+        
+    </title>
+
+    
+<link rel="stylesheet" href="/fonts/Chillax/chillax.css">
+
+
+    <!--- Inject Part-->
+    
+
+    
+<link rel="stylesheet" href="/css/style.css">
+
+
+    
+        
+<link rel="stylesheet" href="/css/build/tailwind.css">
+
+    
+
+    
+<link rel="stylesheet" href="/fonts/GeistMono/geist-mono.css">
+
+    
+<link rel="stylesheet" href="/fonts/Geist/geist.css">
+
+    <!--- Font Part-->
+    
+    
+    
+    
+    
+    
+        
+<script src="/js/build/libs/anime.min.js"></script>
+
+    
+
+    <script id="hexo-configurations">
+    window.config = {"hostname":"bacontoast-pro.github.io","root":"/","language":"en"};
+    window.theme = {"articles":{"style":{"font_size":"16px","line_height":1.5,"image_border_radius":"14px","image_alignment":"center","image_caption":false,"link_icon":true,"delete_mask":false,"title_alignment":"left","headings_top_spacing":{"h1":"3.2rem","h2":"2.4rem","h3":"1.9rem","h4":"1.6rem","h5":"1.4rem","h6":"1.3rem"}},"word_count":{"enable":true,"count":true,"min2read":true},"author_label":{"enable":true,"auto":false,"list":[]},"code_block":{"copy":true,"style":"mac","highlight_theme":{"light":"github","dark":"vs2015"},"font":{"enable":false,"family":null,"url":null}},"toc":{"enable":true,"max_depth":3,"number":false,"expand":true,"init_open":true},"copyright":{"enable":true,"default":"cc_by_nc_sa"},"lazyload":true,"pangu_js":false,"recommendation":{"enable":false,"title":"推荐阅读","limit":3,"mobile_limit":2,"placeholder":"/images/wallhaven-wqery6-light.webp","skip_dirs":[]}},"colors":{"primary":"#A31F34","secondary":null,"default_mode":"light"},"global":{"fonts":{"chinese":{"enable":false,"family":null,"url":null},"english":{"enable":false,"family":null,"url":null},"title":{"enable":false,"family":null,"url":null}},"content_max_width":"1000px","sidebar_width":"210px","hover":{"shadow":true,"scale":true},"scroll_progress":{"bar":false,"percentage":true},"website_counter":{"url":"https://cn.vercount.one/js","enable":true,"site_pv":true,"site_uv":true,"post_pv":true},"single_page":true,"preloader":{"enable":true,"custom_message":null},"side_tools":{"gear_rotation":true,"auto_expand":true},"open_graph":{"enable":true,"image":"/images/redefine-og.webp","description":"Hexo Theme Redefine, Redefine Your Hexo Journey."},"google_analytics":{"enable":false,"id":null}},"home_banner":{"enable":true,"style":"fixed","image":{"light":"/images/wallhaven-wqery6-light.webp","dark":"/images/wallhaven-wqery6-dark.webp"},"title":"BaconToast Blog","subtitle":{"text":["欢迎来到BaconToast小商店~","We can be the light upon the day."],"hitokoto":{"enable":false,"show_author":false,"api":"https://v1.hitokoto.cn"},"typing_speed":100,"backing_speed":80,"starting_delay":500,"backing_delay":1500,"loop":true,"smart_backspace":true},"text_color":{"light":"#fff","dark":"#d1d1b6"},"text_style":{"title_size":"2.8rem","subtitle_size":"1.5rem","line_height":1.2},"custom_font":{"enable":false,"family":null,"url":null},"social_links":{"enable":true,"style":"default","links":{"github":"https://github.com/BaconToast-pro","instagram":null,"zhihu":null,"twitter":null,"email":"zhouzq@buaa.edu.cn"},"qrs":{"weixin":"images/public/wechat.jpg"}}},"plugins":{"feed":{"enable":false},"aplayer":{"enable":false,"type":"fixed","audios":[{"name":null,"artist":null,"url":null,"cover":null,"lrc":null}]},"mermaid":{"enable":false,"version":"11.4.1"}},"version":"2.8.5","navbar":{"auto_hide":true,"color":{"left":"#f78736","right":"#367df7","transparency":35},"width":{"home":"1200px","pages":"1000px"},"links":{"Home":{"path":"/","icon":"fa-regular fa-house"},"Archives":{"path":"/archives","icon":"fa-regular fa-archive"},"Friends":{"icon":"fa-solid fa-link","path":"/links/"},"About":{"icon":"fa-regular fa-user","submenus":{"Github":"https://github.com/BaconToast-pro","Friends":"/links/"}}},"search":{"enable":false,"preload":true}},"page_templates":{"friends_column":2,"tags_style":"blur"},"home":{"sidebar":{"enable":true,"position":"left","first_item":"menu","announcement":"~o(^_^)o~","show_on_mobile":true,"links":{"Archives":{"path":"/archives","icon":"fa-regular fa-archive"},"Tags":{"path":"/tags","icon":"fa-regular fa-tags"},"Categories":{"path":"/categories","icon":"fa-regular fa-folder"}}},"article_date_format":"auto","excerpt_length":200,"categories":{"enable":true,"limit":3},"tags":{"enable":true,"limit":3}},"footerStart":"2025/11/11 17:20:00"};
+    window.lang_ago = {"second":"%s seconds ago","minute":"%s minutes ago","hour":"%s hours ago","day":"%s days ago","week":"%s weeks ago","month":"%s months ago","year":"%s years ago"};
+    window.data = {"masonry":true};
+  </script>
+    
+    <!--- Fontawesome Part-->
+    
+<link rel="stylesheet" href="/fontawesome/fontawesome.min.css">
+
+    
+<link rel="stylesheet" href="/fontawesome/brands.min.css">
+
+    
+<link rel="stylesheet" href="/fontawesome/solid.min.css">
+
+    
+<link rel="stylesheet" href="/fontawesome/regular.min.css">
+
+    
+    
+    
+    
+<meta name="generator" content="Hexo 8.1.1"><style>mjx-container[jax="SVG"] {
+  direction: ltr;
+}
+
+mjx-container[jax="SVG"] > svg {
+  overflow: visible;
+}
+
+mjx-container[jax="SVG"][display="true"] {
+  display: block;
+  text-align: center;
+  margin: 1em 0;
+}
+
+mjx-container[jax="SVG"][justify="left"] {
+  text-align: left;
+}
+
+mjx-container[jax="SVG"][justify="right"] {
+  text-align: right;
+}
+
+g[data-mml-node="merror"] > g {
+  fill: red;
+  stroke: red;
+}
+
+g[data-mml-node="merror"] > rect[data-background] {
+  fill: yellow;
+  stroke: none;
+}
+
+g[data-mml-node="mtable"] > line[data-line] {
+  stroke-width: 70px;
+  fill: none;
+}
+
+g[data-mml-node="mtable"] > rect[data-frame] {
+  stroke-width: 70px;
+  fill: none;
+}
+
+g[data-mml-node="mtable"] > .mjx-dashed {
+  stroke-dasharray: 140;
+}
+
+g[data-mml-node="mtable"] > .mjx-dotted {
+  stroke-linecap: round;
+  stroke-dasharray: 0,140;
+}
+
+g[data-mml-node="mtable"] > svg {
+  overflow: visible;
+}
+
+[jax="SVG"] mjx-tool {
+  display: inline-block;
+  position: relative;
+  width: 0;
+  height: 0;
+}
+
+[jax="SVG"] mjx-tool > mjx-tip {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+mjx-tool > mjx-tip {
+  display: inline-block;
+  padding: .2em;
+  border: 1px solid #888;
+  font-size: 70%;
+  background-color: #F8F8F8;
+  color: black;
+  box-shadow: 2px 2px 5px #AAAAAA;
+}
+
+g[data-mml-node="maction"][data-toggle] {
+  cursor: pointer;
+}
+
+mjx-status {
+  display: block;
+  position: fixed;
+  left: 1em;
+  bottom: 1em;
+  min-width: 25%;
+  padding: .2em .4em;
+  border: 1px solid #888;
+  font-size: 90%;
+  background-color: #F8F8F8;
+  color: black;
+}
+
+foreignObject[data-mjx-xml] {
+  font-family: initial;
+  line-height: normal;
+  overflow: visible;
+}
+
+.MathJax path {
+  stroke-width: 3;
+}
+
+mjx-container[display="true"] {
+  overflow: auto hidden;
+}
+
+mjx-container[display="true"] + br {
+  display: none;
+}
+</style></head>
+
+
+
+<body>
+	<div class="progress-bar-container">
+	
+
+	
+	<span class="pjax-progress-bar"></span>
+	<!--        <span class="swup-progress-icon">-->
+	<!--            <i class="fa-solid fa-circle-notch fa-spin"></i>-->
+	<!--        </span>-->
+	
+</div>
+
+<style>
+    :root {
+        --preloader-background-color: #fff;
+        --preloader-text-color: #000;
+    }
+
+    @media (prefers-color-scheme: dark) {
+        :root {
+            --preloader-background-color: #202124;
+            --preloader-text-color: #fff;
+        }
+    }
+
+    @media (prefers-color-scheme: light) {
+        :root {
+            --preloader-background-color: #fff;
+            --preloader-text-color: #000;
+        }
+    }
+
+    @media (max-width: 600px) {
+        .ml13 {
+            font-size: 2.6rem !important; /* Adjust this value as needed */
+        }
+    }
+
+    .preloader {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem; /* Tailwind 'gap-4' is 1rem */
+        align-items: center;
+        justify-content: center;
+        position: fixed;
+        padding: 12px;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh; /* 'h-screen' is 100% of the viewport height */
+        background-color: var(--preloader-background-color);
+        z-index: 1100; /* 'z-[1100]' sets the z-index */
+        transition: opacity 0.2s ease-in-out;
+    }
+
+    .ml13 {
+        font-size: 3.2rem;
+        /* text-transform: uppercase; */
+        color: var(--preloader-text-color);
+        letter-spacing: -1px;
+        font-weight: 500;
+        font-family: 'Chillax-Variable', sans-serif;
+        text-align: center;
+    }
+
+    .ml13 .word {
+        display: inline-flex;
+        flex-wrap: wrap;
+        white-space: nowrap;
+    }
+
+    .ml13 .letter {
+        display: inline-block;
+        line-height: 1em;
+    }
+</style>
+
+<div class="preloader">
+    <h2 class="ml13">
+        BaconToast&#39;s Shop
+    </h2>
+    <script>
+        var textWrapper = document.querySelector('.ml13');
+        // Split text into words
+        var words = textWrapper.textContent.trim().split(' ');
+
+        // Clear the existing content
+        textWrapper.innerHTML = '';
+
+        // Wrap each word and its letters in spans
+        words.forEach(function(word) {
+            var wordSpan = document.createElement('span');
+            wordSpan.classList.add('word');
+            wordSpan.innerHTML = word.replace(/\S/g, "<span class='letter'>$&</span>");
+            textWrapper.appendChild(wordSpan);
+            textWrapper.appendChild(document.createTextNode(' ')); // Add space between words
+        });
+
+        var animation = anime.timeline({ loop: true })
+            .add({
+                targets: '.ml13 .letter',
+                translateY: [20, 0],
+                translateZ: 0,
+                opacity: [0, 1],
+                filter: ['blur(5px)', 'blur(0px)'],
+                easing: "easeOutExpo",
+                duration: 1200,
+                delay: (el, i) => 300 + 20 * i,
+            })
+            .add({
+                targets: '.ml13 .letter',
+                translateY: [0, -20],
+                opacity: [1, 0],
+                filter: ['blur(0px)', 'blur(5px)'],
+                easing: "easeInExpo",
+                duration: 1000,
+                delay: (el, i) => 15 * i,
+                complete: function() {
+                    hidePreloader();
+                }
+            }, '-=700');
+
+
+        let themeStatus = JSON.parse(localStorage.getItem('REDEFINE-THEME-STATUS'))?.isDark;
+
+        // If the theme status is not found in local storage, check the preferred color scheme
+        if (themeStatus === undefined || themeStatus === null) {
+            if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                themeStatus = 'dark';
+            } else {
+                themeStatus = 'light';
+            }
+        }
+
+        // Now you can use the themeStatus variable in your code
+        if (themeStatus) {
+            document.documentElement.style.setProperty('--preloader-background-color', '#202124');
+            document.documentElement.style.setProperty('--preloader-text-color', '#fff');
+        } else {
+            document.documentElement.style.setProperty('--preloader-background-color', '#fff');
+            document.documentElement.style.setProperty('--preloader-text-color', '#000');
+        }
+
+        window.addEventListener('load', function () {
+            setTimeout(hidePreloader, 5000); // Call hidePreloader after 5000 milliseconds if not already called by animation
+        });
+
+        function hidePreloader() {
+            var preloader = document.querySelector('.preloader');
+            preloader.style.opacity = '0';
+            setTimeout(function () {
+                preloader.style.display = 'none';
+            }, 200);
+        }
+    </script>
+</div>
+
+<main class="page-container" id="swup">
+
+	
+
+	<div class="main-content-container flex flex-col justify-between min-h-dvh">
+		<div class="main-content-header">
+			<header class="navbar-container px-6 md:px-12">
+    <div class="navbar-content transition-navbar ">
+        <div class="left">
+            
+            <a class="logo-title" href="/">
+                
+                BaconToast&#39;s Shop
+                
+            </a>
+        </div>
+
+        <div class="right">
+            <!-- PC -->
+            <div class="desktop">
+                <ul class="navbar-list">
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/"
+                                        >
+                                    <i class="fa-regular fa-house fa-fw"></i>
+                                    HOME
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/archives"
+                                        >
+                                    <i class="fa-regular fa-archive fa-fw"></i>
+                                    ARCHIVES
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/links/"
+                                        >
+                                    <i class="fa-solid fa-link fa-fw"></i>
+                                    FRIENDS
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class="has-dropdown"
+                                   href="#"
+                                        onClick=&#34;return false;&#34;>
+                                    <i class="fa-regular fa-user fa-fw"></i>
+                                    ABOUT
+                                    <i class="fa-solid fa-chevron-down fa-fw"></i>
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                                    <ul class="sub-menu">
+                                        
+                                            <li>
+                                                <a target="_blank" rel="noopener" href="https://github.com/BaconToast-pro">
+                                                    GITHUB
+                                                </a>
+                                            </li>
+                                        
+                                            <li>
+                                                <a href="/links/">
+                                                    FRIENDS
+                                                </a>
+                                            </li>
+                                        
+                                    </ul>
+                                
+                            </li>
+                    
+                    
+                </ul>
+            </div>
+            <!-- Mobile -->
+            <div class="mobile">
+                
+                <div class="icon-item navbar-bar">
+                    <div class="navbar-bar-middle"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mobile sheet -->
+    <div class="navbar-drawer h-dvh w-full absolute top-0 left-0 bg-background-color flex flex-col justify-between">
+        <ul class="drawer-navbar-list flex flex-col px-4 justify-center items-start">
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/"
+                        >
+                            <span>
+                                HOME
+                            </span>
+                            
+                                <i class="fa-regular fa-house fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/archives"
+                        >
+                            <span>
+                                ARCHIVES
+                            </span>
+                            
+                                <i class="fa-regular fa-archive fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/links/"
+                        >
+                            <span>
+                                FRIENDS
+                            </span>
+                            
+                                <i class="fa-solid fa-link fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+                
+                    
+
+                    <li class="drawer-navbar-item-sub text-base my-1.5 flex flex-col w-full">
+                        
+                        <div class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary cursor-pointer text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                             navbar-data-toggle="submenu-About"
+                        >
+                            <span>
+                                ABOUT
+                            </span>
+                            
+                                <i class="fa-solid fa-chevron-right fa-sm fa-fw transition-all"></i>
+                            
+                        </div>
+                        
+
+                        
+                            <div class="flex-col items-start px-2 py-2 hidden" data-target="submenu-About">
+                                
+                                    <div class="drawer-navbar-item text-base flex flex-col justify-center items-start hover:underline active:underline hover:underline-offset-1 rounded-3xl">
+                                        <a class=" text-third-text-color text-xl"
+                                           target="_blank" rel="noopener" href="https://github.com/BaconToast-pro">GITHUB</a>
+                                    </div>
+                                
+                                    <div class="drawer-navbar-item text-base flex flex-col justify-center items-start hover:underline active:underline hover:underline-offset-1 rounded-3xl">
+                                        <a class=" text-third-text-color text-xl"
+                                           href="/links/">FRIENDS</a>
+                                    </div>
+                                
+                            </div>
+                        
+                    </li>
+            
+
+            
+            
+                
+                    
+                    
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full active"
+                           href="/tags"
+                        >
+                            <span>Tags</span>
+                            <i class="fa-regular fa-tags fa-sm fa-fw"></i>
+                        </a>
+                    </li>
+                
+                    
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full active"
+                           href="/categories"
+                        >
+                            <span>Categories</span>
+                            <i class="fa-regular fa-folder fa-sm fa-fw"></i>
+                        </a>
+                    </li>
+                
+            
+        </ul>
+
+        <div class="statistics flex justify-around my-2.5">
+    <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/tags">
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">13</div>
+        <div class="label text-third-text-color text-sm">Tags</div>
+    </a>
+    <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/categories">
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">5</div>
+        <div class="label text-third-text-color text-sm">Categories</div>
+    </a>
+    <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/archives">
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">21</div>
+        <div class="label text-third-text-color text-sm">Posts</div>
+    </a>
+</div>
+    </div>
+
+    <div class="window-mask"></div>
+
+</header>
+
+
+		</div>
+
+		<div class="main-content-body transition-fade-up">
+			
+
+			<div class="main-content">
+				<div class="post-page-container flex relative justify-between box-border w-full h-full">
+	<div class="article-content-container">
+
+		<div class="article-title relative w-full">
+			
+			
+			
+			<img src="/images/public/japan.jpg" alt="操作系统OS：Lab0-初识操作系统" class="w-full h-60 sm:h-72 md:h-80 object-cover sm:rounded-t-large dark:brightness-75" />
+			
+			<div class="w-full flex items-center absolute bottom-0 justify-start">
+				<h1 class="article-title-cover text-center mx-6 my-6 text-second-text-color bg-background-color-transparent px-4 py-3 text-3xl sm:text-4xl md:text-5xl font-semibold backdrop-blur-lg rounded-xl border border-border-color ">操作系统OS：Lab0-初识操作系统</h1>
+			</div>
+			
+		</div>
+
+		
+		<div class="article-header flex flex-row gap-2 items-center px-2 sm:px-6 md:px-8">
+			<div class="avatar w-[46px] h-[46px] flex-shrink-0 rounded-medium border border-border-color p-[1px]">
+				<img src="/images/public/avatar.jpg">
+			</div>
+			<div class="info flex flex-col justify-between">
+				<div class="author flex items-center">
+					<span class="name text-default-text-color text-lg font-semibold">BaconToast</span>
+					
+					<span class="author-label ml-1.5 text-xs px-2 py-0.5 rounded-small text-third-text-color border border-shadow-color-1">Lv3</span>
+					
+				</div>
+				<div class="meta-info">
+					<div class="article-meta-info">
+    <span class="article-date article-meta-item">
+        <i class="fa-regular fa-pen-fancy"></i>&nbsp;
+        <span class="desktop">2025-11-18 15:44:52</span>
+        <span class="mobile">2025-11-18 15:44:52</span>
+        <span class="hover-info">Created</span>
+    </span>
+    
+        <span class="article-date article-meta-item">
+            <i class="fa-regular fa-wrench"></i>&nbsp;
+            <span class="desktop">2025-11-18 16:03</span>
+            <span class="mobile">2025-11-18 16:03</span>
+            <span class="hover-info">Updated</span>
+        </span>
+    
+
+    
+        <span class="article-categories article-meta-item">
+            <i class="fa-regular fa-folders"></i>&nbsp;
+            <ul>
+                
+                
+                    
+                        
+                        <li>
+                            <a href="/categories/OS/">OS</a>&nbsp;
+                        </li>
+                    
+                    
+                
+            </ul>
+        </span>
+    
+    
+        <span class="article-tags article-meta-item">
+            <i class="fa-regular fa-tags"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/tags/C/">C</a>&nbsp;
+                    </li>
+                
+                    <li>
+                        | <a href="/tags/OS/">OS</a>&nbsp;
+                    </li>
+                
+                    <li>
+                        | <a href="/tags/Linux/">Linux</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+
+    
+    
+    
+    
+        <span class="article-pv article-meta-item">
+            <i class="fa-regular fa-eye"></i>&nbsp;<span id="busuanzi_value_page_pv"></span>
+        </span>
+    
+</div>
+
+				</div>
+			</div>
+		</div>
+		
+
+		
+
+
+		<div class="article-content markdown-body px-2 sm:px-6 md:px-8 pb-8">
+			<h2 id="零、实验目的"><a href="#零、实验目的" class="headerlink" title="零、实验目的"></a>零、实验目的</h2><ol>
+<li>认识操作系统实验环境。</li>
+<li>掌握操作系统实验所需的基本工具。</li>
+</ol>
+<p>在本实验中，需要了解实验环境，熟悉 Linux 操作系统（Ubuntu），了解控制终端，掌握一些常用工具并能脱离可视化界面进行工作。本实验难度不大，重点是熟悉操作系统实验环境的各类工具，为后续实验的开展奠定基础。</p>
+<h2 id="一、思考题"><a href="#一、思考题" class="headerlink" title="一、思考题"></a>一、思考题</h2><h3 id="Thinking-0-1-Git-的使用-1"><a href="#Thinking-0-1-Git-的使用-1" class="headerlink" title="Thinking 0.1 - Git 的使用 1"></a>Thinking 0.1 - Git 的使用 1</h3><blockquote>
+<p>思考下列有关 Git 的问题：<br>• 在前述已初始化的 <code>~/learnGit</code> 目录下，创建一个名为 README.txt 的文件。执行命令 <code>git status &gt; Untracked.txt</code>（其中的 <code>&gt;</code> 为输出重定向，我们将在 0.6.3 中详细介绍）。</p>
+</blockquote>
+<p><strong>前述操作</strong>：在主目录 <code>~</code> 下，使用 <code>mkdir learnGit</code> 命令创建一个名为 <code>learnGit</code> 的目录（<code>touch</code> 是创建新文件）；执行 <code>cd learnGit</code> 进入该目录；输入 <code>git init</code> 初始化 Git 仓库；使用命令 <code>ls -a</code> 可以看到该目录下有一个名为 <code>.git</code> 的隐藏目录，这个目录就是 Git 版本库，称为仓库（repository）。现在 <code>learnGit</code> 目录就是 Git 里的工作区。<br><strong>创建 README 文件</strong>：在 <code>learnGit</code> 目录下，执行命令 <code>touch README.txt</code>。<br><strong>查看未跟踪文件状态</strong>：执行命令 <code>git status &gt; Untracked.txt</code> ，现在该目录下增加了 Untracked.txt 文件。</p>
+<blockquote>
+<p>• 在 README.txt 文件中添加任意文件内容，然后使用 <code>add</code> 命令，再执行命令 <code>git status &gt; Stage.txt</code>。</p>
+</blockquote>
+<p><strong>修改 README 文件</strong>：使用命令 <code>vim README.txt</code> 进入 vim 界面，按 <code>i</code> 键进入插入模式，添加字符串 <code>hello world!</code> ，按 <code>Esc</code> 键退出插入模式，按 <code>Shift</code> + <code>:</code> ，再输入 <code>wq</code> 后保存并退出。<br><strong>跟踪文件</strong>：执行命令 <code>git add README.txt</code> ，现在该文件从未跟踪（Untracked）变成了已暂存（Staged）。<br><strong>查看已暂存文件状态</strong>：执行命令 <code>git status &gt; Stage.txt</code> ，现在该目录下增加了 Stage.txt 文件。</p>
+<blockquote>
+<p>• 提交 README.txt，并在提交说明里写入自己的学号。</p>
+</blockquote>
+<p><strong>提交文件</strong>：执行命令 <code>git commit -m "23373179" README.txt</code> ，提交该文件，提交说明为学号。</p>
+<p><img lazyload="" src="/images/loading.svg" data-src="/images/os/lab0_1.png" alt="lab0_1"></p>
+<blockquote>
+<p>• 执行命令 <code>cat Untracked.txt</code> 和 <code>cat Stage.txt</code>，对比两次运行的结果，体会  README.txt 两次所处位置的不同。</p>
+</blockquote>
+<p><img lazyload="" src="/images/loading.svg" data-src="/images/os/lab0_2.png" alt="lab0_2"></p>
+<p><img lazyload="" src="/images/loading.svg" data-src="/images/os/lab0_3.png" alt="lab0_3"></p>
+<p>可以看到，执行 <code>add</code> 命令后，README.txt 文件从未跟踪（Untracked）变成了已暂存（Staged）。此时 README.txt 处于一种等待被提交的状态。</p>
+<blockquote>
+<p>• 修改 README.txt 文件，再执行命令 <code>git status &gt; Modified.txt</code>。</p>
+</blockquote>
+<p><strong>修改文件</strong>：使用同样的方法，我在文件第二行加入了字符串 <code>hello os!</code> 。<br><strong>查看已修改文件状态</strong>：执行命令 <code>git status ? Modified.txt</code> ，现在该目录下增加了 Modified.txt 文件。</p>
+<blockquote>
+<p>• 执行命令 <code>cat Modified.txt</code>，观察其结果和第一次执行 <code>add</code> 命令之前的 status 是否一样，并思考原因。</p>
+</blockquote>
+<p><img lazyload="" src="/images/loading.svg" data-src="/images/os/lab0_4.png" alt="lab0_4"></p>
+<p>不一样。在第一次 <code>add</code> 之前，README.txt 是未跟踪的；在 <code>add</code> 后，即使 README.txt 已被更改，但依然是被跟踪的，处于已修改（Modified）状态，但未被加入暂存区，需要重新 <code>add</code> 和 <code>commit</code> 。</p>
+<h3 id="Thinking-0-2-箭头与命令"><a href="#Thinking-0-2-箭头与命令" class="headerlink" title="Thinking 0.2 - 箭头与命令"></a>Thinking 0.2 - 箭头与命令</h3><blockquote>
+<p>仔细看看 0.10，思考一下箭头中的 add the file、stage the file 和 commit 分别对应的是 Git 里的哪些命令呢？</p>
+</blockquote>
+<p><img lazyload="" src="/images/loading.svg" data-src="/images/os/lab0_5.png" alt="lab0_5"></p>
+<ul>
+<li>add the file: <code>git add &lt;file&gt;</code></li>
+<li>stage the file: <code>git add &lt;file&gt;</code></li>
+<li>commit: <code>git commit &lt;file&gt;</code></li>
+</ul>
+<h3 id="Thinking-0-3-Git-的一些场景"><a href="#Thinking-0-3-Git-的一些场景" class="headerlink" title="Thinking 0.3 - Git 的一些场景"></a>Thinking 0.3 - Git 的一些场景</h3><blockquote>
+<p>思考下列问题：</p>
+<ol>
+<li>代码文件 <code>print.c</code> 被错误删除时，应当使用什么命令将其恢复？</li>
+</ol>
+</blockquote>
+<p><code>git checkout -- print.c</code> ：该命令可以将暂存区的文件恢复到工作区中。</p>
+<blockquote>
+<ol start="2">
+<li>代码文件 <code>print.c</code> 被错误删除后，执行了 <code>git rm print.c</code> 命令，此时应当 使用什么命令将其恢复？</li>
+</ol>
+</blockquote>
+<p><code>git reset HEAD print.c</code> ：该命令撤销了暂存区的更改（即 <code>git rm</code> 操作），但文件不在工作区中。</p>
+<blockquote>
+<ol start="3">
+<li>无关文件 <code>hello.txt</code> 已经被添加到暂存区时，如何在不删除此文件的前提下 将其移出暂存区？</li>
+</ol>
+</blockquote>
+<p><code>git reset HEAD hello.txt</code> ：同上，撤销了暂存区的更改。</p>
+<h3 id="Thinking-0-4-Git-的使用-2"><a href="#Thinking-0-4-Git-的使用-2" class="headerlink" title="Thinking 0.4 - Git 的使用 2"></a>Thinking 0.4 - Git 的使用 2</h3><blockquote>
+<p>思考下列有关Git的问题：<br>• 找到在 <code>/home/22xxxxxx/learnGit</code> 下刚刚创建的 <code>README.txt</code> 文件，若不存 在则新建该文件。<br>• 在文件里加入 <code>Testing 1</code>，<code>git add</code>，<code>git commit</code>，提交说明记为 1。<br>• 模仿上述做法，把 1 分别改为 2 和 3，再提交两次。</p>
+</blockquote>
+<p>（略）。</p>
+<blockquote>
+<p>• 使用 <code>git log</code> 命令查看提交日志，看是否已经有三次提交，记下提交说明为 3 的哈希值 a。</p>
+</blockquote>
+<p><img lazyload="" src="/images/loading.svg" data-src="/images/os/lab0_6.png" alt="lab0_6"></p>
+<p>提交说明为 3 的哈希值为：<code>e1e1df7629b9add1297209975f46c94e11580096</code></p>
+<blockquote>
+<p>• 进行版本回退。执行命令 <code>git reset --hard HEAD^</code> 后，再执行 <code>git log</code>，观 察其变化。</p>
+</blockquote>
+<p><img lazyload="" src="/images/loading.svg" data-src="/images/os/lab0_7.png" alt="lab0_7"></p>
+<p>发现已不存在提交说明为 3 的提交。（<code>HEAD^</code> 表示上个版本，<code>HEAD^^</code> 是上上个版本，<code>HEAD~50</code> 是前 50 个版本）</p>
+<blockquote>
+<p>• 找到提交说明为 1 的哈希值，执行命令 <code>git reset --hard &lt;hash&gt;</code> 后，再执 行 <code>git log</code>，观察其变化。</p>
+</blockquote>
+<p>提交说明为 1 的哈希值为：<code>ba583f536ac0fa9ccb3f0e4b2c98a9466cf77e27</code><br>执行命令 <code>git reset --hard ba583f536ac0fa9ccb3f0e4b2c98a9466cf77e27</code></p>
+<p><img lazyload="" src="/images/loading.svg" data-src="/images/os/lab0_8.png" alt="lab0_8"></p>
+<p>发现现在仅存在提交说明为 1 （及之前）的提交。</p>
+<blockquote>
+<p>• 现在已经回到了旧版本，为了再次回到新版本，执行 <code>git reset --hard &lt;hash&gt;</code> ，再执行 <code>git log</code>，观察其变化。</p>
+</blockquote>
+<p>使用提交说明为 3 的哈希值，发现提交 2 与 3 都再次出现。</p>
+<p><img lazyload="" src="/images/loading.svg" data-src="/images/os/lab0_9.png" alt="lab0_9"></p>
+<h3 id="Thinking-0-5-echo-的使用"><a href="#Thinking-0-5-echo-的使用" class="headerlink" title="Thinking 0.5 - echo 的使用"></a>Thinking 0.5 - <code>echo</code> 的使用</h3><blockquote>
+<p>执行如下命令, 并查看结果<br>• <code>echo first</code></p>
+</blockquote>
+<p>终端直接显示出 <code>first</code>。</p>
+<blockquote>
+<p>• <code>echo second &gt; output.txt</code></p>
+</blockquote>
+<p>当前目录下出现新的文件 <code>output.txt</code> ，其内容为 <code>second</code> 。</p>
+<blockquote>
+<p>• <code>echo third &gt; output.txt</code></p>
+</blockquote>
+<p><code>output.txt</code> 中的内容直接被替换成 <code>third</code> 。</p>
+<blockquote>
+<p>• <code>echo forth &gt;&gt; output.txt</code></p>
+</blockquote>
+<p><code>output.txt</code> 中的内容增加了一行 <code>forth</code> ，之前的 <code>third</code> 被保留。</p>
+<h3 id="Thinking-0-6-文件的操作"><a href="#Thinking-0-6-文件的操作" class="headerlink" title="Thinking 0.6 - 文件的操作"></a>Thinking 0.6 - 文件的操作</h3><blockquote>
+<p>使用你知道的方法（包括重定向）创建下图内容的文件（文件命名为 <code>test</code>），将创建该文件的命令序列保存在 <code>command</code> 文件中，并将 <code>test</code> 文件作为批处理文件运行，将运行结果输出至 <code>result</code> 文件中。给出 <code>command</code> 文件和 <code>result</code> 文件的内容，并对最后的结果进行解释说明（可以从 <code>test</code> 文件的内容入手）. 具体实现的过程中思考下列问题: <code>echo echo Shell Start</code> 与 <code>echo &lt;撇&gt;echo Shell Start&lt;撇&gt;</code> 效果是否有区别; <code>echo echo $c&gt;file1</code> 与 <code>echo &lt;撇&gt;echo $c&gt;file1&lt;撇&gt;</code> 效果是否有区别.<br><img lazyload="" src="/images/loading.svg" data-src="/images/os/lab0_10.png" alt="lab0_10"></p>
+</blockquote>
+<p><code>command</code> 内容：</p>
+<p><img lazyload="" src="/images/loading.svg" data-src="/images/os/lab0_11.png" alt="lab0_11"></p>
+<p>执行命令 <code>chmod +x test</code> 以及 <code>./test &gt; result</code><br><code>result</code> 内容：</p>
+<p><img lazyload="" src="/images/loading.svg" data-src="/images/os/lab0_12.png" alt="lab0_12"></p>
+<p>解释：<br><code>a=1</code> 命令对 <code>a</code> 赋值；<code>c=$[$a+$b]</code> 命令将 a 和 b 的值相加赋给 <code>c</code> ；<code>echo c = $c</code> 命令输出 <code>c</code> 的值；<code>echo $c&gt;file1</code> 将 <code>c</code> 的值重定向输入给 <code>file1</code> ；<code>cat</code> 则是将文件内容输入给其他文件；<code>result</code> 文件最后出现的三行是将 <code>file4</code> 拼接到 <code>result</code> 末尾的结果。<br>加撇号：会先执行符号内部的指令。</p>
+<h2 id="二、难点分析"><a href="#二、难点分析" class="headerlink" title="二、难点分析"></a>二、难点分析</h2><h3 id="命令行界面（CLI）"><a href="#命令行界面（CLI）" class="headerlink" title="命令行界面（CLI）"></a>命令行界面（CLI）</h3><p>在之前的学习中，用的更多的是图形用户界面（GUI），接触过少部分 CLI 如 cmd、Power Shell 等等。CLI 最大的特点是不直观，但足够简洁、直击本质，需要一些时间适应和熟练。</p>
+<h3 id="Linux-基本操作命令"><a href="#Linux-基本操作命令" class="headerlink" title="Linux 基本操作命令"></a>Linux 基本操作命令</h3><table>
+<thead>
+<tr>
+<th>命令</th>
+<th>选项</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>ls [选项] [文件]</code></td>
+<td><code>-a</code> ：不隐藏以 <code>.</code> 开始的项目<br><code>-l</code> ：列出详细信息，每行只列一个文件</td>
+</tr>
+<tr>
+<td><code>touch [文件名]</code></td>
+<td>创建文件</td>
+</tr>
+<tr>
+<td><code>mkdir 目录</code></td>
+<td>创建目录</td>
+</tr>
+<tr>
+<td><code>cd 目录</code></td>
+<td>进入目录。返回上一级目录 <code>cd ..</code></td>
+</tr>
+<tr>
+<td><code>rmdir 目录</code></td>
+<td>删除空目录</td>
+</tr>
+<tr>
+<td><code>rm [选项] 文件</code></td>
+<td><code>-r</code> ：递归删除目录及其内容，删除非空目录<br><code>-f</code> ：强制删除<br><code>-i</code> ：删除前询问</td>
+</tr>
+<tr>
+<td><code>cp [选项] 源文件 目录</code></td>
+<td><code>-r</code> ：递归复制目录及其子目录的所有内容</td>
+</tr>
+<tr>
+<td><code>mv 源文件 目录</code></td>
+<td>移动文件</td>
+</tr>
+<tr>
+<td><code>echo</code></td>
+<td>回显</td>
+</tr>
+<tr>
+<td><code>man</code></td>
+<td>查看帮助</td>
+</tr>
+</tbody></table>
+<table>
+<thead>
+<tr>
+<th>快捷键</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Ctrl+C</td>
+<td>终止当前程序的执行</td>
+</tr>
+<tr>
+<td>Ctrl+Z</td>
+<td>挂起当前程序</td>
+</tr>
+<tr>
+<td>Ctrl+D</td>
+<td>终止输入</td>
+</tr>
+<tr>
+<td>Ctrl+L</td>
+<td>清屏</td>
+</tr>
+</tbody></table>
+<h3 id="Vim"><a href="#Vim" class="headerlink" title="Vim"></a>Vim</h3><p>文本编辑器，具体用法在思考题中已经提到。在 CLI 中非常好用。</p>
+<h3 id="GCC"><a href="#GCC" class="headerlink" title="GCC"></a>GCC</h3><p>即 GNU 编译器套件，包含了 C 语言编译器 gcc。</p>
+<ul>
+<li>将多个文件进行编译链接：<code>gcc a.c b.c -o test</code></li>
+<li>将每个文件单独编译，再进行链接：<code>gcc -c a.c &amp;&amp; gcc -c b.c &amp;&amp; gcc a.o b.o -o test</code></li>
+<li>执行可执行文件：<code>./test</code></li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>命令</th>
+<th>选项</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>gcc [选项] [C 源文件]</code></td>
+<td><code>-o</code> ：自动生成的输出文件<br><code>-S</code> ：将 C 代码转换为汇编代码<br><code>-Wall</code> ：显示警告信息<br><code>-c</code> ：仅执行编译操作，不进行链接操作<br><code>-M</code> ：列出依赖<br><code>-I&lt;path&gt;</code> ：编译时指定头文件目录</td>
+</tr>
+</tbody></table>
+<h3 id="Makefile"><a href="#Makefile" class="headerlink" title="Makefile"></a>Makefile</h3><p>格式：</p>
+<div class="code-container" data-rel="Makefile"><figure class="iseeu highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">target: dependencies</span></span><br><span class="line">	command 1</span><br><span class="line">	command 2</span><br><span class="line">	...</span><br><span class="line">	command n</span><br></pre></td></tr></table></figure></div>
+
+<p>例子：</p>
+<div class="code-container" data-rel="Makefile"><figure class="iseeu highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">all: hello_world.c</span></span><br><span class="line">	gcc -o hello_world hello_world.c</span><br><span class="line"><span class="section">clean:</span></span><br><span class="line">	rm -f helloworld</span><br></pre></td></tr></table></figure></div>
+
+<p>直接执行命令 <code>make</code> 或 <code>make all</code> 将 <code>hello_world.c</code> 编译成可执行文件；执行命令 <code>make clean</code> 删除 <code>helloworld</code> 可执行文件。</p>
+<h3 id="Git"><a href="#Git" class="headerlink" title="Git"></a>Git</h3><p>思考题中已经涉及，不再赘述。</p>
+<h3 id="Linux-操作补充"><a href="#Linux-操作补充" class="headerlink" title="Linux 操作补充"></a>Linux 操作补充</h3><table>
+<thead>
+<tr>
+<th>命令</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>find -name 文件名</code></td>
+<td>递归地查找符合参数所示文件名的文件，输出文件路径</td>
+</tr>
+<tr>
+<td><code>grep [选项] PATTERN [FILE]</code></td>
+<td>用正则表达式搜索文件所含文本，输出目标行<br><code>-a</code> ：不忽略二进制数据进行搜索<br><code>-i</code> ：忽略文件大小写差异<br><code>-r</code> ：从目录递归查找<br><code>-n</code> ：显示行号</td>
+</tr>
+<tr>
+<td><code>tree [选项] [目录名]</code></td>
+<td>生成文件树<br><code>-a</code> ：列出全部文件<br><code>-d</code> ：只列出目录</td>
+</tr>
+<tr>
+<td><code>chmod 权限设定字符串 文件</code></td>
+<td><code>+x</code> ：可执行</td>
+</tr>
+<tr>
+<td><code>diff [选项] file1 file2</code></td>
+<td>比较文件的差异<br><code>-b</code> ：不检查空白字符<br><code>-B</code> ：不检查空行<br><code>-q</code> ：仅显示有无差异，不显示详细信息</td>
+</tr>
+<tr>
+<td><code>sed [选项] 命令 输入文本</code></td>
+<td>将数据行进行替换、删除、新增、选取<br><strong>选项</strong>：<br><code>-n</code> ：安静模式，只显示经过处理的内容<br><code>-i</code> ：直接修改读取档案内容，不输出到屏幕<br><strong>命令</strong>：<br><code>[行号] a\ [内容]</code> ：新增，行号后新增一行内容<br><code>[行号] c\ [内容]</code> ：取代<br><code>[行号] i\ [内容]</code> ：插入，上一行插入<br><code>[行号] d</code> ：删除<br><code>[行号] p</code> ：输出<br><code>s/re/string</code> ：将 <code>re</code> 正则表达式匹配的内容替换为 <code>string</code><br><strong>例子</strong>：<br><code>Shell&lt;br&gt;# 输出第三行&lt;br&gt;sed -n '3p' my.txt&lt;br&gt;# 删除第二行&lt;br&gt;sed '2d' my.txt&lt;br&gt;# 删除第二行到最后一行（$ 表示末尾）&lt;br&gt;sed '2,$d' my.txt&lt;br&gt;# 在整行范围内把 str1 替换为 str2&lt;br&gt;# 如果没有 g 标记，则只有每行第一个匹配的被替换&lt;br&gt;sed 's/str1/str2/g' my.txt&lt;br&gt;# -e 选项允许同一行里执行多条命令&lt;br&gt;# 第四行后添加一个 str，再替换成 aaa&lt;br&gt;sed -e '4a\str' -e 's/str/aaa' my.txt&lt;br&gt;</code></td>
+</tr>
+<tr>
+<td><code>awk</code></td>
+<td><code>awk '$1&gt;2 {print $1,$3}' my.txt</code> ：输出文件中所有第一项大于 2 的行的第一项和第三项<br><code>awk -F, '{print $2}' my.txt</code> ：用 <code>,</code> 分割</td>
+</tr>
+</tbody></table>
+<h3 id="tmux"><a href="#tmux" class="headerlink" title="tmux"></a>tmux</h3><p>终端复用软件。</p>
+<h3 id="shell-脚本"><a href="#shell-脚本" class="headerlink" title="shell 脚本"></a>shell 脚本</h3><p>创建 <code>my.sh</code> 文件，内容例如：</p>
+<div class="code-container" data-rel="Shell"><figure class="iseeu highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">#</span><span class="language-bash">!/bin/bash</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">say something...</span></span><br><span class="line">echo "Hello World!"</span><br></pre></td></tr></table></figure></div>
+
+<p>运行脚本：<code>bash my.sh</code> 或 <code>chmod +x my.sh</code> 后 <code>./my.sh</code><br><strong>脚本传参</strong>：</p>
+<div class="code-container" data-rel="Shell"><figure class="iseeu highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">#</span><span class="language-bash">!/bin/bash</span></span><br><span class="line">echo $1</span><br></pre></td></tr></table></figure></div>
+
+<p>执行命令 <code>./my2.sh msg</code> 。<code>$n</code> 表示第几个参数。<code>$#</code> 传递参数的个数，<code>$*</code> 一个字符串显示传递的全部参数，<code>$?</code> 获取前一个命令的返回值。<br><strong>函数传参</strong>：</p>
+<div class="code-container" data-rel="Shell"><figure class="iseeu highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">定义函数，<span class="keyword">function</span> 与 () 可省其一</span></span><br><span class="line">function &lt; 函数名 &gt; () {</span><br><span class="line">	&lt;commands&gt;</span><br><span class="line">}</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">调用函数</span></span><br><span class="line">&lt; 函数名 &gt; &lt;args&gt;...</span><br></pre></td></tr></table></figure></div>
+
+<p><strong>流程控制语句</strong>：<br>if 语句</p>
+<div class="code-container" data-rel="Shell"><figure class="iseeu highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">格式 1</span></span><br><span class="line">if &lt;condition&gt;</span><br><span class="line">then</span><br><span class="line">	&lt;command1&gt;</span><br><span class="line">	&lt;command2&gt;</span><br><span class="line"><span class="meta prompt_">	# </span><span class="language-bash">...</span></span><br><span class="line">fi</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">格式 2</span></span><br><span class="line">if condition; then command1; command2; ... fi</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">例如</span></span><br><span class="line">a=1</span><br><span class="line">if [ $a -ne 1 ]; then echo ok; fi</span><br></pre></td></tr></table></figure></div>
+
+<p><code>&lt;condition&gt;</code> 也是命令，返回值为 0 时成功执行，条件成立。</p>
+<table>
+<thead>
+<tr>
+<th>关系运算符</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>-eq</code></td>
+<td>==</td>
+</tr>
+<tr>
+<td><code>-ne</code></td>
+<td>!=</td>
+</tr>
+<tr>
+<td><code>-gt</code></td>
+<td>&gt;</td>
+</tr>
+<tr>
+<td><code>-lt</code></td>
+<td>&lt;</td>
+</tr>
+<tr>
+<td><code>-ge</code></td>
+<td>&gt;=</td>
+</tr>
+<tr>
+<td><code>-le</code></td>
+<td>&lt;=</td>
+</tr>
+</tbody></table>
+<p>while 语句</p>
+<div class="code-container" data-rel="Shell"><figure class="iseeu highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">格式</span></span><br><span class="line">while &lt;condition&gt;</span><br><span class="line">do</span><br><span class="line">	&lt;commands&gt;</span><br><span class="line">done</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">例子</span></span><br><span class="line">a=1</span><br><span class="line">while [ $a -ne 10 ]</span><br><span class="line">do</span><br><span class="line">	mkdir file$a</span><br><span class="line">	a=$[$a+1]</span><br><span class="line">done</span><br></pre></td></tr></table></figure></div>
+
+<h3 id="重定向和管道"><a href="#重定向和管道" class="headerlink" title="重定向和管道"></a>重定向和管道</h3><p>标准输入：<code>stdin</code>，<code>0</code><br>标准输出：<code>stdout</code>，<code>1</code><br>标准错误：<code>stderr</code>，<code>2</code><br>重定向输出：<code>&gt;</code> ，重定向输入：<code>&lt;</code> ，重定向输出追加：<code>&gt;&gt;</code><br>管道：<code>|</code> 前者输出发给后者</p>
+<h2 id="三、实验体会"><a href="#三、实验体会" class="headerlink" title="三、实验体会"></a>三、实验体会</h2><p>Lab0 的指导书所列出的知识点是庞杂的，OS 的学习不能只停留于理论，而要动手实操，这样不仅能加深对理论的记忆，也能训练动手设计能力。本实验学习的内容是非常有用的，其中 Linux、Git、Makefile、GCC 等知识应该熟记于心。<br>Lab0 影响较为深刻的部分：Exercise 0.4 中，可能需要嵌套调用 Makefile 命令，但我使用列出具体地址的方法只用到了外层 Makefile。同时，gcc 命令寻找头文件的方法靠网络搜索得出，即添加选项 <code>-I</code> 。</p>
+
+		</div>
+
+		
+		<div class="post-copyright-info w-full my-8 px-2 sm:px-6 md:px-8">
+			<div class="article-copyright-info-container">
+    <ul>
+        <li><strong>Title:</strong> 操作系统OS：Lab0-初识操作系统</li>
+        <li><strong>Author:</strong> BaconToast</li>
+        <li><strong>Created at
+                :</strong> 2025-11-18 15:44:52</li>
+        
+            <li>
+                <strong>Updated at
+                    :</strong> 2025-11-18 16:00:03
+            </li>
+        
+        <li>
+            <strong>Link:</strong> https://bacontoast-pro.github.io/2025/11/18/os/lab0/
+        </li>
+        <li>
+            <strong>
+                License:
+            </strong>
+            
+
+            
+                This work is licensed under <a class="license" target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0">CC BY-NC-SA 4.0</a>.
+            
+        </li>
+    </ul>
+</div>
+
+		</div>
+		
+
+		
+		<ul class="post-tags-box text-lg mt-1.5 flex-wrap justify-center flex md:hidden">
+			
+			<li class="tag-item mx-0.5">
+				<a href="/tags/C/">#C</a>&nbsp;
+			</li>
+			
+			<li class="tag-item mx-0.5">
+				<a href="/tags/OS/">#OS</a>&nbsp;
+			</li>
+			
+			<li class="tag-item mx-0.5">
+				<a href="/tags/Linux/">#Linux</a>&nbsp;
+			</li>
+			
+		</ul>
+		
+
+		
+
+		
+		<div class="article-nav my-8 flex justify-between items-center px-2 sm:px-6 md:px-8">
+			
+			<div class="article-prev border-border-color shadow-redefine-flat shadow-shadow-color-2 rounded-medium px-4 py-2 hover:shadow-redefine-flat-hover hover:shadow-shadow-color-2">
+				<a class="prev" rel="prev" href="/2025/11/18/os/lab1/">
+					<span class="left arrow-icon flex justify-center items-center">
+						<i class="fa-solid fa-chevron-left"></i>
+					</span>
+					<span class="title flex justify-center items-center">
+						<span class="post-nav-title-item truncate max-w-48">操作系统OS：Lab1-内核、启动和printf</span>
+						<span class="post-nav-item">Prev posts</span>
+					</span>
+				</a>
+			</div>
+			
+			
+			<div class="article-next border-border-color shadow-redefine-flat shadow-shadow-color-2 rounded-medium px-4 py-2 hover:shadow-redefine-flat-hover hover:shadow-shadow-color-2">
+				<a class="next" rel="next" href="/2025/11/18/oo/u4/">
+					<span class="title flex justify-center items-center">
+						<span class="post-nav-title-item truncate max-w-48">面向对象设计与构造OO：Unit4-图书馆系统</span>
+						<span class="post-nav-item">Next posts</span>
+					</span>
+					<span class="right arrow-icon flex justify-center items-center">
+						<i class="fa-solid fa-chevron-right"></i>
+					</span>
+				</a>
+			</div>
+			
+		</div>
+		
+
+
+		
+		<div class="comment-container px-2 sm:px-6 md:px-8 pb-8">
+			<div class="comments-container mt-10 w-full ">
+    <div id="comment-anchor" class="w-full h-2.5"></div>
+    <div class="comment-area-title w-full my-1.5 md:my-2.5 text-xl md:text-3xl font-bold">
+        Comments
+    </div>
+    
+
+        
+            
+    <div id="waline"></div>
+    <script type="module" data-swup-reload-script>
+      import { init } from '/js/libs/waline.mjs';
+
+      function loadWaline() {
+        init({
+          el: '#waline',
+          serverURL: 'https://example.example.com',
+          dark: 'body[class~="dark-mode"]',
+          reaction: false,
+          requiredMeta: ['nick', 'mail'],
+          emoji: [],
+                    lang: 'zh-CN',
+        });
+      }
+
+      if (typeof swup !== 'undefined') {
+        loadWaline();
+      } else {
+        window.addEventListener('DOMContentLoaded', loadWaline);
+      }
+    </script>
+
+
+
+        
+    
+</div>
+
+		</div>
+		
+	</div>
+
+	
+	<div class="toc-content-container">
+		<div class="post-toc-wrap">
+	<div class="post-toc">
+		<div class="toc-title">On this page</div>
+		<div class="page-title">操作系统OS：Lab0-初识操作系统</div>
+		<ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%9B%B6%E3%80%81%E5%AE%9E%E9%AA%8C%E7%9B%AE%E7%9A%84"><span class="nav-text">零、实验目的</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80%E3%80%81%E6%80%9D%E8%80%83%E9%A2%98"><span class="nav-text">一、思考题</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Thinking-0-1-Git-%E7%9A%84%E4%BD%BF%E7%94%A8-1"><span class="nav-text">Thinking 0.1 - Git 的使用 1</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Thinking-0-2-%E7%AE%AD%E5%A4%B4%E4%B8%8E%E5%91%BD%E4%BB%A4"><span class="nav-text">Thinking 0.2 - 箭头与命令</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Thinking-0-3-Git-%E7%9A%84%E4%B8%80%E4%BA%9B%E5%9C%BA%E6%99%AF"><span class="nav-text">Thinking 0.3 - Git 的一些场景</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Thinking-0-4-Git-%E7%9A%84%E4%BD%BF%E7%94%A8-2"><span class="nav-text">Thinking 0.4 - Git 的使用 2</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Thinking-0-5-echo-%E7%9A%84%E4%BD%BF%E7%94%A8"><span class="nav-text">Thinking 0.5 - echo 的使用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Thinking-0-6-%E6%96%87%E4%BB%B6%E7%9A%84%E6%93%8D%E4%BD%9C"><span class="nav-text">Thinking 0.6 - 文件的操作</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C%E3%80%81%E9%9A%BE%E7%82%B9%E5%88%86%E6%9E%90"><span class="nav-text">二、难点分析</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%91%BD%E4%BB%A4%E8%A1%8C%E7%95%8C%E9%9D%A2%EF%BC%88CLI%EF%BC%89"><span class="nav-text">命令行界面（CLI）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Linux-%E5%9F%BA%E6%9C%AC%E6%93%8D%E4%BD%9C%E5%91%BD%E4%BB%A4"><span class="nav-text">Linux 基本操作命令</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Vim"><span class="nav-text">Vim</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#GCC"><span class="nav-text">GCC</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Makefile"><span class="nav-text">Makefile</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Git"><span class="nav-text">Git</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Linux-%E6%93%8D%E4%BD%9C%E8%A1%A5%E5%85%85"><span class="nav-text">Linux 操作补充</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#tmux"><span class="nav-text">tmux</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#shell-%E8%84%9A%E6%9C%AC"><span class="nav-text">shell 脚本</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%87%8D%E5%AE%9A%E5%90%91%E5%92%8C%E7%AE%A1%E9%81%93"><span class="nav-text">重定向和管道</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%89%E3%80%81%E5%AE%9E%E9%AA%8C%E4%BD%93%E4%BC%9A"><span class="nav-text">三、实验体会</span></a></li></ol>
+
+	</div>
+</div>
+	</div>
+	
+</div>
+			</div>
+
+			
+		</div>
+
+		<div class="main-content-footer">
+			<footer class="footer mt-5 py-5 h-auto text-base text-third-text-color relative border-t-2 border-t-border-color">
+    <div class="info-container py-3 text-center">
+        
+        <div class="text-center">
+            &copy;
+            
+              <span>2025</span>
+              -
+            
+            2025&nbsp;&nbsp;<i class="fa-solid fa-heart fa-beat" style="--fa-animation-duration: 0.5s; color: #f54545"></i>&nbsp;&nbsp;<a href="/">BaconToast</a>
+            
+                
+                <p class="post-count space-x-0.5">
+                    <span>
+                        21 posts in total
+                    </span>
+                    
+                </p>
+            
+        </div>
+        
+            <script data-swup-reload-script src="https://cn.vercount.one/js"></script>
+            <div class="relative text-center lg:absolute lg:right-[20px] lg:top-1/2 lg:-translate-y-1/2 lg:text-right">
+                
+                    <span id="busuanzi_container_site_uv" class="lg:!block">
+                        <span class="text-sm">VISITOR COUNT</span>
+                        <span id="busuanzi_value_site_uv"></span>
+                    </span>
+                
+                
+                    <span id="busuanzi_container_site_pv" class="lg:!block">
+                        <span class="text-sm">TOTAL PAGE VIEWS</span>
+                        <span id="busuanzi_value_site_pv"></span>
+                    </span>
+                
+            </div>
+        
+        <div class="relative text-center lg:absolute lg:left-[20px] lg:top-1/2 lg:-translate-y-1/2 lg:text-left">
+            <span class="lg:block text-sm">POWERED BY <?xml version="1.0" encoding="utf-8"?><!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"><svg class="relative top-[2px] inline-block align-baseline" version="1.1" id="圖層_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="1rem" height="1rem" viewBox="0 0 512 512" enable-background="new 0 0 512 512" xml:space="preserve"><path fill="#0E83CD" d="M256.4,25.8l-200,115.5L56,371.5l199.6,114.7l200-115.5l0.4-230.2L256.4,25.8z M349,354.6l-18.4,10.7l-18.6-11V275H200v79.6l-18.4,10.7l-18.6-11v-197l18.5-10.6l18.5,10.8V237h112v-79.6l18.5-10.6l18.5,10.8V354.6z"/></svg><a target="_blank" class="text-base" href="https://hexo.io">Hexo</a></span>
+            <span class="text-sm lg:block">THEME&nbsp;<a class="text-base" target="_blank" href="https://github.com/EvanNotFound/hexo-theme-redefine">Redefine v2.8.5</a></span>
+        </div>
+        
+        
+            <div>
+                Blog up for <span class="odometer" id="runtime_days" ></span> days <span class="odometer" id="runtime_hours"></span> hrs <span class="odometer" id="runtime_minutes"></span> Min <span class="odometer" id="runtime_seconds"></span> Sec
+            </div>
+        
+        
+            <script data-swup-reload-script>
+                try {
+                    function odometer_init() {
+                    const elements = document.querySelectorAll('.odometer');
+                    elements.forEach(el => {
+                        new Odometer({
+                            el,
+                            format: '( ddd).dd',
+                            duration: 200
+                        });
+                    });
+                    }
+                    odometer_init();
+                } catch (error) {}
+            </script>
+        
+        
+        
+    </div>  
+</footer>
+		</div>
+	</div>
+
+	
+	<div class="post-tools">
+		<div class="post-tools-container">
+	<ul class="article-tools-list">
+		<!-- TOC aside toggle -->
+		
+		<li class="right-bottom-tools page-aside-toggle">
+			<i class="fa-regular fa-outdent"></i>
+		</li>
+		
+
+		<!-- go comment -->
+		
+		<li class="go-comment">
+			<i class="fa-regular fa-comments"></i>
+		</li>
+		
+	</ul>
+</div>
+	</div>
+	
+
+	<div class="right-side-tools-container">
+		<div class="side-tools-container">
+	<ul class="hidden-tools-list">
+		<li class="right-bottom-tools tool-font-adjust-plus flex justify-center items-center">
+			<i class="fa-regular fa-magnifying-glass-plus"></i>
+		</li>
+
+		<li class="right-bottom-tools tool-font-adjust-minus flex justify-center items-center">
+			<i class="fa-regular fa-magnifying-glass-minus"></i>
+		</li>
+
+		<li class="right-bottom-tools tool-dark-light-toggle flex justify-center items-center">
+			<i class="fa-regular fa-moon"></i>
+		</li>
+
+		<!-- rss -->
+		
+
+		
+
+		<li class="right-bottom-tools tool-scroll-to-bottom flex justify-center items-center">
+			<i class="fa-regular fa-arrow-down"></i>
+		</li>
+	</ul>
+
+	<ul class="visible-tools-list">
+		<li class="right-bottom-tools toggle-tools-list flex justify-center items-center">
+			<i class="fa-regular fa-cog fa-spin"></i>
+		</li>
+		
+		<li class="right-bottom-tools tool-scroll-to-top flex justify-center items-center">
+			<i class="arrow-up fas fa-arrow-up"></i>
+			<span class="percent"></span>
+		</li>
+		
+		
+	</ul>
+</div>
+	</div>
+
+	<div class="image-viewer-container">
+	<img src="">
+</div>
+
+	
+
+</main>
+
+
+
+<script src="/js/build/libs/Swup.min.js"></script>
+
+<script src="/js/build/libs/SwupSlideTheme.min.js"></script>
+
+<script src="/js/build/libs/SwupScriptsPlugin.min.js"></script>
+
+<script src="/js/build/libs/SwupProgressPlugin.min.js"></script>
+
+<script src="/js/build/libs/SwupScrollPlugin.min.js"></script>
+
+<script src="/js/build/libs/SwupPreloadPlugin.min.js"></script>
+
+<script>
+    const swup = new Swup({
+        plugins: [
+            new SwupScriptsPlugin({
+                optin: true,
+            }),
+            new SwupProgressPlugin(),
+            new SwupScrollPlugin({
+                offset: 80,
+            }),
+            new SwupSlideTheme({
+                mainElement: ".main-content-body",
+            }),
+            new SwupPreloadPlugin(),
+        ],
+        containers: ["#swup"],
+    });
+</script>
+
+
+
+
+	
+<script src="/js/build/tools/imageViewer.js" type="module"></script>
+
+<script src="/js/build/utils.js" type="module"></script>
+
+<script src="/js/build/main.js" type="module"></script>
+
+<script src="/js/build/layouts/navbarShrink.js" type="module"></script>
+
+<script src="/js/build/tools/scrollTopBottom.js" type="module"></script>
+
+<script src="/js/build/tools/lightDarkSwitch.js" type="module"></script>
+
+<script src="/js/build/layouts/categoryList.js" type="module"></script>
+
+
+
+
+
+    
+<script src="/js/build/tools/codeBlock.js" type="module"></script>
+
+
+
+
+    
+<script src="/js/build/layouts/lazyload.js" type="module"></script>
+
+
+
+
+    
+<script src="/js/build/tools/runtime.js"></script>
+
+    
+<script src="/js/build/libs/odometer.min.js"></script>
+
+    
+<link rel="stylesheet" href="/assets/odometer-theme-minimal.css">
+
+
+
+
+  
+<script src="/js/build/libs/Typed.min.js"></script>
+
+  
+<script src="/js/build/plugins/typed.js" type="module"></script>
+
+
+
+
+
+
+    
+<script src="/js/build/libs/minimasonry.min.js"></script>
+
+    
+<script src="/js/build/plugins/masonry.js" type="module"></script>
+
+
+
+
+
+
+
+    
+<script src="/js/build/tools/tocToggle.js" type="module" data-swup-reload-script=""></script>
+
+<script src="/js/build/layouts/toc.js" type="module" data-swup-reload-script=""></script>
+
+<script src="/js/build/plugins/tabs.js" type="module" data-swup-reload-script=""></script>
+
+
+
+
+<script src="/js/build/libs/moment-with-locales.min.js" data-swup-reload-script=""></script>
+
+
+<script src="/js/build/layouts/essays.js" type="module" data-swup-reload-script=""></script>
+
+
+
+
+
+    
+<script src="/js/build/layouts/bookmarkNav.js" type="module"></script>
+
+
+	
+</body>
+
+</html>

@@ -140,7 +140,7 @@
 <meta property="og:locale" content="en_US">
 <meta property="og:image" content="https://bacontoast-pro.github.io/images/redefine-og.webp">
 <meta property="article:published_time" content="2025-11-18T05:06:14.832Z">
-<meta property="article:modified_time" content="2025-11-18T05:24:57.163Z">
+<meta property="article:modified_time" content="2025-11-18T07:33:32.870Z">
 <meta property="article:author" content="BaconToast">
 <meta property="article:tag" content="Java">
 <meta property="article:tag" content="OO">
@@ -742,15 +742,15 @@ mjx-container[display="true"] + br {
 
         <div class="statistics flex justify-around my-2.5">
     <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/tags">
-        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">11</div>
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">13</div>
         <div class="label text-third-text-color text-sm">Tags</div>
     </a>
     <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/categories">
-        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">4</div>
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">5</div>
         <div class="label text-third-text-color text-sm">Categories</div>
     </a>
     <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/archives">
-        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">14</div>
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">21</div>
         <div class="label text-third-text-color text-sm">Posts</div>
     </a>
 </div>
@@ -791,7 +791,7 @@ mjx-container[display="true"] + br {
 				<div class="author flex items-center">
 					<span class="name text-default-text-color text-lg font-semibold">BaconToast</span>
 					
-					<span class="author-label ml-1.5 text-xs px-2 py-0.5 rounded-small text-third-text-color border border-shadow-color-1">Lv2</span>
+					<span class="author-label ml-1.5 text-xs px-2 py-0.5 rounded-small text-third-text-color border border-shadow-color-1">Lv3</span>
 					
 				</div>
 				<div class="meta-info">
@@ -805,8 +805,8 @@ mjx-container[display="true"] + br {
     
         <span class="article-date article-meta-item">
             <i class="fa-regular fa-wrench"></i>&nbsp;
-            <span class="desktop">2025-11-18 13:24:57</span>
-            <span class="mobile">2025-11-18 13:24:57</span>
+            <span class="desktop">2025-11-18 15:33:32</span>
+            <span class="mobile">2025-11-18 15:33:32</span>
             <span class="hover-info">Updated</span>
         </span>
     
@@ -876,7 +876,7 @@ mjx-container[display="true"] + br {
 <h3 id="1-2-项目结构"><a href="#1-2-项目结构" class="headerlink" title="1.2 项目结构"></a>1.2 项目结构</h3><h4 id="1-2-1-文件树"><a href="#1-2-1-文件树" class="headerlink" title="1.2.1 文件树"></a>1.2.1 文件树</h4><div class="code-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">src</span><br><span class="line">│  Computer.java</span><br><span class="line">│  Lexer.java</span><br><span class="line">│  MainClass.java</span><br><span class="line">│  Optimizer.java</span><br><span class="line">│  Parser.java</span><br><span class="line">│</span><br><span class="line">├─expr</span><br><span class="line">│      Expr.java</span><br><span class="line">│      Factor.java</span><br><span class="line">│      Number.java</span><br><span class="line">│      Power.java</span><br><span class="line">│      Term.java</span><br><span class="line">│      Variate.java</span><br><span class="line">│</span><br><span class="line">└─poly</span><br><span class="line">        Monomial.java</span><br><span class="line">        Polynomial.java</span><br></pre></td></tr></table></figure></div>
 
 <h4 id="1-2-2-UML-类图"><a href="#1-2-2-UML-类图" class="headerlink" title="1.2.2 UML 类图"></a>1.2.2 UML 类图</h4><p>为方便呈现，仅展示必要的属性和方法。</p>
-<p><img lazyload="" src="/images/loading.svg" data-src="/iamges/oo/hw1.png" alt="hw1"></p>
+<p><img lazyload="" src="/images/loading.svg" data-src="/images/oo/hw1.png" alt="hw1"></p>
 <h3 id="1-3-架构设计"><a href="#1-3-架构设计" class="headerlink" title="1.3 架构设计"></a>1.3 架构设计</h3><p>使用了常规的递归下降算法架构，由训练栏目的 advance 代码改编而来（原代码是读入包含加法、乘法和括号的算式，输出后缀表达式）。宏观上讲，流程为：预处理、得到后缀表达式、计算、化简。</p>
 <h4 id="1-3-1-预处理"><a href="#1-3-1-预处理" class="headerlink" title="1.3.1 预处理"></a>1.3.1 预处理</h4><p>因为输入的原始字符串含有许多<strong>空白项（<code>&lt;space&gt;</code> 和 <code>\t</code>）</strong> ，且有许多<strong>加减号重复</strong>的情况，在这里笔者对其进行了预处理，结果是得到不含空白、不含多余加减、不含前导零的原始表达式。这些部分在 <code>Optimizer.preProcess()</code> 中实现。</p>
 <blockquote>
@@ -1407,7 +1407,7 @@ mjx-container[display="true"] + br {
         
             <li>
                 <strong>Updated at
-                    :</strong> 2025-11-18 13:24:57
+                    :</strong> 2025-11-18 15:33:32
             </li>
         
         <li>
@@ -1554,7 +1554,7 @@ mjx-container[display="true"] + br {
                 
                 <p class="post-count space-x-0.5">
                     <span>
-                        14 posts in total
+                        21 posts in total
                     </span>
                     
                 </p>

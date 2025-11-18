@@ -140,7 +140,7 @@
 <meta property="og:locale" content="en_US">
 <meta property="og:image" content="https://bacontoast-pro.github.io/images/redefine-og.webp">
 <meta property="article:published_time" content="2025-11-18T07:23:05.485Z">
-<meta property="article:modified_time" content="2025-11-18T07:28:55.357Z">
+<meta property="article:modified_time" content="2025-11-18T07:38:47.292Z">
 <meta property="article:author" content="BaconToast">
 <meta property="article:tag" content="Java">
 <meta property="article:tag" content="OO">
@@ -742,15 +742,15 @@ mjx-container[display="true"] + br {
 
         <div class="statistics flex justify-around my-2.5">
     <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/tags">
-        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">11</div>
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">13</div>
         <div class="label text-third-text-color text-sm">Tags</div>
     </a>
     <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/categories">
-        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">4</div>
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">5</div>
         <div class="label text-third-text-color text-sm">Categories</div>
     </a>
     <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/archives">
-        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">14</div>
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">21</div>
         <div class="label text-third-text-color text-sm">Posts</div>
     </a>
 </div>
@@ -791,7 +791,7 @@ mjx-container[display="true"] + br {
 				<div class="author flex items-center">
 					<span class="name text-default-text-color text-lg font-semibold">BaconToast</span>
 					
-					<span class="author-label ml-1.5 text-xs px-2 py-0.5 rounded-small text-third-text-color border border-shadow-color-1">Lv2</span>
+					<span class="author-label ml-1.5 text-xs px-2 py-0.5 rounded-small text-third-text-color border border-shadow-color-1">Lv3</span>
 					
 				</div>
 				<div class="meta-info">
@@ -805,8 +805,8 @@ mjx-container[display="true"] + br {
     
         <span class="article-date article-meta-item">
             <i class="fa-regular fa-wrench"></i>&nbsp;
-            <span class="desktop">2025-11-18 15:28:55</span>
-            <span class="mobile">2025-11-18 15:28:55</span>
+            <span class="desktop">2025-11-18 15:38:47</span>
+            <span class="mobile">2025-11-18 15:38:47</span>
             <span class="hover-info">Updated</span>
         </span>
     
@@ -885,7 +885,7 @@ mjx-container[display="true"] + br {
 <h2 id="3-第十五次作业"><a href="#3-第十五次作业" class="headerlink" title="3 第十五次作业"></a>3 第十五次作业</h2><h3 id="3-1-需求说明"><a href="#3-1-需求说明" class="headerlink" title="3.1 需求说明"></a>3.1 需求说明</h3><p>在之前的基础上，引入用户信用分系统，对用户的行为作进一步限制，新增图书馆借阅期限。</p>
 <h3 id="3-2-项目结构"><a href="#3-2-项目结构" class="headerlink" title="3.2 项目结构"></a>3.2 项目结构</h3><h4 id="3-2-1-UML-类图"><a href="#3-2-1-UML-类图" class="headerlink" title="3.2.1 UML 类图"></a>3.2.1 UML 类图</h4><p><img lazyload="" src="/images/loading.svg" data-src="/images/oo/hw15.png" alt="hw15"></p>
 <h4 id="3-2-2-UML-状态图"><a href="#3-2-2-UML-状态图" class="headerlink" title="3.2.2 UML 状态图"></a>3.2.2 UML 状态图</h4><p><img lazyload="" src="/images/loading.svg" data-src="/images/oo/hw14_state.png" alt="hw15_state"></p>
-<h4 id="3-2-3-UML-顺序图"><a href="#3-2-3-UML-顺序图" class="headerlink" title="3.2.3 UML 顺序图"></a>3.2.3 UML 顺序图</h4><p><img lazyload="" src="/images/loading.svg" data-src="/images/oo/he15_sequence.png" alt="hw15_sequence"></p>
+<h4 id="3-2-3-UML-顺序图"><a href="#3-2-3-UML-顺序图" class="headerlink" title="3.2.3 UML 顺序图"></a>3.2.3 UML 顺序图</h4><p><img lazyload="" src="/images/loading.svg" data-src="/images/oo/hw15_sequence.png" alt="hw15_sequence"></p>
 <h3 id="3-3-架构设计"><a href="#3-3-架构设计" class="headerlink" title="3.3 架构设计"></a>3.3 架构设计</h3><h4 id="3-3-1-大模型辅助"><a href="#3-3-1-大模型辅助" class="headerlink" title="3.3.1 大模型辅助"></a>3.3.1 大模型辅助</h4><p>虽然作业没有使用大模型，但上机实验体验过，我的感想是，大模型适合于完成<strong>黑盒</strong>，即确定的输入和预期输出，而不去动他内部的逻辑了。这样可以达成最高效，不浪费时间。因为读懂大模型写的代码还是有些艰难的（）。具体例子可以回溯第三单元实现 HashLinkedList，我将需求直接告诉大模型，写出来之后我也不去管代码内部实现了，因为直接可以用。包括 BFS 的实现，我也直接交给大模型了，相当于在我的系统中拼接了一块其他商家的积木。</p>
 <h4 id="3-3-2-UML-模型之间的追踪关系"><a href="#3-3-2-UML-模型之间的追踪关系" class="headerlink" title="3.3.2 UML 模型之间的追踪关系"></a>3.3.2 UML 模型之间的追踪关系</h4><p>这次作业集齐了三种 UML 模型，类图是对总体结构的把控，状态图是对图书馆行为的高度抽象，顺序图是对代码方法之间组织的总结。</p>
 <p>在这单元实现的过程中，类图对写代码有一定的指导作用；而状态图是在写完代码之后再抽象出来的，给我一种直观的回顾；顺序图更是起到了零个作用，原因是顺序图是方法之间的调用关系，是在太细节太局部了，我感觉适合于写好代码的开发者向其他人介绍代码调用关系所用，就像 OS 指导书内的函数调用关系顺序图一样。</p>
@@ -917,7 +917,7 @@ mjx-container[display="true"] + br {
         
             <li>
                 <strong>Updated at
-                    :</strong> 2025-11-18 15:28:55
+                    :</strong> 2025-11-18 15:38:47
             </li>
         
         <li>
@@ -957,6 +957,18 @@ mjx-container[display="true"] + br {
 
 		
 		<div class="article-nav my-8 flex justify-between items-center px-2 sm:px-6 md:px-8">
+			
+			<div class="article-prev border-border-color shadow-redefine-flat shadow-shadow-color-2 rounded-medium px-4 py-2 hover:shadow-redefine-flat-hover hover:shadow-shadow-color-2">
+				<a class="prev" rel="prev" href="/2025/11/18/os/lab0/">
+					<span class="left arrow-icon flex justify-center items-center">
+						<i class="fa-solid fa-chevron-left"></i>
+					</span>
+					<span class="title flex justify-center items-center">
+						<span class="post-nav-title-item truncate max-w-48">操作系统OS：Lab0-初识操作系统</span>
+						<span class="post-nav-item">Prev posts</span>
+					</span>
+				</a>
+			</div>
 			
 			
 			<div class="article-next border-border-color shadow-redefine-flat shadow-shadow-color-2 rounded-medium px-4 py-2 hover:shadow-redefine-flat-hover hover:shadow-shadow-color-2">
@@ -1052,7 +1064,7 @@ mjx-container[display="true"] + br {
                 
                 <p class="post-count space-x-0.5">
                     <span>
-                        14 posts in total
+                        21 posts in total
                     </span>
                     
                 </p>
