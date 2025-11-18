@@ -1,0 +1,1351 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="keywords" content="Hexo Theme Redefine">
+    
+    <meta name="author" content="BaconToast">
+    
+    <!-- Completely eliminate flash of wrong theme -->
+    <script>
+        (function() {
+            const THEME_KEY = "REDEFINE-THEME-STATUS";
+            const DARK = "dark", LIGHT = "light";
+            
+            // Get preferred theme
+            function getTheme() {
+                try {
+                    const saved = localStorage.getItem(THEME_KEY);
+                    if (saved) {
+                        const { isDark } = JSON.parse(saved);
+                        return isDark ? DARK : LIGHT;
+                    }
+                } catch (e) {}
+                
+                return matchMedia("(prefers-color-scheme: dark)").matches ? DARK : LIGHT;
+            }
+            
+            // Apply theme to document
+            function applyTheme(theme) {
+                const isDark = theme === DARK;
+                const root = document.documentElement;
+                
+                // Set data attribute for CSS variables
+                root.setAttribute("data-theme", theme);
+                
+                // Set classes for compatibility
+                root.classList.add(theme);
+                root.classList.remove(isDark ? LIGHT : DARK);
+                root.style.colorScheme = theme;
+            }
+            
+            // Initial application
+            const theme = getTheme();
+            applyTheme(theme);
+            
+            // Listen for system preference changes
+            matchMedia("(prefers-color-scheme: dark)").addEventListener("change", ({ matches }) => {
+                // Only update if using system preference (no localStorage entry)
+                if (!localStorage.getItem(THEME_KEY)) {
+                    applyTheme(matches ? DARK : LIGHT);
+                }
+            });
+            
+            // Set body classes once DOM is ready
+            if (document.readyState !== "loading") {
+                document.body.classList.add(theme + "-mode");
+            } else {
+                document.addEventListener("DOMContentLoaded", () => {
+                    document.body.classList.add(theme + "-mode");
+                    document.body.classList.remove((theme === DARK ? LIGHT : DARK) + "-mode");
+                });
+            }
+        })();
+    </script>
+    
+    <!-- Critical CSS to prevent flash -->
+    <style>
+        :root[data-theme="dark"] {
+            --background-color: #202124;
+            --background-color-transparent: rgba(32, 33, 36, 0.6);
+            --second-background-color: #2d2e32;
+            --third-background-color: #34353a;
+            --third-background-color-transparent: rgba(32, 33, 36, 0.6);
+            --primary-color: #0066CC;
+            --first-text-color: #ffffff;
+            --second-text-color: #eeeeee;
+            --third-text-color: #bebec6;
+            --fourth-text-color: #999999;
+            --default-text-color: #bebec6;
+            --invert-text-color: #373D3F;
+            --border-color: rgba(255, 255, 255, 0.08);
+            --selection-color: #0066CC;
+            --shadow-color-1: rgba(255, 255, 255, 0.08);
+            --shadow-color-2: rgba(255, 255, 255, 0.05);
+        }
+        
+        :root[data-theme="light"] {
+            --background-color: #fff;
+            --background-color-transparent: rgba(255, 255, 255, 0.6);
+            --second-background-color: #f8f8f8;
+            --third-background-color: #f2f2f2;
+            --third-background-color-transparent: rgba(241, 241, 241, 0.6);
+            --primary-color: #0066CC;
+            --first-text-color: #16171a;
+            --second-text-color: #2f3037;
+            --third-text-color: #5e5e5e;
+            --fourth-text-color: #eeeeee;
+            --default-text-color: #373D3F;
+            --invert-text-color: #bebec6;
+            --border-color: rgba(0, 0, 0, 0.08);
+            --selection-color: #0066CC;
+            --shadow-color-1: rgba(0, 0, 0, 0.08);
+            --shadow-color-2: rgba(0, 0, 0, 0.05);
+        }
+        
+        body {
+            background-color: var(--background-color);
+            color: var(--default-text-color);
+        }
+        
+        /* Apply body classes as soon as DOM is ready */
+        :root[data-theme="dark"] body {
+            background-color: var(--background-color);
+            color: var(--default-text-color);
+        }
+    </style>
+    
+    <!-- preconnect -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    
+    <!--- Seo Part-->
+    
+    <link rel="canonical" href="https://BaconToast-pro.github.io/2025/11/18/oo/u3/"/>
+    <meta name="robots" content="index,follow">
+    <meta name="googlebot" content="index,follow">
+    <meta name="revisit-after" content="1 days">
+    
+    
+    
+        
+        <meta name="description" content="Hexo Theme Redefine, Redefine Your Hexo Journey.">
+<meta property="og:type" content="article">
+<meta property="og:title" content="面向对象设计与构造OO：Unit3-社交网络">
+<meta property="og:url" content="https://bacontoast-pro.github.io/2025/11/18/oo/u3/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="Hexo Theme Redefine, Redefine Your Hexo Journey.">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://bacontoast-pro.github.io/images/redefine-og.webp">
+<meta property="article:published_time" content="2025-11-18T07:17:44.346Z">
+<meta property="article:modified_time" content="2025-11-18T07:23:05.482Z">
+<meta property="article:author" content="BaconToast">
+<meta property="article:tag" content="Java">
+<meta property="article:tag" content="OO">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://bacontoast-pro.github.io/images/redefine-og.webp">
+    
+    
+    <!--- Icon Part-->
+    <link rel="icon" type="image/png" href="/images/public/toast.svg" sizes="192x192">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/public/toast.svg">
+    <meta name="theme-color" content="#A31F34">
+    <link rel="shortcut icon" href="/images/public/toast.svg">
+    <!--- Page Info-->
+    
+    <title>
+        
+            面向对象设计与构造OO：Unit3-社交网络 | BaconToast&#39;s Shop
+        
+    </title>
+
+    
+<link rel="stylesheet" href="/fonts/Chillax/chillax.css">
+
+
+    <!--- Inject Part-->
+    
+
+    
+<link rel="stylesheet" href="/css/style.css">
+
+
+    
+        
+<link rel="stylesheet" href="/css/build/tailwind.css">
+
+    
+
+    
+<link rel="stylesheet" href="/fonts/GeistMono/geist-mono.css">
+
+    
+<link rel="stylesheet" href="/fonts/Geist/geist.css">
+
+    <!--- Font Part-->
+    
+    
+    
+    
+    
+    
+        
+<script src="/js/build/libs/anime.min.js"></script>
+
+    
+
+    <script id="hexo-configurations">
+    window.config = {"hostname":"bacontoast-pro.github.io","root":"/","language":"en"};
+    window.theme = {"articles":{"style":{"font_size":"16px","line_height":1.5,"image_border_radius":"14px","image_alignment":"center","image_caption":false,"link_icon":true,"delete_mask":false,"title_alignment":"left","headings_top_spacing":{"h1":"3.2rem","h2":"2.4rem","h3":"1.9rem","h4":"1.6rem","h5":"1.4rem","h6":"1.3rem"}},"word_count":{"enable":true,"count":true,"min2read":true},"author_label":{"enable":true,"auto":false,"list":[]},"code_block":{"copy":true,"style":"mac","highlight_theme":{"light":"github","dark":"vs2015"},"font":{"enable":false,"family":null,"url":null}},"toc":{"enable":true,"max_depth":3,"number":false,"expand":true,"init_open":true},"copyright":{"enable":true,"default":"cc_by_nc_sa"},"lazyload":true,"pangu_js":false,"recommendation":{"enable":false,"title":"推荐阅读","limit":3,"mobile_limit":2,"placeholder":"/images/wallhaven-wqery6-light.webp","skip_dirs":[]}},"colors":{"primary":"#A31F34","secondary":null,"default_mode":"light"},"global":{"fonts":{"chinese":{"enable":false,"family":null,"url":null},"english":{"enable":false,"family":null,"url":null},"title":{"enable":false,"family":null,"url":null}},"content_max_width":"1000px","sidebar_width":"210px","hover":{"shadow":true,"scale":true},"scroll_progress":{"bar":false,"percentage":true},"website_counter":{"url":"https://cn.vercount.one/js","enable":true,"site_pv":true,"site_uv":true,"post_pv":true},"single_page":true,"preloader":{"enable":true,"custom_message":null},"side_tools":{"gear_rotation":true,"auto_expand":true},"open_graph":{"enable":true,"image":"/images/redefine-og.webp","description":"Hexo Theme Redefine, Redefine Your Hexo Journey."},"google_analytics":{"enable":false,"id":null}},"home_banner":{"enable":true,"style":"fixed","image":{"light":"/images/wallhaven-wqery6-light.webp","dark":"/images/wallhaven-wqery6-dark.webp"},"title":"BaconToast Blog","subtitle":{"text":["欢迎来到BaconToast小商店~","We can be the light upon the day."],"hitokoto":{"enable":false,"show_author":false,"api":"https://v1.hitokoto.cn"},"typing_speed":100,"backing_speed":80,"starting_delay":500,"backing_delay":1500,"loop":true,"smart_backspace":true},"text_color":{"light":"#fff","dark":"#d1d1b6"},"text_style":{"title_size":"2.8rem","subtitle_size":"1.5rem","line_height":1.2},"custom_font":{"enable":false,"family":null,"url":null},"social_links":{"enable":true,"style":"default","links":{"github":"https://github.com/BaconToast-pro","instagram":null,"zhihu":null,"twitter":null,"email":"zhouzq@buaa.edu.cn"},"qrs":{"weixin":"images/public/wechat.jpg"}}},"plugins":{"feed":{"enable":false},"aplayer":{"enable":false,"type":"fixed","audios":[{"name":null,"artist":null,"url":null,"cover":null,"lrc":null}]},"mermaid":{"enable":false,"version":"11.4.1"}},"version":"2.8.5","navbar":{"auto_hide":true,"color":{"left":"#f78736","right":"#367df7","transparency":35},"width":{"home":"1200px","pages":"1000px"},"links":{"Home":{"path":"/","icon":"fa-regular fa-house"},"Archives":{"path":"/archives","icon":"fa-regular fa-archive"},"Friends":{"icon":"fa-solid fa-link","path":"/links/"},"About":{"icon":"fa-regular fa-user","submenus":{"Github":"https://github.com/BaconToast-pro","Friends":"/links/"}}},"search":{"enable":false,"preload":true}},"page_templates":{"friends_column":2,"tags_style":"blur"},"home":{"sidebar":{"enable":true,"position":"left","first_item":"menu","announcement":"~o(^_^)o~","show_on_mobile":true,"links":{"Archives":{"path":"/archives","icon":"fa-regular fa-archive"},"Tags":{"path":"/tags","icon":"fa-regular fa-tags"},"Categories":{"path":"/categories","icon":"fa-regular fa-folder"}}},"article_date_format":"auto","excerpt_length":200,"categories":{"enable":true,"limit":3},"tags":{"enable":true,"limit":3}},"footerStart":"2025/11/11 17:20:00"};
+    window.lang_ago = {"second":"%s seconds ago","minute":"%s minutes ago","hour":"%s hours ago","day":"%s days ago","week":"%s weeks ago","month":"%s months ago","year":"%s years ago"};
+    window.data = {"masonry":true};
+  </script>
+    
+    <!--- Fontawesome Part-->
+    
+<link rel="stylesheet" href="/fontawesome/fontawesome.min.css">
+
+    
+<link rel="stylesheet" href="/fontawesome/brands.min.css">
+
+    
+<link rel="stylesheet" href="/fontawesome/solid.min.css">
+
+    
+<link rel="stylesheet" href="/fontawesome/regular.min.css">
+
+    
+    
+    
+    
+<meta name="generator" content="Hexo 8.1.1"><style>mjx-container[jax="SVG"] {
+  direction: ltr;
+}
+
+mjx-container[jax="SVG"] > svg {
+  overflow: visible;
+}
+
+mjx-container[jax="SVG"][display="true"] {
+  display: block;
+  text-align: center;
+  margin: 1em 0;
+}
+
+mjx-container[jax="SVG"][justify="left"] {
+  text-align: left;
+}
+
+mjx-container[jax="SVG"][justify="right"] {
+  text-align: right;
+}
+
+g[data-mml-node="merror"] > g {
+  fill: red;
+  stroke: red;
+}
+
+g[data-mml-node="merror"] > rect[data-background] {
+  fill: yellow;
+  stroke: none;
+}
+
+g[data-mml-node="mtable"] > line[data-line] {
+  stroke-width: 70px;
+  fill: none;
+}
+
+g[data-mml-node="mtable"] > rect[data-frame] {
+  stroke-width: 70px;
+  fill: none;
+}
+
+g[data-mml-node="mtable"] > .mjx-dashed {
+  stroke-dasharray: 140;
+}
+
+g[data-mml-node="mtable"] > .mjx-dotted {
+  stroke-linecap: round;
+  stroke-dasharray: 0,140;
+}
+
+g[data-mml-node="mtable"] > svg {
+  overflow: visible;
+}
+
+[jax="SVG"] mjx-tool {
+  display: inline-block;
+  position: relative;
+  width: 0;
+  height: 0;
+}
+
+[jax="SVG"] mjx-tool > mjx-tip {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+mjx-tool > mjx-tip {
+  display: inline-block;
+  padding: .2em;
+  border: 1px solid #888;
+  font-size: 70%;
+  background-color: #F8F8F8;
+  color: black;
+  box-shadow: 2px 2px 5px #AAAAAA;
+}
+
+g[data-mml-node="maction"][data-toggle] {
+  cursor: pointer;
+}
+
+mjx-status {
+  display: block;
+  position: fixed;
+  left: 1em;
+  bottom: 1em;
+  min-width: 25%;
+  padding: .2em .4em;
+  border: 1px solid #888;
+  font-size: 90%;
+  background-color: #F8F8F8;
+  color: black;
+}
+
+foreignObject[data-mjx-xml] {
+  font-family: initial;
+  line-height: normal;
+  overflow: visible;
+}
+
+.MathJax path {
+  stroke-width: 3;
+}
+
+mjx-container[display="true"] {
+  overflow: auto hidden;
+}
+
+mjx-container[display="true"] + br {
+  display: none;
+}
+</style></head>
+
+
+
+<body>
+	<div class="progress-bar-container">
+	
+
+	
+	<span class="pjax-progress-bar"></span>
+	<!--        <span class="swup-progress-icon">-->
+	<!--            <i class="fa-solid fa-circle-notch fa-spin"></i>-->
+	<!--        </span>-->
+	
+</div>
+
+<style>
+    :root {
+        --preloader-background-color: #fff;
+        --preloader-text-color: #000;
+    }
+
+    @media (prefers-color-scheme: dark) {
+        :root {
+            --preloader-background-color: #202124;
+            --preloader-text-color: #fff;
+        }
+    }
+
+    @media (prefers-color-scheme: light) {
+        :root {
+            --preloader-background-color: #fff;
+            --preloader-text-color: #000;
+        }
+    }
+
+    @media (max-width: 600px) {
+        .ml13 {
+            font-size: 2.6rem !important; /* Adjust this value as needed */
+        }
+    }
+
+    .preloader {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem; /* Tailwind 'gap-4' is 1rem */
+        align-items: center;
+        justify-content: center;
+        position: fixed;
+        padding: 12px;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh; /* 'h-screen' is 100% of the viewport height */
+        background-color: var(--preloader-background-color);
+        z-index: 1100; /* 'z-[1100]' sets the z-index */
+        transition: opacity 0.2s ease-in-out;
+    }
+
+    .ml13 {
+        font-size: 3.2rem;
+        /* text-transform: uppercase; */
+        color: var(--preloader-text-color);
+        letter-spacing: -1px;
+        font-weight: 500;
+        font-family: 'Chillax-Variable', sans-serif;
+        text-align: center;
+    }
+
+    .ml13 .word {
+        display: inline-flex;
+        flex-wrap: wrap;
+        white-space: nowrap;
+    }
+
+    .ml13 .letter {
+        display: inline-block;
+        line-height: 1em;
+    }
+</style>
+
+<div class="preloader">
+    <h2 class="ml13">
+        BaconToast&#39;s Shop
+    </h2>
+    <script>
+        var textWrapper = document.querySelector('.ml13');
+        // Split text into words
+        var words = textWrapper.textContent.trim().split(' ');
+
+        // Clear the existing content
+        textWrapper.innerHTML = '';
+
+        // Wrap each word and its letters in spans
+        words.forEach(function(word) {
+            var wordSpan = document.createElement('span');
+            wordSpan.classList.add('word');
+            wordSpan.innerHTML = word.replace(/\S/g, "<span class='letter'>$&</span>");
+            textWrapper.appendChild(wordSpan);
+            textWrapper.appendChild(document.createTextNode(' ')); // Add space between words
+        });
+
+        var animation = anime.timeline({ loop: true })
+            .add({
+                targets: '.ml13 .letter',
+                translateY: [20, 0],
+                translateZ: 0,
+                opacity: [0, 1],
+                filter: ['blur(5px)', 'blur(0px)'],
+                easing: "easeOutExpo",
+                duration: 1200,
+                delay: (el, i) => 300 + 20 * i,
+            })
+            .add({
+                targets: '.ml13 .letter',
+                translateY: [0, -20],
+                opacity: [1, 0],
+                filter: ['blur(0px)', 'blur(5px)'],
+                easing: "easeInExpo",
+                duration: 1000,
+                delay: (el, i) => 15 * i,
+                complete: function() {
+                    hidePreloader();
+                }
+            }, '-=700');
+
+
+        let themeStatus = JSON.parse(localStorage.getItem('REDEFINE-THEME-STATUS'))?.isDark;
+
+        // If the theme status is not found in local storage, check the preferred color scheme
+        if (themeStatus === undefined || themeStatus === null) {
+            if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                themeStatus = 'dark';
+            } else {
+                themeStatus = 'light';
+            }
+        }
+
+        // Now you can use the themeStatus variable in your code
+        if (themeStatus) {
+            document.documentElement.style.setProperty('--preloader-background-color', '#202124');
+            document.documentElement.style.setProperty('--preloader-text-color', '#fff');
+        } else {
+            document.documentElement.style.setProperty('--preloader-background-color', '#fff');
+            document.documentElement.style.setProperty('--preloader-text-color', '#000');
+        }
+
+        window.addEventListener('load', function () {
+            setTimeout(hidePreloader, 5000); // Call hidePreloader after 5000 milliseconds if not already called by animation
+        });
+
+        function hidePreloader() {
+            var preloader = document.querySelector('.preloader');
+            preloader.style.opacity = '0';
+            setTimeout(function () {
+                preloader.style.display = 'none';
+            }, 200);
+        }
+    </script>
+</div>
+
+<main class="page-container" id="swup">
+
+	
+
+	<div class="main-content-container flex flex-col justify-between min-h-dvh">
+		<div class="main-content-header">
+			<header class="navbar-container px-6 md:px-12">
+    <div class="navbar-content transition-navbar ">
+        <div class="left">
+            
+            <a class="logo-title" href="/">
+                
+                BaconToast&#39;s Shop
+                
+            </a>
+        </div>
+
+        <div class="right">
+            <!-- PC -->
+            <div class="desktop">
+                <ul class="navbar-list">
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/"
+                                        >
+                                    <i class="fa-regular fa-house fa-fw"></i>
+                                    HOME
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/archives"
+                                        >
+                                    <i class="fa-regular fa-archive fa-fw"></i>
+                                    ARCHIVES
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/links/"
+                                        >
+                                    <i class="fa-solid fa-link fa-fw"></i>
+                                    FRIENDS
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class="has-dropdown"
+                                   href="#"
+                                        onClick=&#34;return false;&#34;>
+                                    <i class="fa-regular fa-user fa-fw"></i>
+                                    ABOUT
+                                    <i class="fa-solid fa-chevron-down fa-fw"></i>
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                                    <ul class="sub-menu">
+                                        
+                                            <li>
+                                                <a target="_blank" rel="noopener" href="https://github.com/BaconToast-pro">
+                                                    GITHUB
+                                                </a>
+                                            </li>
+                                        
+                                            <li>
+                                                <a href="/links/">
+                                                    FRIENDS
+                                                </a>
+                                            </li>
+                                        
+                                    </ul>
+                                
+                            </li>
+                    
+                    
+                </ul>
+            </div>
+            <!-- Mobile -->
+            <div class="mobile">
+                
+                <div class="icon-item navbar-bar">
+                    <div class="navbar-bar-middle"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mobile sheet -->
+    <div class="navbar-drawer h-dvh w-full absolute top-0 left-0 bg-background-color flex flex-col justify-between">
+        <ul class="drawer-navbar-list flex flex-col px-4 justify-center items-start">
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/"
+                        >
+                            <span>
+                                HOME
+                            </span>
+                            
+                                <i class="fa-regular fa-house fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/archives"
+                        >
+                            <span>
+                                ARCHIVES
+                            </span>
+                            
+                                <i class="fa-regular fa-archive fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/links/"
+                        >
+                            <span>
+                                FRIENDS
+                            </span>
+                            
+                                <i class="fa-solid fa-link fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+                
+                    
+
+                    <li class="drawer-navbar-item-sub text-base my-1.5 flex flex-col w-full">
+                        
+                        <div class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary cursor-pointer text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                             navbar-data-toggle="submenu-About"
+                        >
+                            <span>
+                                ABOUT
+                            </span>
+                            
+                                <i class="fa-solid fa-chevron-right fa-sm fa-fw transition-all"></i>
+                            
+                        </div>
+                        
+
+                        
+                            <div class="flex-col items-start px-2 py-2 hidden" data-target="submenu-About">
+                                
+                                    <div class="drawer-navbar-item text-base flex flex-col justify-center items-start hover:underline active:underline hover:underline-offset-1 rounded-3xl">
+                                        <a class=" text-third-text-color text-xl"
+                                           target="_blank" rel="noopener" href="https://github.com/BaconToast-pro">GITHUB</a>
+                                    </div>
+                                
+                                    <div class="drawer-navbar-item text-base flex flex-col justify-center items-start hover:underline active:underline hover:underline-offset-1 rounded-3xl">
+                                        <a class=" text-third-text-color text-xl"
+                                           href="/links/">FRIENDS</a>
+                                    </div>
+                                
+                            </div>
+                        
+                    </li>
+            
+
+            
+            
+                
+                    
+                    
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full active"
+                           href="/tags"
+                        >
+                            <span>Tags</span>
+                            <i class="fa-regular fa-tags fa-sm fa-fw"></i>
+                        </a>
+                    </li>
+                
+                    
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full active"
+                           href="/categories"
+                        >
+                            <span>Categories</span>
+                            <i class="fa-regular fa-folder fa-sm fa-fw"></i>
+                        </a>
+                    </li>
+                
+            
+        </ul>
+
+        <div class="statistics flex justify-around my-2.5">
+    <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/tags">
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">11</div>
+        <div class="label text-third-text-color text-sm">Tags</div>
+    </a>
+    <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/categories">
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">4</div>
+        <div class="label text-third-text-color text-sm">Categories</div>
+    </a>
+    <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/archives">
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">14</div>
+        <div class="label text-third-text-color text-sm">Posts</div>
+    </a>
+</div>
+    </div>
+
+    <div class="window-mask"></div>
+
+</header>
+
+
+		</div>
+
+		<div class="main-content-body transition-fade-up">
+			
+
+			<div class="main-content">
+				<div class="post-page-container flex relative justify-between box-border w-full h-full">
+	<div class="article-content-container">
+
+		<div class="article-title relative w-full">
+			
+			
+			
+			<img src="/images/public/sunrise.jpg" alt="面向对象设计与构造OO：Unit3-社交网络" class="w-full h-60 sm:h-72 md:h-80 object-cover sm:rounded-t-large dark:brightness-75" />
+			
+			<div class="w-full flex items-center absolute bottom-0 justify-start">
+				<h1 class="article-title-cover text-center mx-6 my-6 text-second-text-color bg-background-color-transparent px-4 py-3 text-3xl sm:text-4xl md:text-5xl font-semibold backdrop-blur-lg rounded-xl border border-border-color ">面向对象设计与构造OO：Unit3-社交网络</h1>
+			</div>
+			
+		</div>
+
+		
+		<div class="article-header flex flex-row gap-2 items-center px-2 sm:px-6 md:px-8">
+			<div class="avatar w-[46px] h-[46px] flex-shrink-0 rounded-medium border border-border-color p-[1px]">
+				<img src="/images/public/avatar.jpg">
+			</div>
+			<div class="info flex flex-col justify-between">
+				<div class="author flex items-center">
+					<span class="name text-default-text-color text-lg font-semibold">BaconToast</span>
+					
+					<span class="author-label ml-1.5 text-xs px-2 py-0.5 rounded-small text-third-text-color border border-shadow-color-1">Lv2</span>
+					
+				</div>
+				<div class="meta-info">
+					<div class="article-meta-info">
+    <span class="article-date article-meta-item">
+        <i class="fa-regular fa-pen-fancy"></i>&nbsp;
+        <span class="desktop">2025-11-18 15:17:44</span>
+        <span class="mobile">2025-11-18 15:17:44</span>
+        <span class="hover-info">Created</span>
+    </span>
+    
+        <span class="article-date article-meta-item">
+            <i class="fa-regular fa-wrench"></i>&nbsp;
+            <span class="desktop">2025-11-18 15:23:05</span>
+            <span class="mobile">2025-11-18 15:23:05</span>
+            <span class="hover-info">Updated</span>
+        </span>
+    
+
+    
+        <span class="article-categories article-meta-item">
+            <i class="fa-regular fa-folders"></i>&nbsp;
+            <ul>
+                
+                
+                    
+                        
+                        <li>
+                            <a href="/categories/OO/">OO</a>&nbsp;
+                        </li>
+                    
+                    
+                
+            </ul>
+        </span>
+    
+    
+        <span class="article-tags article-meta-item">
+            <i class="fa-regular fa-tags"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/tags/Java/">Java</a>&nbsp;
+                    </li>
+                
+                    <li>
+                        | <a href="/tags/OO/">OO</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+
+    
+    
+    
+    
+        <span class="article-pv article-meta-item">
+            <i class="fa-regular fa-eye"></i>&nbsp;<span id="busuanzi_value_page_pv"></span>
+        </span>
+    
+</div>
+
+				</div>
+			</div>
+		</div>
+		
+
+		
+
+
+		<div class="article-content markdown-body px-2 sm:px-6 md:px-8 pb-8">
+			<h2 id="0-前言"><a href="#0-前言" class="headerlink" title="0 前言"></a>0 前言</h2><p>第三单元的内容聚焦在实现简单社交关系的模拟和查询；学习目标为对规格化开发（以入门级 JML 规格为例）的理解与相应的代码实现。本单元最难的部分是选取合适的<strong>图算法</strong>优化代码的时间复杂度；最重要的思想是<strong>契约式编程</strong>。</p>
+<p>本文将分别介绍分析三次迭代作业，每部分包括需求说明、规格实现、性能优化、测试方案。最后总结心得体会。</p>
+<h2 id="1-第九次作业"><a href="#1-第九次作业" class="headerlink" title="1 第九次作业"></a>1 第九次作业</h2><h3 id="1-1-需求说明"><a href="#1-1-需求说明" class="headerlink" title="1.1 需求说明"></a>1.1 需求说明</h3><p>第一次迭代需要根据输入的指令构建一个社交网络，是一个<strong>有权无向图</strong>，每个结点都是一个用户，用户有多个好友，同时可以对好友进行标签分类。</p>
+<h3 id="1-2-规格实现"><a href="#1-2-规格实现" class="headerlink" title="1.2 规格实现"></a>1.2 规格实现</h3><h4 id="1-2-1-UML-类图"><a href="#1-2-1-UML-类图" class="headerlink" title="1.2.1 UML 类图"></a>1.2.1 UML 类图</h4><p><img lazyload="" src="/images/loading.svg" data-src="/images/oo/hw9.png" alt="hw9"></p>
+<h4 id="1-2-2-JML-规格实现"><a href="#1-2-2-JML-规格实现" class="headerlink" title="1.2.2 JML 规格实现"></a>1.2.2 JML 规格实现</h4><p>本次迭代大部分方法都可以直译 JML，但为了更好的性能和更方便的操作，规格与实现应当有所分离。</p>
+<h5 id="1-2-2-1-集合类的选取"><a href="#1-2-2-1-集合类的选取" class="headerlink" title="1.2.2.1 集合类的选取"></a>1.2.2.1 集合类的选取</h5><p>JML 并不规定使用什么类型的集合，但通读 JML，发现几乎所有集合由此特点：存储的对象都有一个独一无二的 id。因此，使用 <code>HashMap</code> 构建 <code>id</code> 和 <code>obj</code> 的映射是不二之选，存取复杂度都是 <code>O(1)</code>。</p>
+<h5 id="1-2-2-2-JML-的阅读复杂性"><a href="#1-2-2-2-JML-的阅读复杂性" class="headerlink" title="1.2.2.2 JML 的阅读复杂性"></a>1.2.2.2 JML 的阅读复杂性</h5><p>JMl 力求精准，因此在可读性上有所欠缺。有如下 JML：</p>
+<div class="code-container" data-rel="Java"><figure class="iseeu highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/*@ ensures \result == (persons.length == 0? 0:  </span></span><br><span class="line"><span class="comment">  @          ((\sum int i; 0 &lt;= i &amp;&amp; i &lt; persons.length; persons[i].getAge()) / persons.length));  </span></span><br><span class="line"><span class="comment">  @*/</span></span><br><span class="line"><span class="keyword">public</span> <span class="comment">/*@ pure @*/</span> <span class="type">int</span> <span class="title function_">getAgeMean</span><span class="params">()</span>;  </span><br><span class="line">  </span><br><span class="line"><span class="comment">/*@ ensures \result == (persons.length == 0? 0 : ((\sum int i; 0 &lt;= i &amp;&amp; i &lt; persons.length;</span></span><br><span class="line"><span class="comment">  @          (persons[i].getAge() - getAgeMean()) * (persons[i].getAge() - getAgeMean())) /  </span></span><br><span class="line"><span class="comment">  @           persons.length));  </span></span><br><span class="line"><span class="comment">  @*/</span></span><br><span class="line"><span class="keyword">public</span> <span class="comment">/*@ pure @*/</span> <span class="type">int</span> <span class="title function_">getAgeVar</span><span class="params">()</span>;</span><br></pre></td></tr></table></figure></div>
+
+<p>放眼望去全是括号嵌套，Java 注释的灰色将视觉混淆，本是求均值明白先加再除，可 JML 的繁杂黯淡了自然语言的精妙。</p>
+<p>笔者没注意括号匹配，实现过程中误将 <code>(a + b + c) / n</code> 的操作写成 <code>(a / n) + (b / n) + (c / n)</code> ，向下取整的无形大手发力，你在强测中获得了 0 分。</p>
+<h5 id="1-2-2-3-优雅地抛出异常"><a href="#1-2-2-3-优雅地抛出异常" class="headerlink" title="1.2.2.3 优雅地抛出异常"></a>1.2.2.3 优雅地抛出异常</h5><p>刚开始写的时候先入为主地写了“if 没有异常， else if 有异常”的结构，但发现“没有异常”其实就是“有异常”的取反并集，不如写成“if 有异常， else if 有别的异常……else （没有异常）”的结果。赏心悦目。</p>
+<h3 id="1-3-性能优化"><a href="#1-3-性能优化" class="headerlink" title="1.3 性能优化"></a>1.3 性能优化</h3><h4 id="1-3-1-寻找三元环"><a href="#1-3-1-寻找三元环" class="headerlink" title="1.3.1 寻找三元环"></a>1.3.1 寻找三元环</h4><p><code>public int queryTripleSum()</code>，如果直接按照 JML 实现需要遍历网络中的所有 <code>person</code>，每个用户遍历他对应的 <code>acquaintance</code>，接着遍历 <code>acquaintance</code> 的 <code>acquaintance</code>，再遍历 <code>acquaintance</code> 的 <code>acquaintance</code> 的 <code>acquaintance</code>，三个循环嵌套，<code>O(n^3)</code> 的复杂度无穷匮也！</p>
+<p>并查集算法学习成本高，笔者直接无脑增量维护效果拔群 (^_^)。</p>
+<p>简单来说，每次增加或删除一条边，判断一下存着的 <code>tripleSum</code> 变量是否更改。那么什么时候需要更改呢？即更改关系的两个人 a 和 b，如果他俩可以通过且仅通过 1 个人进行联络，则认定是在“破坏一个三元环” or “构建一个三元环”。经过分析三元环之间是独立的，不会出现矛盾，具体代码如下：</p>
+<div class="code-container" data-rel="Java"><figure class="iseeu highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// search for how many "this-&gt;mid-&gt;person"  </span></span><br><span class="line"><span class="keyword">public</span> <span class="type">int</span> <span class="title function_">tripleSearch</span><span class="params">(PersonInterface person)</span> {  </span><br><span class="line">    <span class="type">int</span> <span class="variable">sum</span> <span class="operator">=</span> <span class="number">0</span>;  </span><br><span class="line">    <span class="keyword">if</span> (!acquaintance.isEmpty()) {  </span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> i : acquaintance.keySet()) {  </span><br><span class="line">            <span class="type">Person</span> <span class="variable">mid</span> <span class="operator">=</span> (Person) acquaintance.get(i);  </span><br><span class="line">            <span class="keyword">if</span> (mid.isLinked(person)) {  </span><br><span class="line">                sum++;  </span><br><span class="line">            }  </span><br><span class="line">        }  </span><br><span class="line">    }  </span><br><span class="line">    <span class="keyword">return</span> sum;  </span><br><span class="line">}</span><br></pre></td></tr></table></figure></div>
+
+<h3 id="1-4-测试方案"><a href="#1-4-测试方案" class="headerlink" title="1.4 测试方案"></a>1.4 测试方案</h3><h4 id="1-4-1-Junit-单元测试"><a href="#1-4-1-Junit-单元测试" class="headerlink" title="1.4.1 Junit 单元测试"></a>1.4.1 Junit 单元测试</h4><p>本次迭代需要编写针对 <code>queryTripleSum</code> 方法的单元测试。</p>
+<p>尝试了随机数据生成以及构造特殊数据，但前者效果并不好，因为数据密度不大。对于构造特殊数据，即空图、一边、三元环、四元环、四元完全图等依次测试，不到六元就能通过 Junit 测试。</p>
+<p>此外还需要注意方法的 <code>pure</code> 性，即使用方法前后不能对 <code>network</code> 的属性进行更改，需要保持不变。测试这个部分，我在最开始就创建了两个独立的网络 <code>network</code> 和 <code>oldNetwork</code>，并且对它们同步进行 <code>addPerson</code> 和 <code>addRelation</code> 操作，最后只对一个进行 <code>qts</code> 操作，然后判断各自内部属性是否 <code>strictEquals</code> 即可。</p>
+<h4 id="1-4-2-评测机搭建"><a href="#1-4-2-评测机搭建" class="headerlink" title="1.4.2 评测机搭建"></a>1.4.2 评测机搭建</h4><p>这里先回答一下博客要求的第一个问题！</p>
+<ul>
+<li><strong>单元测试</strong>：针对软件中的最小可测试单元进行的测试，，旨在验证单个单元（通常是函数、方法或类）的功能是否按照预期工作，并尽可能地覆盖不同的代码路径和边界情况。</li>
+<li><strong>功能测试</strong>：通过模拟用户操作来验证系统功能是否符合需求和规格说明，需要尽可能覆盖整个系统的功能，验证系统的输入与输出是否符合预期。</li>
+<li><strong>集成测试</strong>：验证不同模块之间的交互和集成是否正常工作的测试过程，将已经通过单元测试的模块组装成完整的系统，并进行接口测试、模块间通信测试等，以确保模块之间的集成没有问题。</li>
+<li><strong>压力测试</strong>：评估系统在负载较大或极端条件下的性能表现的测试方法，通过模拟大量用户访问、高并发操作等情况，来测试系统的稳定性、可靠性和性能表现。</li>
+<li><strong>回归测试</strong>：在软件发生变更后重新运行之前的测试用例，验证软件的修改是否对现有功能产生了影响，以确保修改没有引入新的错误或破坏现有的功能。</li>
+</ul>
+<p>我的评测机采用随机数据生成+输出对拍，显然属于功能测试！很可惜这次作业的评测机弱爆了。分析后发现原因如下：</p>
+<ul>
+<li>图过于稀疏。因为所有 <code>id</code> 的数据范围都是 <code>int</code> 内，倘若真的设置在 <code>int</code> 内随机生成 <code>id</code>，是很难随机出两个同样的 <code>id</code> 的，也就是说某个操作加了一个用户，但他之后都不会被用到了（）。后面缩小范围到了 -150~150 左右，但仍然有些稀疏。</li>
+<li><code>Person</code>、<code>Tag</code> 的 <code>id</code> 尺度相同。这是不对的，因为 <code>Person</code> 理论上会比 <code>Tag</code> 多，这样导致在 <code>Person</code> 的尺度视角下，<code>Tag</code> 的分布过于稀疏。</li>
+<li>没有实现“根据已有的 <code>id</code> 生成数据”或“避开已有的 <code>id</code> 生成数据”的功能。但这是必要的，例如 <code>addPerson</code> 的时候期望避开已有的 <code>id</code>，而 <code>addPersonToTag</code> 的时候期望从已有的 <code>id</code> 中获取。（在异常抛出功能已经测试正确的情况下）</li>
+</ul>
+<h2 id="2-第十次作业"><a href="#2-第十次作业" class="headerlink" title="2 第十次作业"></a>2 第十次作业</h2><h3 id="2-1-需求说明"><a href="#2-1-需求说明" class="headerlink" title="2.1 需求说明"></a>2.1 需求说明</h3><p>在之前的基础上，新增<strong>公众号</strong>和<strong>文章</strong>，公众号可以发出文章，用户可以关注公众号、接收文章。</p>
+<h3 id="2-2-规格实现"><a href="#2-2-规格实现" class="headerlink" title="2.2 规格实现"></a>2.2 规格实现</h3><h4 id="2-2-1-UML-类图"><a href="#2-2-1-UML-类图" class="headerlink" title="2.2.1 UML 类图"></a>2.2.1 UML 类图</h4><p><img lazyload="" src="/images/loading.svg" data-src="/images/oo/hw10.png" alt="hw10"></p>
+<h4 id="2-2-2-JML-规格实现"><a href="#2-2-2-JML-规格实现" class="headerlink" title="2.2.2 JML 规格实现"></a>2.2.2 JML 规格实现</h4><p>没什么好说的。本次作业强测超时一个点，其余全对。具体优化在之后说明。</p>
+<h4 id="2-2-3-大模型辅助"><a href="#2-2-3-大模型辅助" class="headerlink" title="2.2.3 大模型辅助"></a>2.2.3 大模型辅助</h4><h5 id="2-2-3-1-BFS-算法直接生成"><a href="#2-2-3-1-BFS-算法直接生成" class="headerlink" title="2.2.3.1 BFS 算法直接生成"></a>2.2.3.1 BFS 算法直接生成</h5><p>笔者在 hw9 的搜索需求中手写了 DFS 算法，但这次作业中新增的 <code>queryShortestPath</code> 查找最短路径使用 BFS 可以完美解决，无法复用之前代码。为了<del>偷懒</del>高效编程，直接去问 LLM！于是也是准确无误地运行了。</p>
+<h5 id="2-2-3-2-优化已有代码"><a href="#2-2-3-2-优化已有代码" class="headerlink" title="2.2.3.2 优化已有代码"></a>2.2.3.2 优化已有代码</h5><p>在 <code>queryCoupleSum</code> 方法中，原先 <code>O(n^2)</code> 复杂度的算法担心超时，于是求助 LLM。</p>
+<p>Prompt 如下！</p>
+<blockquote>
+<p>这段代码计算了一个无向图中符合“A权值最大的直接连接的结点是B，且B权值最大的直接连接结点是A”的结点对的数目。经过我不完全归纳发现这个结果就是无向图的连通子图的数目（一整块连通的算一个），你能用这种方式优化一下时间复杂度吗</p>
+</blockquote>
+<p>Deepseek 是这么说的：</p>
+<blockquote>
+<p>为了优化时间复杂度，我们可以避免双重循环，转而通过记录每个结点的最佳熟人并线性检查互为最佳的对。以下是优化后的代码：</p>
+</blockquote>
+<div class="code-container" data-rel="Java"><figure class="iseeu highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Override</span>  </span><br><span class="line"><span class="keyword">public</span> <span class="type">int</span> <span class="title function_">queryCoupleSum</span><span class="params">()</span> {  </span><br><span class="line">    Map&lt;Integer, Integer&gt; bestMap = <span class="keyword">new</span> <span class="title class_">HashMap</span>&lt;&gt;();  </span><br><span class="line">    <span class="keyword">for</span> (PersonInterface person : persons.values()) {  </span><br><span class="line">        <span class="type">int</span> <span class="variable">id</span> <span class="operator">=</span> person.getId();  </span><br><span class="line">        <span class="type">int</span> bestId;  </span><br><span class="line">        <span class="keyword">if</span> (((Person) getPerson(id)).getSize() != <span class="number">0</span>) {  </span><br><span class="line">            bestId = ((Person) getPerson(id)).findBestAcquaintance();  </span><br><span class="line">            bestMap.put(id, bestId);  </span><br><span class="line">        }  </span><br><span class="line">    }  </span><br><span class="line">  </span><br><span class="line">    <span class="type">int</span> <span class="variable">coupleSum</span> <span class="operator">=</span> <span class="number">0</span>;  </span><br><span class="line">    Set&lt;Integer&gt; processed = <span class="keyword">new</span> <span class="title class_">HashSet</span>&lt;&gt;();  </span><br><span class="line">    <span class="keyword">for</span> (PersonInterface person : persons.values()) {  </span><br><span class="line">        <span class="type">int</span> <span class="variable">id</span> <span class="operator">=</span> person.getId();  </span><br><span class="line">        <span class="keyword">if</span> (processed.contains(id)) {  </span><br><span class="line">            <span class="keyword">continue</span>;  </span><br><span class="line">        }  </span><br><span class="line">  </span><br><span class="line">        <span class="type">Integer</span> <span class="variable">bestId</span> <span class="operator">=</span> bestMap.get(id);  </span><br><span class="line">        <span class="keyword">if</span> (bestId != <span class="literal">null</span>) {  </span><br><span class="line">            <span class="type">Integer</span> <span class="variable">bestOfBest</span> <span class="operator">=</span> bestMap.get(bestId);  </span><br><span class="line">            <span class="keyword">if</span> (bestOfBest != <span class="literal">null</span> &amp;&amp; bestOfBest == id) {  </span><br><span class="line">                <span class="keyword">if</span> (id &lt; bestId) {  </span><br><span class="line">                    coupleSum++;  </span><br><span class="line">                    processed.add(id);  </span><br><span class="line">                    processed.add(bestId);  </span><br><span class="line">                }  </span><br><span class="line">            }  </span><br><span class="line">        }  </span><br><span class="line">    }  </span><br><span class="line">    <span class="keyword">return</span> coupleSum;  </span><br><span class="line">}</span><br></pre></td></tr></table></figure></div>
+
+<p>简单来说，是先循环一次记录一个字典，然后再循环一次计算结果。避免了循环嵌套，用空间换时间。</p>
+<h5 id="2-2-3-3-生成期望数据结构"><a href="#2-2-3-3-生成期望数据结构" class="headerlink" title="2.2.3.3 生成期望数据结构"></a>2.2.3.3 生成期望数据结构</h5><p>在 <code>receivedArticles</code> 的组织中，笔者原本使用 <code>LinkedList</code> 双向链表，但发现链表取出头部的效果虽好，但查找效果很差。而 <code>HashMap</code> 的查找效果很好，但无法记录顺序。为了不 TLE，笔者想实现一个 <code>HashLinkedList</code> 数据结构，结合二者功能。</p>
+<p>然而有些操作涉及偏底层代码实现，交给 LLM 来做了。</p>
+<h3 id="2-3-性能优化"><a href="#2-3-性能优化" class="headerlink" title="2.3 性能优化"></a>2.3 性能优化</h3><p>主要性能优化在上一条大模型辅助中介绍。</p>
+<p>附 <code>HashLinkedList</code> 实现（需要支持重复元素）：</p>
+<div class="code-container" data-rel="Java"><figure class="iseeu highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">HashLinkedList</span>&lt;E&gt; <span class="keyword">extends</span> <span class="title class_">AbstractList</span>&lt;E&gt; {  </span><br><span class="line">    <span class="comment">// 双向链表节点  </span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">class</span> <span class="title class_">Node</span>&lt;E&gt; {  </span><br><span class="line">        <span class="keyword">private</span> E item;  </span><br><span class="line">        <span class="keyword">private</span> Node&lt;E&gt; prev;  </span><br><span class="line">        <span class="keyword">private</span> Node&lt;E&gt; next;  </span><br><span class="line">  </span><br><span class="line">        Node(Node&lt;E&gt; prev, E element, Node&lt;E&gt; next) {  </span><br><span class="line">            <span class="built_in">this</span>.item = element;  </span><br><span class="line">            <span class="built_in">this</span>.prev = prev;  </span><br><span class="line">            <span class="built_in">this</span>.next = next;  </span><br><span class="line">        }  </span><br><span class="line">    }  </span><br><span class="line">  </span><br><span class="line">    <span class="comment">// 虚拟头尾节点  </span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">transient</span> Node&lt;E&gt; head;  </span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">transient</span> Node&lt;E&gt; tail;  </span><br><span class="line">    <span class="comment">// 元素到节点列表的映射  </span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">transient</span> HashMap&lt;E, List&lt;Node&lt;E&gt;&gt;&gt; map;  </span><br><span class="line">    <span class="comment">// 是否允许重复元素  </span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> <span class="type">boolean</span> allowDuplicates;  </span><br><span class="line">    <span class="comment">// 实际元素数量  </span></span><br><span class="line">    <span class="keyword">private</span> <span class="type">int</span> size;  </span><br><span class="line">  </span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">HashLinkedList</span><span class="params">()</span> {  </span><br><span class="line">        <span class="built_in">this</span>(<span class="literal">true</span>); <span class="comment">// 默认允许重复元素  </span></span><br><span class="line">    }  </span><br><span class="line">  </span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">HashLinkedList</span><span class="params">(<span class="type">boolean</span> allowDuplicates)</span> {  </span><br><span class="line">        <span class="built_in">this</span>.allowDuplicates = allowDuplicates;  </span><br><span class="line">        head = <span class="keyword">new</span> <span class="title class_">Node</span>&lt;&gt;(<span class="literal">null</span>, <span class="literal">null</span>, <span class="literal">null</span>);  </span><br><span class="line">        tail = <span class="keyword">new</span> <span class="title class_">Node</span>&lt;&gt;(head, <span class="literal">null</span>, <span class="literal">null</span>);  </span><br><span class="line">        head.next = tail;  </span><br><span class="line">        map = <span class="keyword">new</span> <span class="title class_">HashMap</span>&lt;&gt;();  </span><br><span class="line">        size = <span class="number">0</span>;  </span><br><span class="line">    }  </span><br><span class="line">  </span><br><span class="line">    <span class="comment">// O(1)时间添加元素到头部  </span></span><br><span class="line">    <span class="meta">@Override</span>  </span><br><span class="line">    <span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">add</span><span class="params">(E e)</span> {  </span><br><span class="line">        <span class="keyword">if</span> (e == <span class="literal">null</span>) {  </span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">NullPointerException</span>(<span class="string">"元素不能为null"</span>);  </span><br><span class="line">        }  </span><br><span class="line">  </span><br><span class="line">        <span class="comment">// 唯一性检查（当不允许重复时）  </span></span><br><span class="line">        <span class="keyword">if</span> (!allowDuplicates &amp;&amp; map.containsKey(e)) {  </span><br><span class="line">            <span class="keyword">return</span> <span class="literal">false</span>;  </span><br><span class="line">        }  </span><br><span class="line">  </span><br><span class="line">        <span class="comment">// 创建新节点并更新链表  </span></span><br><span class="line">        Node&lt;E&gt; newNode = <span class="keyword">new</span> <span class="title class_">Node</span>&lt;&gt;(head, e, head.next);  </span><br><span class="line">        head.next.prev = newNode;  </span><br><span class="line">        head.next = newNode;  </span><br><span class="line">  </span><br><span class="line">        <span class="comment">// 更新尾节点（仅当链表为空时）  </span></span><br><span class="line">        <span class="keyword">if</span> (tail.prev == head) {  </span><br><span class="line">            tail.prev = newNode;  </span><br><span class="line">        }  </span><br><span class="line">  </span><br><span class="line">        <span class="comment">// 更新映射表  </span></span><br><span class="line">        map.computeIfAbsent(e, k -&gt; <span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;&gt;()).add(newNode);  </span><br><span class="line">        size++; <span class="comment">// 维护实际大小  </span></span><br><span class="line">        <span class="keyword">return</span> <span class="literal">true</span>;  </span><br><span class="line">    }  </span><br><span class="line">  </span><br><span class="line">    <span class="comment">// O(1)时间通过元素删除（移除最后添加的节点）  </span></span><br><span class="line">    <span class="meta">@Override</span>  </span><br><span class="line">    <span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">remove</span><span class="params">(Object o)</span> {  </span><br><span class="line">        <span class="keyword">if</span> (!map.containsKey(o)) {  </span><br><span class="line">            <span class="keyword">return</span> <span class="literal">false</span>;  </span><br><span class="line">        }  </span><br><span class="line">  </span><br><span class="line">        List&lt;Node&lt;E&gt;&gt; nodes = map.get(o);  </span><br><span class="line">        <span class="keyword">if</span> (nodes.isEmpty()) {  </span><br><span class="line">            <span class="keyword">return</span> <span class="literal">false</span>;  </span><br><span class="line">        }  </span><br><span class="line">  </span><br><span class="line">        <span class="comment">// 移除最后一个添加的节点（栈行为）  </span></span><br><span class="line">        Node&lt;E&gt; nodeToRemove = nodes.remove(nodes.size() - <span class="number">1</span>);  </span><br><span class="line">        unlink(nodeToRemove);  </span><br><span class="line">        size--; <span class="comment">// 维护实际大小  </span></span><br><span class="line">  </span><br><span class="line">        <span class="comment">// 若节点列表为空，从map中移除键  </span></span><br><span class="line">        <span class="keyword">if</span> (nodes.isEmpty()) {  </span><br><span class="line">            map.remove(o);  </span><br><span class="line">        }  </span><br><span class="line">        <span class="keyword">return</span> <span class="literal">true</span>;  </span><br><span class="line">    }  </span><br><span class="line">  </span><br><span class="line">    <span class="comment">// O(1)时间断开节点链接  </span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">void</span> <span class="title function_">unlink</span><span class="params">(Node&lt;E&gt; node)</span> {  </span><br><span class="line">        node.prev.next = node.next;  </span><br><span class="line">        node.next.prev = node.prev;  </span><br><span class="line">        node.item = <span class="literal">null</span>; <span class="comment">// 帮助GC  </span></span><br><span class="line">    }  </span><br><span class="line">  </span><br><span class="line">    <span class="comment">// O(1)时间检查元素是否存在  </span></span><br><span class="line">    <span class="meta">@Override</span>  </span><br><span class="line">    <span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">contains</span><span class="params">(Object o)</span> {  </span><br><span class="line">        <span class="keyword">return</span> map.containsKey(o) &amp;&amp; !map.get(o).isEmpty();  </span><br><span class="line">    }  </span><br><span class="line">  </span><br><span class="line">    <span class="comment">// O(n)时间按索引访问  </span></span><br><span class="line">    <span class="meta">@Override</span>  </span><br><span class="line">    <span class="keyword">public</span> E <span class="title function_">get</span><span class="params">(<span class="type">int</span> index)</span> {  </span><br><span class="line">        checkIndex(index);  </span><br><span class="line">        Node&lt;E&gt; x = head.next;  </span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; index; i++) {  </span><br><span class="line">            x = x.next;  </span><br><span class="line">        }  </span><br><span class="line">        <span class="keyword">return</span> x.item;  </span><br><span class="line">    }  </span><br><span class="line">  </span><br><span class="line">    <span class="comment">// 正确返回实际大小  </span></span><br><span class="line">    <span class="meta">@Override</span>  </span><br><span class="line">    <span class="keyword">public</span> <span class="type">int</span> <span class="title function_">size</span><span class="params">()</span> {  </span><br><span class="line">        <span class="keyword">return</span> size;  </span><br><span class="line">    }  </span><br><span class="line">  </span><br><span class="line">    <span class="comment">// 辅助方法：检查索引合法性  </span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">void</span> <span class="title function_">checkIndex</span><span class="params">(<span class="type">int</span> index)</span> {  </span><br><span class="line">        <span class="keyword">if</span> (index &lt; <span class="number">0</span> || index &gt;= size) {  </span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">IndexOutOfBoundsException</span>(<span class="string">"索引越界: "</span> + index);  </span><br><span class="line">        }  </span><br><span class="line">    }  </span><br><span class="line">}</span><br></pre></td></tr></table></figure></div>
+
+<h3 id="2-4-测试方案"><a href="#2-4-测试方案" class="headerlink" title="2.4 测试方案"></a>2.4 测试方案</h3><h4 id="2-4-1-Junit-单元测试"><a href="#2-4-1-Junit-单元测试" class="headerlink" title="2.4.1 Junit 单元测试"></a>2.4.1 Junit 单元测试</h4><p>本次作业需要针对 <code>queryCoupleSum</code> 进行单元测试。和之前一样，构造特殊数据并测试 pure 即可通过所有测试点。在构造数据的过程中，归纳发现该结果就是连通子图的数量。也就有了前文提到的优化，给了 LLM 合适的提示词。</p>
+<h4 id="2-4-2-评测机搭建"><a href="#2-4-2-评测机搭建" class="headerlink" title="2.4.2 评测机搭建"></a>2.4.2 评测机搭建</h4><p>这次的评测机很强！甚至测出了评测机做不出的点。</p>
+<p>主要是弥补了上一次作业的三个漏洞：增大密度、个性化尺度、考虑已有 <code>id</code> 信息。</p>
+<h2 id="3-第十一次作业"><a href="#3-第十一次作业" class="headerlink" title="3 第十一次作业"></a>3 第十一次作业</h2><h3 id="3-1-需求说明"><a href="#3-1-需求说明" class="headerlink" title="3.1 需求说明"></a>3.1 需求说明</h3><p>在之前的基础上，完成对<strong>消息收发</strong>的模拟。消息包括表情消息、转发消息、红包消息。</p>
+<h3 id="3-2-规格实现"><a href="#3-2-规格实现" class="headerlink" title="3.2 规格实现"></a>3.2 规格实现</h3><h4 id="3-2-1-UML-类图"><a href="#3-2-1-UML-类图" class="headerlink" title="3.2.1 UML 类图"></a>3.2.1 UML 类图</h4><p><img lazyload="" src="/images/loading.svg" data-src="/images/oo/hw11.png" alt="hw11"></p>
+<h4 id="3-2-2-JML-规格实现"><a href="#3-2-2-JML-规格实现" class="headerlink" title="3.2.2 JML 规格实现"></a>3.2.2 JML 规格实现</h4><p>这次作业的消息发送具有很复杂的 JML，让人体会到了自然语言高于 JML 之处。</p>
+<p>本次作业也没有需要性能优化的地方。</p>
+<h3 id="3-3-测试方案"><a href="#3-3-测试方案" class="headerlink" title="3.3 测试方案"></a>3.3 测试方案</h3><h4 id="3-3-1-Junit-单元测试"><a href="#3-3-1-Junit-单元测试" class="headerlink" title="3.3.1 Junit 单元测试"></a>3.3.1 Junit 单元测试</h4><p>本次作业需要针对 <code>deleteCodeEmoji</code> 进行单元测试。这次的方法不是 pure 了所以不用测。依旧构造特殊数据，但需要特别测试 <code>messages</code> 容器是否也进行了删除，这是 JML 中做了正确性约束的。</p>
+<h2 id="4-心得体会"><a href="#4-心得体会" class="headerlink" title="4 心得体会"></a>4 心得体会</h2><p>我觉得 JML 很鸡肋（诚实）。它没有自然语言的可读性和简洁性，唯一的准确性也可能因为可读性太低而丢失。或许它是在 LLM 语境下的不错实践，但 LLM 也可以阅读自然语言啊（）。</p>
+<p>我觉得本单元更重要的思想是“契约式编程”。无论是 JML，还是需求文档等其他形式，实现高效编程协作（面向对象）的要求是能够没有歧义地限定边界。</p>
+<p>在之前的单元中，我会尝试在自己写的方法上加上注释，提示自己“这个方法是在xx基础上进行的”，比如“输入数据已经排好序了”。避免进行重复冗余操作或者因为出现 bug。而 JML 很好地做到了这件事情，<code>requires</code> 就是前提条件，也就是我在注释中尝试限定的东西。</p>
+<p>JML 也是为了实现高内聚低耦合的面向对象实践啊！</p>
+
+		</div>
+
+		
+		<div class="post-copyright-info w-full my-8 px-2 sm:px-6 md:px-8">
+			<div class="article-copyright-info-container">
+    <ul>
+        <li><strong>Title:</strong> 面向对象设计与构造OO：Unit3-社交网络</li>
+        <li><strong>Author:</strong> BaconToast</li>
+        <li><strong>Created at
+                :</strong> 2025-11-18 15:17:44</li>
+        
+            <li>
+                <strong>Updated at
+                    :</strong> 2025-11-18 15:23:05
+            </li>
+        
+        <li>
+            <strong>Link:</strong> https://bacontoast-pro.github.io/2025/11/18/oo/u3/
+        </li>
+        <li>
+            <strong>
+                License:
+            </strong>
+            
+
+            
+                This work is licensed under <a class="license" target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0">CC BY-NC-SA 4.0</a>.
+            
+        </li>
+    </ul>
+</div>
+
+		</div>
+		
+
+		
+		<ul class="post-tags-box text-lg mt-1.5 flex-wrap justify-center flex md:hidden">
+			
+			<li class="tag-item mx-0.5">
+				<a href="/tags/Java/">#Java</a>&nbsp;
+			</li>
+			
+			<li class="tag-item mx-0.5">
+				<a href="/tags/OO/">#OO</a>&nbsp;
+			</li>
+			
+		</ul>
+		
+
+		
+
+		
+		<div class="article-nav my-8 flex justify-between items-center px-2 sm:px-6 md:px-8">
+			
+			<div class="article-prev border-border-color shadow-redefine-flat shadow-shadow-color-2 rounded-medium px-4 py-2 hover:shadow-redefine-flat-hover hover:shadow-shadow-color-2">
+				<a class="prev" rel="prev" href="/2025/11/18/oo/u4/">
+					<span class="left arrow-icon flex justify-center items-center">
+						<i class="fa-solid fa-chevron-left"></i>
+					</span>
+					<span class="title flex justify-center items-center">
+						<span class="post-nav-title-item truncate max-w-48">面向对象设计与构造OO：Unit4-图书馆系统</span>
+						<span class="post-nav-item">Prev posts</span>
+					</span>
+				</a>
+			</div>
+			
+			
+			<div class="article-next border-border-color shadow-redefine-flat shadow-shadow-color-2 rounded-medium px-4 py-2 hover:shadow-redefine-flat-hover hover:shadow-shadow-color-2">
+				<a class="next" rel="next" href="/2025/11/18/oo/u2/">
+					<span class="title flex justify-center items-center">
+						<span class="post-nav-title-item truncate max-w-48">面向对象设计与构造OO：Unit2-电梯调度</span>
+						<span class="post-nav-item">Next posts</span>
+					</span>
+					<span class="right arrow-icon flex justify-center items-center">
+						<i class="fa-solid fa-chevron-right"></i>
+					</span>
+				</a>
+			</div>
+			
+		</div>
+		
+
+
+		
+		<div class="comment-container px-2 sm:px-6 md:px-8 pb-8">
+			<div class="comments-container mt-10 w-full ">
+    <div id="comment-anchor" class="w-full h-2.5"></div>
+    <div class="comment-area-title w-full my-1.5 md:my-2.5 text-xl md:text-3xl font-bold">
+        Comments
+    </div>
+    
+
+        
+            
+    <div id="waline"></div>
+    <script type="module" data-swup-reload-script>
+      import { init } from '/js/libs/waline.mjs';
+
+      function loadWaline() {
+        init({
+          el: '#waline',
+          serverURL: 'https://example.example.com',
+          dark: 'body[class~="dark-mode"]',
+          reaction: false,
+          requiredMeta: ['nick', 'mail'],
+          emoji: [],
+                    lang: 'zh-CN',
+        });
+      }
+
+      if (typeof swup !== 'undefined') {
+        loadWaline();
+      } else {
+        window.addEventListener('DOMContentLoaded', loadWaline);
+      }
+    </script>
+
+
+
+        
+    
+</div>
+
+		</div>
+		
+	</div>
+
+	
+	<div class="toc-content-container">
+		<div class="post-toc-wrap">
+	<div class="post-toc">
+		<div class="toc-title">On this page</div>
+		<div class="page-title">面向对象设计与构造OO：Unit3-社交网络</div>
+		<ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#0-%E5%89%8D%E8%A8%80"><span class="nav-text">0 前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-%E7%AC%AC%E4%B9%9D%E6%AC%A1%E4%BD%9C%E4%B8%9A"><span class="nav-text">1 第九次作业</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-1-%E9%9C%80%E6%B1%82%E8%AF%B4%E6%98%8E"><span class="nav-text">1.1 需求说明</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-2-%E8%A7%84%E6%A0%BC%E5%AE%9E%E7%8E%B0"><span class="nav-text">1.2 规格实现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-3-%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96"><span class="nav-text">1.3 性能优化</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-4-%E6%B5%8B%E8%AF%95%E6%96%B9%E6%A1%88"><span class="nav-text">1.4 测试方案</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-%E7%AC%AC%E5%8D%81%E6%AC%A1%E4%BD%9C%E4%B8%9A"><span class="nav-text">2 第十次作业</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1-%E9%9C%80%E6%B1%82%E8%AF%B4%E6%98%8E"><span class="nav-text">2.1 需求说明</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2-%E8%A7%84%E6%A0%BC%E5%AE%9E%E7%8E%B0"><span class="nav-text">2.2 规格实现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-3-%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96"><span class="nav-text">2.3 性能优化</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-4-%E6%B5%8B%E8%AF%95%E6%96%B9%E6%A1%88"><span class="nav-text">2.4 测试方案</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-%E7%AC%AC%E5%8D%81%E4%B8%80%E6%AC%A1%E4%BD%9C%E4%B8%9A"><span class="nav-text">3 第十一次作业</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#3-1-%E9%9C%80%E6%B1%82%E8%AF%B4%E6%98%8E"><span class="nav-text">3.1 需求说明</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-2-%E8%A7%84%E6%A0%BC%E5%AE%9E%E7%8E%B0"><span class="nav-text">3.2 规格实现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-3-%E6%B5%8B%E8%AF%95%E6%96%B9%E6%A1%88"><span class="nav-text">3.3 测试方案</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-%E5%BF%83%E5%BE%97%E4%BD%93%E4%BC%9A"><span class="nav-text">4 心得体会</span></a></li></ol>
+
+	</div>
+</div>
+	</div>
+	
+</div>
+			</div>
+
+			
+		</div>
+
+		<div class="main-content-footer">
+			<footer class="footer mt-5 py-5 h-auto text-base text-third-text-color relative border-t-2 border-t-border-color">
+    <div class="info-container py-3 text-center">
+        
+        <div class="text-center">
+            &copy;
+            
+              <span>2025</span>
+              -
+            
+            2025&nbsp;&nbsp;<i class="fa-solid fa-heart fa-beat" style="--fa-animation-duration: 0.5s; color: #f54545"></i>&nbsp;&nbsp;<a href="/">BaconToast</a>
+            
+                
+                <p class="post-count space-x-0.5">
+                    <span>
+                        14 posts in total
+                    </span>
+                    
+                </p>
+            
+        </div>
+        
+            <script data-swup-reload-script src="https://cn.vercount.one/js"></script>
+            <div class="relative text-center lg:absolute lg:right-[20px] lg:top-1/2 lg:-translate-y-1/2 lg:text-right">
+                
+                    <span id="busuanzi_container_site_uv" class="lg:!block">
+                        <span class="text-sm">VISITOR COUNT</span>
+                        <span id="busuanzi_value_site_uv"></span>
+                    </span>
+                
+                
+                    <span id="busuanzi_container_site_pv" class="lg:!block">
+                        <span class="text-sm">TOTAL PAGE VIEWS</span>
+                        <span id="busuanzi_value_site_pv"></span>
+                    </span>
+                
+            </div>
+        
+        <div class="relative text-center lg:absolute lg:left-[20px] lg:top-1/2 lg:-translate-y-1/2 lg:text-left">
+            <span class="lg:block text-sm">POWERED BY <?xml version="1.0" encoding="utf-8"?><!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"><svg class="relative top-[2px] inline-block align-baseline" version="1.1" id="圖層_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="1rem" height="1rem" viewBox="0 0 512 512" enable-background="new 0 0 512 512" xml:space="preserve"><path fill="#0E83CD" d="M256.4,25.8l-200,115.5L56,371.5l199.6,114.7l200-115.5l0.4-230.2L256.4,25.8z M349,354.6l-18.4,10.7l-18.6-11V275H200v79.6l-18.4,10.7l-18.6-11v-197l18.5-10.6l18.5,10.8V237h112v-79.6l18.5-10.6l18.5,10.8V354.6z"/></svg><a target="_blank" class="text-base" href="https://hexo.io">Hexo</a></span>
+            <span class="text-sm lg:block">THEME&nbsp;<a class="text-base" target="_blank" href="https://github.com/EvanNotFound/hexo-theme-redefine">Redefine v2.8.5</a></span>
+        </div>
+        
+        
+            <div>
+                Blog up for <span class="odometer" id="runtime_days" ></span> days <span class="odometer" id="runtime_hours"></span> hrs <span class="odometer" id="runtime_minutes"></span> Min <span class="odometer" id="runtime_seconds"></span> Sec
+            </div>
+        
+        
+            <script data-swup-reload-script>
+                try {
+                    function odometer_init() {
+                    const elements = document.querySelectorAll('.odometer');
+                    elements.forEach(el => {
+                        new Odometer({
+                            el,
+                            format: '( ddd).dd',
+                            duration: 200
+                        });
+                    });
+                    }
+                    odometer_init();
+                } catch (error) {}
+            </script>
+        
+        
+        
+    </div>  
+</footer>
+		</div>
+	</div>
+
+	
+	<div class="post-tools">
+		<div class="post-tools-container">
+	<ul class="article-tools-list">
+		<!-- TOC aside toggle -->
+		
+		<li class="right-bottom-tools page-aside-toggle">
+			<i class="fa-regular fa-outdent"></i>
+		</li>
+		
+
+		<!-- go comment -->
+		
+		<li class="go-comment">
+			<i class="fa-regular fa-comments"></i>
+		</li>
+		
+	</ul>
+</div>
+	</div>
+	
+
+	<div class="right-side-tools-container">
+		<div class="side-tools-container">
+	<ul class="hidden-tools-list">
+		<li class="right-bottom-tools tool-font-adjust-plus flex justify-center items-center">
+			<i class="fa-regular fa-magnifying-glass-plus"></i>
+		</li>
+
+		<li class="right-bottom-tools tool-font-adjust-minus flex justify-center items-center">
+			<i class="fa-regular fa-magnifying-glass-minus"></i>
+		</li>
+
+		<li class="right-bottom-tools tool-dark-light-toggle flex justify-center items-center">
+			<i class="fa-regular fa-moon"></i>
+		</li>
+
+		<!-- rss -->
+		
+
+		
+
+		<li class="right-bottom-tools tool-scroll-to-bottom flex justify-center items-center">
+			<i class="fa-regular fa-arrow-down"></i>
+		</li>
+	</ul>
+
+	<ul class="visible-tools-list">
+		<li class="right-bottom-tools toggle-tools-list flex justify-center items-center">
+			<i class="fa-regular fa-cog fa-spin"></i>
+		</li>
+		
+		<li class="right-bottom-tools tool-scroll-to-top flex justify-center items-center">
+			<i class="arrow-up fas fa-arrow-up"></i>
+			<span class="percent"></span>
+		</li>
+		
+		
+	</ul>
+</div>
+	</div>
+
+	<div class="image-viewer-container">
+	<img src="">
+</div>
+
+	
+
+</main>
+
+
+
+<script src="/js/build/libs/Swup.min.js"></script>
+
+<script src="/js/build/libs/SwupSlideTheme.min.js"></script>
+
+<script src="/js/build/libs/SwupScriptsPlugin.min.js"></script>
+
+<script src="/js/build/libs/SwupProgressPlugin.min.js"></script>
+
+<script src="/js/build/libs/SwupScrollPlugin.min.js"></script>
+
+<script src="/js/build/libs/SwupPreloadPlugin.min.js"></script>
+
+<script>
+    const swup = new Swup({
+        plugins: [
+            new SwupScriptsPlugin({
+                optin: true,
+            }),
+            new SwupProgressPlugin(),
+            new SwupScrollPlugin({
+                offset: 80,
+            }),
+            new SwupSlideTheme({
+                mainElement: ".main-content-body",
+            }),
+            new SwupPreloadPlugin(),
+        ],
+        containers: ["#swup"],
+    });
+</script>
+
+
+
+
+	
+<script src="/js/build/tools/imageViewer.js" type="module"></script>
+
+<script src="/js/build/utils.js" type="module"></script>
+
+<script src="/js/build/main.js" type="module"></script>
+
+<script src="/js/build/layouts/navbarShrink.js" type="module"></script>
+
+<script src="/js/build/tools/scrollTopBottom.js" type="module"></script>
+
+<script src="/js/build/tools/lightDarkSwitch.js" type="module"></script>
+
+<script src="/js/build/layouts/categoryList.js" type="module"></script>
+
+
+
+
+
+    
+<script src="/js/build/tools/codeBlock.js" type="module"></script>
+
+
+
+
+    
+<script src="/js/build/layouts/lazyload.js" type="module"></script>
+
+
+
+
+    
+<script src="/js/build/tools/runtime.js"></script>
+
+    
+<script src="/js/build/libs/odometer.min.js"></script>
+
+    
+<link rel="stylesheet" href="/assets/odometer-theme-minimal.css">
+
+
+
+
+  
+<script src="/js/build/libs/Typed.min.js"></script>
+
+  
+<script src="/js/build/plugins/typed.js" type="module"></script>
+
+
+
+
+
+
+    
+<script src="/js/build/libs/minimasonry.min.js"></script>
+
+    
+<script src="/js/build/plugins/masonry.js" type="module"></script>
+
+
+
+
+
+
+
+    
+<script src="/js/build/tools/tocToggle.js" type="module" data-swup-reload-script=""></script>
+
+<script src="/js/build/layouts/toc.js" type="module" data-swup-reload-script=""></script>
+
+<script src="/js/build/plugins/tabs.js" type="module" data-swup-reload-script=""></script>
+
+
+
+
+<script src="/js/build/libs/moment-with-locales.min.js" data-swup-reload-script=""></script>
+
+
+<script src="/js/build/layouts/essays.js" type="module" data-swup-reload-script=""></script>
+
+
+
+
+
+    
+<script src="/js/build/layouts/bookmarkNav.js" type="module"></script>
+
+
+	
+</body>
+
+</html>

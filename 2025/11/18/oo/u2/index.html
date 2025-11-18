@@ -1,0 +1,1404 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="keywords" content="Hexo Theme Redefine">
+    
+    <meta name="author" content="BaconToast">
+    
+    <!-- Completely eliminate flash of wrong theme -->
+    <script>
+        (function() {
+            const THEME_KEY = "REDEFINE-THEME-STATUS";
+            const DARK = "dark", LIGHT = "light";
+            
+            // Get preferred theme
+            function getTheme() {
+                try {
+                    const saved = localStorage.getItem(THEME_KEY);
+                    if (saved) {
+                        const { isDark } = JSON.parse(saved);
+                        return isDark ? DARK : LIGHT;
+                    }
+                } catch (e) {}
+                
+                return matchMedia("(prefers-color-scheme: dark)").matches ? DARK : LIGHT;
+            }
+            
+            // Apply theme to document
+            function applyTheme(theme) {
+                const isDark = theme === DARK;
+                const root = document.documentElement;
+                
+                // Set data attribute for CSS variables
+                root.setAttribute("data-theme", theme);
+                
+                // Set classes for compatibility
+                root.classList.add(theme);
+                root.classList.remove(isDark ? LIGHT : DARK);
+                root.style.colorScheme = theme;
+            }
+            
+            // Initial application
+            const theme = getTheme();
+            applyTheme(theme);
+            
+            // Listen for system preference changes
+            matchMedia("(prefers-color-scheme: dark)").addEventListener("change", ({ matches }) => {
+                // Only update if using system preference (no localStorage entry)
+                if (!localStorage.getItem(THEME_KEY)) {
+                    applyTheme(matches ? DARK : LIGHT);
+                }
+            });
+            
+            // Set body classes once DOM is ready
+            if (document.readyState !== "loading") {
+                document.body.classList.add(theme + "-mode");
+            } else {
+                document.addEventListener("DOMContentLoaded", () => {
+                    document.body.classList.add(theme + "-mode");
+                    document.body.classList.remove((theme === DARK ? LIGHT : DARK) + "-mode");
+                });
+            }
+        })();
+    </script>
+    
+    <!-- Critical CSS to prevent flash -->
+    <style>
+        :root[data-theme="dark"] {
+            --background-color: #202124;
+            --background-color-transparent: rgba(32, 33, 36, 0.6);
+            --second-background-color: #2d2e32;
+            --third-background-color: #34353a;
+            --third-background-color-transparent: rgba(32, 33, 36, 0.6);
+            --primary-color: #0066CC;
+            --first-text-color: #ffffff;
+            --second-text-color: #eeeeee;
+            --third-text-color: #bebec6;
+            --fourth-text-color: #999999;
+            --default-text-color: #bebec6;
+            --invert-text-color: #373D3F;
+            --border-color: rgba(255, 255, 255, 0.08);
+            --selection-color: #0066CC;
+            --shadow-color-1: rgba(255, 255, 255, 0.08);
+            --shadow-color-2: rgba(255, 255, 255, 0.05);
+        }
+        
+        :root[data-theme="light"] {
+            --background-color: #fff;
+            --background-color-transparent: rgba(255, 255, 255, 0.6);
+            --second-background-color: #f8f8f8;
+            --third-background-color: #f2f2f2;
+            --third-background-color-transparent: rgba(241, 241, 241, 0.6);
+            --primary-color: #0066CC;
+            --first-text-color: #16171a;
+            --second-text-color: #2f3037;
+            --third-text-color: #5e5e5e;
+            --fourth-text-color: #eeeeee;
+            --default-text-color: #373D3F;
+            --invert-text-color: #bebec6;
+            --border-color: rgba(0, 0, 0, 0.08);
+            --selection-color: #0066CC;
+            --shadow-color-1: rgba(0, 0, 0, 0.08);
+            --shadow-color-2: rgba(0, 0, 0, 0.05);
+        }
+        
+        body {
+            background-color: var(--background-color);
+            color: var(--default-text-color);
+        }
+        
+        /* Apply body classes as soon as DOM is ready */
+        :root[data-theme="dark"] body {
+            background-color: var(--background-color);
+            color: var(--default-text-color);
+        }
+    </style>
+    
+    <!-- preconnect -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    
+    <!--- Seo Part-->
+    
+    <link rel="canonical" href="https://BaconToast-pro.github.io/2025/11/18/oo/u2/"/>
+    <meta name="robots" content="index,follow">
+    <meta name="googlebot" content="index,follow">
+    <meta name="revisit-after" content="1 days">
+    
+    
+    
+        
+        <meta name="description" content="Hexo Theme Redefine, Redefine Your Hexo Journey.">
+<meta property="og:type" content="article">
+<meta property="og:title" content="面向对象设计与构造OO：Unit2-电梯调度">
+<meta property="og:url" content="https://bacontoast-pro.github.io/2025/11/18/oo/u2/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="Hexo Theme Redefine, Redefine Your Hexo Journey.">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://bacontoast-pro.github.io/images/redefine-og.webp">
+<meta property="article:published_time" content="2025-11-18T05:23:36.357Z">
+<meta property="article:modified_time" content="2025-11-18T07:17:44.341Z">
+<meta property="article:author" content="BaconToast">
+<meta property="article:tag" content="Java">
+<meta property="article:tag" content="OO">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://bacontoast-pro.github.io/images/redefine-og.webp">
+    
+    
+    <!--- Icon Part-->
+    <link rel="icon" type="image/png" href="/images/public/toast.svg" sizes="192x192">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/public/toast.svg">
+    <meta name="theme-color" content="#A31F34">
+    <link rel="shortcut icon" href="/images/public/toast.svg">
+    <!--- Page Info-->
+    
+    <title>
+        
+            面向对象设计与构造OO：Unit2-电梯调度 | BaconToast&#39;s Shop
+        
+    </title>
+
+    
+<link rel="stylesheet" href="/fonts/Chillax/chillax.css">
+
+
+    <!--- Inject Part-->
+    
+
+    
+<link rel="stylesheet" href="/css/style.css">
+
+
+    
+        
+<link rel="stylesheet" href="/css/build/tailwind.css">
+
+    
+
+    
+<link rel="stylesheet" href="/fonts/GeistMono/geist-mono.css">
+
+    
+<link rel="stylesheet" href="/fonts/Geist/geist.css">
+
+    <!--- Font Part-->
+    
+    
+    
+    
+    
+    
+        
+<script src="/js/build/libs/anime.min.js"></script>
+
+    
+
+    <script id="hexo-configurations">
+    window.config = {"hostname":"bacontoast-pro.github.io","root":"/","language":"en"};
+    window.theme = {"articles":{"style":{"font_size":"16px","line_height":1.5,"image_border_radius":"14px","image_alignment":"center","image_caption":false,"link_icon":true,"delete_mask":false,"title_alignment":"left","headings_top_spacing":{"h1":"3.2rem","h2":"2.4rem","h3":"1.9rem","h4":"1.6rem","h5":"1.4rem","h6":"1.3rem"}},"word_count":{"enable":true,"count":true,"min2read":true},"author_label":{"enable":true,"auto":false,"list":[]},"code_block":{"copy":true,"style":"mac","highlight_theme":{"light":"github","dark":"vs2015"},"font":{"enable":false,"family":null,"url":null}},"toc":{"enable":true,"max_depth":3,"number":false,"expand":true,"init_open":true},"copyright":{"enable":true,"default":"cc_by_nc_sa"},"lazyload":true,"pangu_js":false,"recommendation":{"enable":false,"title":"推荐阅读","limit":3,"mobile_limit":2,"placeholder":"/images/wallhaven-wqery6-light.webp","skip_dirs":[]}},"colors":{"primary":"#A31F34","secondary":null,"default_mode":"light"},"global":{"fonts":{"chinese":{"enable":false,"family":null,"url":null},"english":{"enable":false,"family":null,"url":null},"title":{"enable":false,"family":null,"url":null}},"content_max_width":"1000px","sidebar_width":"210px","hover":{"shadow":true,"scale":true},"scroll_progress":{"bar":false,"percentage":true},"website_counter":{"url":"https://cn.vercount.one/js","enable":true,"site_pv":true,"site_uv":true,"post_pv":true},"single_page":true,"preloader":{"enable":true,"custom_message":null},"side_tools":{"gear_rotation":true,"auto_expand":true},"open_graph":{"enable":true,"image":"/images/redefine-og.webp","description":"Hexo Theme Redefine, Redefine Your Hexo Journey."},"google_analytics":{"enable":false,"id":null}},"home_banner":{"enable":true,"style":"fixed","image":{"light":"/images/wallhaven-wqery6-light.webp","dark":"/images/wallhaven-wqery6-dark.webp"},"title":"BaconToast Blog","subtitle":{"text":["欢迎来到BaconToast小商店~","We can be the light upon the day."],"hitokoto":{"enable":false,"show_author":false,"api":"https://v1.hitokoto.cn"},"typing_speed":100,"backing_speed":80,"starting_delay":500,"backing_delay":1500,"loop":true,"smart_backspace":true},"text_color":{"light":"#fff","dark":"#d1d1b6"},"text_style":{"title_size":"2.8rem","subtitle_size":"1.5rem","line_height":1.2},"custom_font":{"enable":false,"family":null,"url":null},"social_links":{"enable":true,"style":"default","links":{"github":"https://github.com/BaconToast-pro","instagram":null,"zhihu":null,"twitter":null,"email":"zhouzq@buaa.edu.cn"},"qrs":{"weixin":"images/public/wechat.jpg"}}},"plugins":{"feed":{"enable":false},"aplayer":{"enable":false,"type":"fixed","audios":[{"name":null,"artist":null,"url":null,"cover":null,"lrc":null}]},"mermaid":{"enable":false,"version":"11.4.1"}},"version":"2.8.5","navbar":{"auto_hide":true,"color":{"left":"#f78736","right":"#367df7","transparency":35},"width":{"home":"1200px","pages":"1000px"},"links":{"Home":{"path":"/","icon":"fa-regular fa-house"},"Archives":{"path":"/archives","icon":"fa-regular fa-archive"},"Friends":{"icon":"fa-solid fa-link","path":"/links/"},"About":{"icon":"fa-regular fa-user","submenus":{"Github":"https://github.com/BaconToast-pro","Friends":"/links/"}}},"search":{"enable":false,"preload":true}},"page_templates":{"friends_column":2,"tags_style":"blur"},"home":{"sidebar":{"enable":true,"position":"left","first_item":"menu","announcement":"~o(^_^)o~","show_on_mobile":true,"links":{"Archives":{"path":"/archives","icon":"fa-regular fa-archive"},"Tags":{"path":"/tags","icon":"fa-regular fa-tags"},"Categories":{"path":"/categories","icon":"fa-regular fa-folder"}}},"article_date_format":"auto","excerpt_length":200,"categories":{"enable":true,"limit":3},"tags":{"enable":true,"limit":3}},"footerStart":"2025/11/11 17:20:00"};
+    window.lang_ago = {"second":"%s seconds ago","minute":"%s minutes ago","hour":"%s hours ago","day":"%s days ago","week":"%s weeks ago","month":"%s months ago","year":"%s years ago"};
+    window.data = {"masonry":true};
+  </script>
+    
+    <!--- Fontawesome Part-->
+    
+<link rel="stylesheet" href="/fontawesome/fontawesome.min.css">
+
+    
+<link rel="stylesheet" href="/fontawesome/brands.min.css">
+
+    
+<link rel="stylesheet" href="/fontawesome/solid.min.css">
+
+    
+<link rel="stylesheet" href="/fontawesome/regular.min.css">
+
+    
+    
+    
+    
+<meta name="generator" content="Hexo 8.1.1"><style>mjx-container[jax="SVG"] {
+  direction: ltr;
+}
+
+mjx-container[jax="SVG"] > svg {
+  overflow: visible;
+}
+
+mjx-container[jax="SVG"][display="true"] {
+  display: block;
+  text-align: center;
+  margin: 1em 0;
+}
+
+mjx-container[jax="SVG"][justify="left"] {
+  text-align: left;
+}
+
+mjx-container[jax="SVG"][justify="right"] {
+  text-align: right;
+}
+
+g[data-mml-node="merror"] > g {
+  fill: red;
+  stroke: red;
+}
+
+g[data-mml-node="merror"] > rect[data-background] {
+  fill: yellow;
+  stroke: none;
+}
+
+g[data-mml-node="mtable"] > line[data-line] {
+  stroke-width: 70px;
+  fill: none;
+}
+
+g[data-mml-node="mtable"] > rect[data-frame] {
+  stroke-width: 70px;
+  fill: none;
+}
+
+g[data-mml-node="mtable"] > .mjx-dashed {
+  stroke-dasharray: 140;
+}
+
+g[data-mml-node="mtable"] > .mjx-dotted {
+  stroke-linecap: round;
+  stroke-dasharray: 0,140;
+}
+
+g[data-mml-node="mtable"] > svg {
+  overflow: visible;
+}
+
+[jax="SVG"] mjx-tool {
+  display: inline-block;
+  position: relative;
+  width: 0;
+  height: 0;
+}
+
+[jax="SVG"] mjx-tool > mjx-tip {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+mjx-tool > mjx-tip {
+  display: inline-block;
+  padding: .2em;
+  border: 1px solid #888;
+  font-size: 70%;
+  background-color: #F8F8F8;
+  color: black;
+  box-shadow: 2px 2px 5px #AAAAAA;
+}
+
+g[data-mml-node="maction"][data-toggle] {
+  cursor: pointer;
+}
+
+mjx-status {
+  display: block;
+  position: fixed;
+  left: 1em;
+  bottom: 1em;
+  min-width: 25%;
+  padding: .2em .4em;
+  border: 1px solid #888;
+  font-size: 90%;
+  background-color: #F8F8F8;
+  color: black;
+}
+
+foreignObject[data-mjx-xml] {
+  font-family: initial;
+  line-height: normal;
+  overflow: visible;
+}
+
+.MathJax path {
+  stroke-width: 3;
+}
+
+mjx-container[display="true"] {
+  overflow: auto hidden;
+}
+
+mjx-container[display="true"] + br {
+  display: none;
+}
+</style></head>
+
+
+
+<body>
+	<div class="progress-bar-container">
+	
+
+	
+	<span class="pjax-progress-bar"></span>
+	<!--        <span class="swup-progress-icon">-->
+	<!--            <i class="fa-solid fa-circle-notch fa-spin"></i>-->
+	<!--        </span>-->
+	
+</div>
+
+<style>
+    :root {
+        --preloader-background-color: #fff;
+        --preloader-text-color: #000;
+    }
+
+    @media (prefers-color-scheme: dark) {
+        :root {
+            --preloader-background-color: #202124;
+            --preloader-text-color: #fff;
+        }
+    }
+
+    @media (prefers-color-scheme: light) {
+        :root {
+            --preloader-background-color: #fff;
+            --preloader-text-color: #000;
+        }
+    }
+
+    @media (max-width: 600px) {
+        .ml13 {
+            font-size: 2.6rem !important; /* Adjust this value as needed */
+        }
+    }
+
+    .preloader {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem; /* Tailwind 'gap-4' is 1rem */
+        align-items: center;
+        justify-content: center;
+        position: fixed;
+        padding: 12px;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh; /* 'h-screen' is 100% of the viewport height */
+        background-color: var(--preloader-background-color);
+        z-index: 1100; /* 'z-[1100]' sets the z-index */
+        transition: opacity 0.2s ease-in-out;
+    }
+
+    .ml13 {
+        font-size: 3.2rem;
+        /* text-transform: uppercase; */
+        color: var(--preloader-text-color);
+        letter-spacing: -1px;
+        font-weight: 500;
+        font-family: 'Chillax-Variable', sans-serif;
+        text-align: center;
+    }
+
+    .ml13 .word {
+        display: inline-flex;
+        flex-wrap: wrap;
+        white-space: nowrap;
+    }
+
+    .ml13 .letter {
+        display: inline-block;
+        line-height: 1em;
+    }
+</style>
+
+<div class="preloader">
+    <h2 class="ml13">
+        BaconToast&#39;s Shop
+    </h2>
+    <script>
+        var textWrapper = document.querySelector('.ml13');
+        // Split text into words
+        var words = textWrapper.textContent.trim().split(' ');
+
+        // Clear the existing content
+        textWrapper.innerHTML = '';
+
+        // Wrap each word and its letters in spans
+        words.forEach(function(word) {
+            var wordSpan = document.createElement('span');
+            wordSpan.classList.add('word');
+            wordSpan.innerHTML = word.replace(/\S/g, "<span class='letter'>$&</span>");
+            textWrapper.appendChild(wordSpan);
+            textWrapper.appendChild(document.createTextNode(' ')); // Add space between words
+        });
+
+        var animation = anime.timeline({ loop: true })
+            .add({
+                targets: '.ml13 .letter',
+                translateY: [20, 0],
+                translateZ: 0,
+                opacity: [0, 1],
+                filter: ['blur(5px)', 'blur(0px)'],
+                easing: "easeOutExpo",
+                duration: 1200,
+                delay: (el, i) => 300 + 20 * i,
+            })
+            .add({
+                targets: '.ml13 .letter',
+                translateY: [0, -20],
+                opacity: [1, 0],
+                filter: ['blur(0px)', 'blur(5px)'],
+                easing: "easeInExpo",
+                duration: 1000,
+                delay: (el, i) => 15 * i,
+                complete: function() {
+                    hidePreloader();
+                }
+            }, '-=700');
+
+
+        let themeStatus = JSON.parse(localStorage.getItem('REDEFINE-THEME-STATUS'))?.isDark;
+
+        // If the theme status is not found in local storage, check the preferred color scheme
+        if (themeStatus === undefined || themeStatus === null) {
+            if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                themeStatus = 'dark';
+            } else {
+                themeStatus = 'light';
+            }
+        }
+
+        // Now you can use the themeStatus variable in your code
+        if (themeStatus) {
+            document.documentElement.style.setProperty('--preloader-background-color', '#202124');
+            document.documentElement.style.setProperty('--preloader-text-color', '#fff');
+        } else {
+            document.documentElement.style.setProperty('--preloader-background-color', '#fff');
+            document.documentElement.style.setProperty('--preloader-text-color', '#000');
+        }
+
+        window.addEventListener('load', function () {
+            setTimeout(hidePreloader, 5000); // Call hidePreloader after 5000 milliseconds if not already called by animation
+        });
+
+        function hidePreloader() {
+            var preloader = document.querySelector('.preloader');
+            preloader.style.opacity = '0';
+            setTimeout(function () {
+                preloader.style.display = 'none';
+            }, 200);
+        }
+    </script>
+</div>
+
+<main class="page-container" id="swup">
+
+	
+
+	<div class="main-content-container flex flex-col justify-between min-h-dvh">
+		<div class="main-content-header">
+			<header class="navbar-container px-6 md:px-12">
+    <div class="navbar-content transition-navbar ">
+        <div class="left">
+            
+            <a class="logo-title" href="/">
+                
+                BaconToast&#39;s Shop
+                
+            </a>
+        </div>
+
+        <div class="right">
+            <!-- PC -->
+            <div class="desktop">
+                <ul class="navbar-list">
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/"
+                                        >
+                                    <i class="fa-regular fa-house fa-fw"></i>
+                                    HOME
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/archives"
+                                        >
+                                    <i class="fa-regular fa-archive fa-fw"></i>
+                                    ARCHIVES
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/links/"
+                                        >
+                                    <i class="fa-solid fa-link fa-fw"></i>
+                                    FRIENDS
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class="has-dropdown"
+                                   href="#"
+                                        onClick=&#34;return false;&#34;>
+                                    <i class="fa-regular fa-user fa-fw"></i>
+                                    ABOUT
+                                    <i class="fa-solid fa-chevron-down fa-fw"></i>
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                                    <ul class="sub-menu">
+                                        
+                                            <li>
+                                                <a target="_blank" rel="noopener" href="https://github.com/BaconToast-pro">
+                                                    GITHUB
+                                                </a>
+                                            </li>
+                                        
+                                            <li>
+                                                <a href="/links/">
+                                                    FRIENDS
+                                                </a>
+                                            </li>
+                                        
+                                    </ul>
+                                
+                            </li>
+                    
+                    
+                </ul>
+            </div>
+            <!-- Mobile -->
+            <div class="mobile">
+                
+                <div class="icon-item navbar-bar">
+                    <div class="navbar-bar-middle"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mobile sheet -->
+    <div class="navbar-drawer h-dvh w-full absolute top-0 left-0 bg-background-color flex flex-col justify-between">
+        <ul class="drawer-navbar-list flex flex-col px-4 justify-center items-start">
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/"
+                        >
+                            <span>
+                                HOME
+                            </span>
+                            
+                                <i class="fa-regular fa-house fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/archives"
+                        >
+                            <span>
+                                ARCHIVES
+                            </span>
+                            
+                                <i class="fa-regular fa-archive fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/links/"
+                        >
+                            <span>
+                                FRIENDS
+                            </span>
+                            
+                                <i class="fa-solid fa-link fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+                
+                    
+
+                    <li class="drawer-navbar-item-sub text-base my-1.5 flex flex-col w-full">
+                        
+                        <div class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary cursor-pointer text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                             navbar-data-toggle="submenu-About"
+                        >
+                            <span>
+                                ABOUT
+                            </span>
+                            
+                                <i class="fa-solid fa-chevron-right fa-sm fa-fw transition-all"></i>
+                            
+                        </div>
+                        
+
+                        
+                            <div class="flex-col items-start px-2 py-2 hidden" data-target="submenu-About">
+                                
+                                    <div class="drawer-navbar-item text-base flex flex-col justify-center items-start hover:underline active:underline hover:underline-offset-1 rounded-3xl">
+                                        <a class=" text-third-text-color text-xl"
+                                           target="_blank" rel="noopener" href="https://github.com/BaconToast-pro">GITHUB</a>
+                                    </div>
+                                
+                                    <div class="drawer-navbar-item text-base flex flex-col justify-center items-start hover:underline active:underline hover:underline-offset-1 rounded-3xl">
+                                        <a class=" text-third-text-color text-xl"
+                                           href="/links/">FRIENDS</a>
+                                    </div>
+                                
+                            </div>
+                        
+                    </li>
+            
+
+            
+            
+                
+                    
+                    
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full active"
+                           href="/tags"
+                        >
+                            <span>Tags</span>
+                            <i class="fa-regular fa-tags fa-sm fa-fw"></i>
+                        </a>
+                    </li>
+                
+                    
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full active"
+                           href="/categories"
+                        >
+                            <span>Categories</span>
+                            <i class="fa-regular fa-folder fa-sm fa-fw"></i>
+                        </a>
+                    </li>
+                
+            
+        </ul>
+
+        <div class="statistics flex justify-around my-2.5">
+    <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/tags">
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">11</div>
+        <div class="label text-third-text-color text-sm">Tags</div>
+    </a>
+    <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/categories">
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">4</div>
+        <div class="label text-third-text-color text-sm">Categories</div>
+    </a>
+    <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/archives">
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">14</div>
+        <div class="label text-third-text-color text-sm">Posts</div>
+    </a>
+</div>
+    </div>
+
+    <div class="window-mask"></div>
+
+</header>
+
+
+		</div>
+
+		<div class="main-content-body transition-fade-up">
+			
+
+			<div class="main-content">
+				<div class="post-page-container flex relative justify-between box-border w-full h-full">
+	<div class="article-content-container">
+
+		<div class="article-title relative w-full">
+			
+			
+			
+			<img src="/images/public/sunrise.jpg" alt="面向对象设计与构造OO：Unit2-电梯调度" class="w-full h-60 sm:h-72 md:h-80 object-cover sm:rounded-t-large dark:brightness-75" />
+			
+			<div class="w-full flex items-center absolute bottom-0 justify-start">
+				<h1 class="article-title-cover text-center mx-6 my-6 text-second-text-color bg-background-color-transparent px-4 py-3 text-3xl sm:text-4xl md:text-5xl font-semibold backdrop-blur-lg rounded-xl border border-border-color ">面向对象设计与构造OO：Unit2-电梯调度</h1>
+			</div>
+			
+		</div>
+
+		
+		<div class="article-header flex flex-row gap-2 items-center px-2 sm:px-6 md:px-8">
+			<div class="avatar w-[46px] h-[46px] flex-shrink-0 rounded-medium border border-border-color p-[1px]">
+				<img src="/images/public/avatar.jpg">
+			</div>
+			<div class="info flex flex-col justify-between">
+				<div class="author flex items-center">
+					<span class="name text-default-text-color text-lg font-semibold">BaconToast</span>
+					
+					<span class="author-label ml-1.5 text-xs px-2 py-0.5 rounded-small text-third-text-color border border-shadow-color-1">Lv2</span>
+					
+				</div>
+				<div class="meta-info">
+					<div class="article-meta-info">
+    <span class="article-date article-meta-item">
+        <i class="fa-regular fa-pen-fancy"></i>&nbsp;
+        <span class="desktop">2025-11-18 13:23:36</span>
+        <span class="mobile">2025-11-18 13:23:36</span>
+        <span class="hover-info">Created</span>
+    </span>
+    
+        <span class="article-date article-meta-item">
+            <i class="fa-regular fa-wrench"></i>&nbsp;
+            <span class="desktop">2025-11-18 15:17:44</span>
+            <span class="mobile">2025-11-18 15:17:44</span>
+            <span class="hover-info">Updated</span>
+        </span>
+    
+
+    
+        <span class="article-categories article-meta-item">
+            <i class="fa-regular fa-folders"></i>&nbsp;
+            <ul>
+                
+                
+                    
+                        
+                        <li>
+                            <a href="/categories/OO/">OO</a>&nbsp;
+                        </li>
+                    
+                    
+                
+            </ul>
+        </span>
+    
+    
+        <span class="article-tags article-meta-item">
+            <i class="fa-regular fa-tags"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/tags/Java/">Java</a>&nbsp;
+                    </li>
+                
+                    <li>
+                        | <a href="/tags/OO/">OO</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+
+    
+    
+    
+    
+        <span class="article-pv article-meta-item">
+            <i class="fa-regular fa-eye"></i>&nbsp;<span id="busuanzi_value_page_pv"></span>
+        </span>
+    
+</div>
+
+				</div>
+			</div>
+		</div>
+		
+
+		
+
+
+		<div class="article-content markdown-body px-2 sm:px-6 md:px-8 pb-8">
+			<h2 id="0-前言"><a href="#0-前言" class="headerlink" title="0 前言"></a>0 前言</h2><p>第二单元的内容聚集在掌握多线程的基本知识，如线程的创建、线程的互斥与协作、wait/notify机制等，以及掌握生产者-消费者模式，能设计简单的多线程程序。本单元最难的部分，我认为是多线程同步互斥的实现以及 bug 复现调试。</p>
+<p>三次迭代后，线程之间的组织关系如下：</p>
+<p><img lazyload="" src="/images/loading.svg" data-src="/images/oo/u2.png" alt="u2"></p>
+<p>本文将分别介绍分析三次迭代作业，每部分包括需求说明、项目结构、架构设计、性能度量、bug 分析等。最后总结心得体会。</p>
+<h2 id="1-第五次作业"><a href="#1-第五次作业" class="headerlink" title="1 第五次作业"></a>1 第五次作业</h2><h3 id="1-1-需求说明"><a href="#1-1-需求说明" class="headerlink" title="1.1 需求说明"></a>1.1 需求说明</h3><p>以某公司的目的选层电梯系统为背景，从标准输入中读入<strong>定时投放</strong>的乘客请求信息（起点层、终点层、优先级指数），需要将乘客安排给<strong>指定的电梯</strong>，在规定的时间内将所有乘客送达。</p>
+<h3 id="1-2-项目结构"><a href="#1-2-项目结构" class="headerlink" title="1.2 项目结构"></a>1.2 项目结构</h3><h4 id="1-2-1-文件树"><a href="#1-2-1-文件树" class="headerlink" title="1.2.1 文件树"></a>1.2.1 文件树</h4><div class="code-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">src</span><br><span class="line">│  Action.java</span><br><span class="line">│  Elevator.java</span><br><span class="line">│  InputHandler.java</span><br><span class="line">│  MainClass.java</span><br><span class="line">│  OutputHandler.java</span><br><span class="line">│  Person.java</span><br><span class="line">│  RequestQueue.java</span><br><span class="line">│  Strategy.java</span><br><span class="line">└─ Utils.java</span><br></pre></td></tr></table></figure></div>
+
+<h4 id="1-2-2-UML-类图"><a href="#1-2-2-UML-类图" class="headerlink" title="1.2.2 UML 类图"></a>1.2.2 UML 类图</h4><p>为方便呈现，仅展示必要的属性和方法。</p>
+<p><img lazyload="" src="/images/loading.svg" data-src="/images/oo/hw5.png" alt="hw5"></p>
+<h4 id="1-2-3-UML-时序图"><a href="#1-2-3-UML-时序图" class="headerlink" title="1.2.3 UML 时序图"></a>1.2.3 UML 时序图</h4><p><img lazyload="" src="/images/loading.svg" data-src="/images/oo/hw5_sequence.png" alt="hw5_sequence"></p>
+<h3 id="1-3-架构设计"><a href="#1-3-架构设计" class="headerlink" title="1.3 架构设计"></a>1.3 架构设计</h3><p>第一次迭代，笔者参考了 [hyggge](<a class="link" target="_blank" rel="noopener" href="https://hyggge.github.io/2022/04/29/oo/oo-di-er-dan-yuan-zong-jie/">「BUAA-OO」第二单元:电梯调度 | Hyggge’s Blog<i class="fa-solid fa-arrow-up-right ml-[0.2em] font-light align-text-top text-[0.7em] link-icon"></i></a>) 学长的大部分思路。总的来说，实现了一个最基础的<strong>生产者-消费者</strong>模型。两大线程：输入线程 <code>InputHandler</code> 和电梯线程 <code>Elevator</code> ，其中电梯线程有 6 个，对应 6 部电梯。一种托盘：请求队列 <code>RequestQueue</code> ，一共 6 个，分别对应每部电梯。输入线程不断获取请求（生产者），并分配给指定的请求队列（托盘），电梯线程不停地从各自的请求队列获取请求（消费者）。</p>
+<h4 id="1-3-1-电梯的运行策略"><a href="#1-3-1-电梯的运行策略" class="headerlink" title="1.3.1 电梯的运行策略"></a>1.3.1 电梯的运行策略</h4><p>采用现实生活中电梯的运行算法，<strong>LOOK 策略</strong>，该算法执行流程如下：</p>
+<p>如果电梯当前楼层有人需要进/出，则执行<strong>开门</strong>：</p>
+<ul>
+<li>先出：所有目标楼层是当前楼层的乘客出电梯；</li>
+<li>后进：按照优先级从高到低的顺序，将起始楼层是当前楼层且与电梯运行方向一致的乘客接收，直到满员或没有乘客需要进入。特别地，如果进人前电梯是空的，则电梯的运行方向与第一个进入的人一致。</li>
+</ul>
+<p>否则，如果电梯非空，电梯按照其目前的运动方向<strong>移动一层</strong>。</p>
+<p>如果电梯是空的：</p>
+<ul>
+<li>请求队列有请求。如果请求与电梯运动方向相同，电梯<strong>移动一层</strong>；如果电梯运动方向前方没有请求，电梯<strong>掉头</strong>。</li>
+<li>请求队列无请求。如果输入线程已经结束了，电梯线程<strong>结束</strong>；反之，电梯<strong>等待</strong>。</li>
+</ul>
+<p>为提高代码的可读性，创建一个 <code>Action</code> 枚举类表示 LOOK 策略提供给电梯的下一步动作。</p>
+<div class="code-container" data-rel="Java"><figure class="iseeu highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">enum</span> <span class="title class_">Action</span> {  </span><br><span class="line">    OVER, MOVE, REVERSE, OPEN, WAIT  </span><br><span class="line">}</span><br></pre></td></tr></table></figure></div>
+
+<p>电梯线程不断地从 <code>Strategy</code> 策略类获取下一步动作，自身不关心请求队列是否有请求或是电梯内部乘客的情况；策略类不关心电梯动作具体如何实现，仅仅根据请求队列和电梯内部的信息给出下一步指令。符合高内聚/低耦合的思想。</p>
+<div class="code-container" data-rel="Java"><figure class="iseeu highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Override</span>  </span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">run</span><span class="params">()</span> {  </span><br><span class="line">    <span class="keyword">while</span> (<span class="literal">true</span>) {  </span><br><span class="line">        <span class="type">Action</span> <span class="variable">action</span> <span class="operator">=</span> strategy.look();  </span><br><span class="line">        <span class="keyword">if</span> (action == Action.OVER) {  </span><br><span class="line">            <span class="keyword">break</span>;  </span><br><span class="line">        } <span class="keyword">else</span> <span class="keyword">if</span> (action == Action.MOVE) {  </span><br><span class="line">            move();  </span><br><span class="line">        } <span class="keyword">else</span> <span class="keyword">if</span> (action == Action.REVERSE) {  </span><br><span class="line">            dir = (dir.equals(<span class="string">"up"</span>) ? <span class="string">"down"</span> : <span class="string">"up"</span>);  </span><br><span class="line">        } <span class="keyword">else</span> <span class="keyword">if</span> (action == Action.WAIT) {  </span><br><span class="line">            <span class="keyword">synchronized</span> (requestQueue) {  </span><br><span class="line">                <span class="keyword">try</span> {  </span><br><span class="line">                    requestQueue.wait();  </span><br><span class="line">                } <span class="keyword">catch</span> (InterruptedException e) {  </span><br><span class="line">                    e.printStackTrace();  </span><br><span class="line">                }  </span><br><span class="line">            }  </span><br><span class="line">        } <span class="keyword">else</span> <span class="keyword">if</span> (action == Action.OPEN) {  </span><br><span class="line">            openAndClose();  </span><br><span class="line">        }  </span><br><span class="line">    }  </span><br><span class="line">}</span><br></pre></td></tr></table></figure></div>
+
+<h4 id="1-3-2-乘客的存储方式"><a href="#1-3-2-乘客的存储方式" class="headerlink" title="1.3.2 乘客的存储方式"></a>1.3.2 乘客的存储方式</h4><p>在请求队列 <code>RequestQueue</code> 中，以 <code>HashMap&lt;Integer, HashSet&lt;PersonRequest&gt;&gt;</code> 存储请求（在上个单元吃亏后，这个单元能 Hash 就 Hash！）。该容器 Key 为乘客的起始楼层，Value 为对应的乘客集合。</p>
+<p>在电梯线程 <code>Elevator</code> 中，以 <code>HashMap&lt;Integer, HashSet&lt;Person&gt;&gt;</code> 存储乘客。该容器 Key 为乘客的目标楼层，Value 为对应的乘客集合。</p>
+<p>这么组织可以很快地找到需要的乘客，不需要花很多时间遍历。</p>
+<h4 id="1-3-3-量子电梯"><a href="#1-3-3-量子电梯" class="headerlink" title="1.3.3 量子电梯"></a>1.3.3 量子电梯</h4><p>这是一种对运行时间的小优化。普通电梯系统需要在两次移动之间等待 0.4s，在开关门之间等待 0.4s，而这些时间可以用来执行在这期间可能需要进行的计算操作。</p>
+<p>以开关门为例，量子电梯的思想是：开门后，记录当前时间。中间经过乘客进出等操作，可能需要花费或长或短的时间。准备关门时，如果当前时间已经过了 0.4s 了，则不再重复等待，如果当前时间不够 0.4s，则等待对应的剩余时间。</p>
+<div class="code-container" data-rel="Java"><figure class="iseeu highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">long</span> <span class="variable">curTime</span> <span class="operator">=</span> System.currentTimeMillis();  </span><br><span class="line"><span class="keyword">if</span> (preTime == -<span class="number">1</span>) {  </span><br><span class="line">    <span class="keyword">try</span> {  </span><br><span class="line">        sleep(<span class="number">400</span>);  </span><br><span class="line">    } <span class="keyword">catch</span> (InterruptedException e) {  </span><br><span class="line">        e.printStackTrace();  </span><br><span class="line">    }  </span><br><span class="line">} <span class="keyword">else</span> <span class="keyword">if</span> (curTime - preTime &lt; <span class="number">400</span>) {  </span><br><span class="line">    <span class="keyword">try</span> {  </span><br><span class="line">        sleep(<span class="number">400</span> - curTime + preTime);  </span><br><span class="line">    } <span class="keyword">catch</span> (InterruptedException e) {  </span><br><span class="line">        e.printStackTrace();  </span><br><span class="line">    }  </span><br><span class="line">}</span><br></pre></td></tr></table></figure></div>
+
+<h4 id="1-3-4-架构的优缺点"><a href="#1-3-4-架构的优缺点" class="headerlink" title="1.3.4 架构的优缺点"></a>1.3.4 架构的优缺点</h4><p><strong>优点</strong>：LOOK 策略易于实现，且能达到不错的效果。生产者消费者模型简单直接，鉴于本次作业本身不太复杂的原因，数据冒险问题易于解决。本次强测取得了非常不错的成绩（90+）。</p>
+<p><strong>缺点</strong>：加锁混乱，对线程之间同步互斥问题理解不深刻，为第二次迭代惨败埋下伏笔！</p>
+<h3 id="1-4-性能度量"><a href="#1-4-性能度量" class="headerlink" title="1.4 性能度量"></a>1.4 性能度量</h3><p><strong>代码规模</strong>：</p>
+<p><img lazyload="" src="/images/loading.svg" data-src="/images/oo/hw5_data.png" alt="hw5_data"></p>
+<p><strong>运行时间</strong>：本次作业不存在调度，且大部分同学都使用了 LOOK 策略，没有很多可以讨论的空间。针对<strong>满足优先级指数</strong>，笔者在“从请求队列获取一个请求”的操作中入手，即取出优先级指数最高的那个人。</p>
+<h3 id="1-5-bug-分析"><a href="#1-5-bug-分析" class="headerlink" title="1.5 bug 分析"></a>1.5 bug 分析</h3><p>强测出现了一个 bug：实现量子电梯时，将初始时间设为 1，使用评测机没能测出来（因为评测机参数设置为互测，互测要求第一个请求在 1s 后出现，而公测第一个请求在 0s 后出现）导致被 hack！</p>
+<h2 id="2-第六次作业"><a href="#2-第六次作业" class="headerlink" title="2 第六次作业"></a>2 第六次作业</h2><h3 id="2-1-需求说明"><a href="#2-1-需求说明" class="headerlink" title="2.1 需求说明"></a>2.1 需求说明</h3><p>在之前的基础上，<strong>不再为每个乘客指定电梯</strong>，需要自己设计调度算法将其分配给合适的电梯；新增<strong>临时调度 <code>sche</code></strong>，收到该请求的电梯需要尽快移动到指定的维修楼层，将所有乘客赶出电梯，进行一段时间的维修后才能继续工作。</p>
+<h3 id="2-2-项目结构"><a href="#2-2-项目结构" class="headerlink" title="2.2 项目结构"></a>2.2 项目结构</h3><h4 id="2-2-1-文件树"><a href="#2-2-1-文件树" class="headerlink" title="2.2.1 文件树"></a>2.2.1 文件树</h4><div class="code-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">src</span><br><span class="line">│  MainClass.java</span><br><span class="line">│</span><br><span class="line">├─thread</span><br><span class="line">│  │  Dispatcher.java</span><br><span class="line">│  │  InputHandler.java</span><br><span class="line">│  │</span><br><span class="line">│  └─elevator</span><br><span class="line">│          Action.java</span><br><span class="line">│          Elevator.java</span><br><span class="line">│          Person.java</span><br><span class="line">│          Strategy.java</span><br><span class="line">│</span><br><span class="line">├─tray</span><br><span class="line">│      RequestQueue.java</span><br><span class="line">│      WaitQueue.java</span><br><span class="line">│</span><br><span class="line">└─utils</span><br><span class="line">        OutputHandler.java</span><br><span class="line">        Util.java</span><br></pre></td></tr></table></figure></div>
+
+<h4 id="2-2-2-UML-类图"><a href="#2-2-2-UML-类图" class="headerlink" title="2.2.2 UML 类图"></a>2.2.2 UML 类图</h4><p>为方便呈现，仅展示必要的属性和方法。</p>
+<p><img lazyload="" src="/images/loading.svg" data-src="/images/oo/hw6.png" alt="hw6"></p>
+<h4 id="2-2-3-UML-时序图"><a href="#2-2-3-UML-时序图" class="headerlink" title="2.2.3 UML 时序图"></a>2.2.3 UML 时序图</h4><p><img lazyload="" src="/images/loading.svg" data-src="/images/oo/hw6_sequence.png" alt="hw6_sequence"></p>
+<h3 id="2-3-架构设计"><a href="#2-3-架构设计" class="headerlink" title="2.3 架构设计"></a>2.3 架构设计</h3><p>本次作业进行了<strong>重构</strong>。（因为强测因为<strong>死锁</strong>惨败！）先介绍重构前后保留的架构：</p>
+<h4 id="2-3-1-电梯的调度策略"><a href="#2-3-1-电梯的调度策略" class="headerlink" title="2.3.1 电梯的调度策略"></a>2.3.1 电梯的调度策略</h4><p>部分博客将这个称为<strong>分派策略</strong>，为避免歧义，先说明该部分解决的是<strong>请求应该分给哪部电梯</strong>。</p>
+<p>主流的调度策略有四种：</p>
+<ul>
+<li><strong>随机分配</strong>：直接随机数指定调给哪部电梯，缺点是如果出现了 bug，<strong>难以复现</strong>，毕竟每一次运行分配的结果都不一样；优点是如果本身代码没有很致命的错误，如果出现 bug 了重新交一发说不定能通过（x）</li>
+<li><strong>均匀分配</strong>：先分配给 1 号电梯，然后 2 号，…… 6 号，然后 1 号……如此循环，可以达到非常中庸的效果，而且很容易实现，效果也还可以，性价比超高！</li>
+<li><strong>影子电梯</strong>：在考虑分配的时候，复制一份当前电梯的所有参数（影子），然后模拟运行，计算不同抉择运行时长或耗电量，比较后得到一个局部最优解。优点，这种算法确实大部分情况下能得到最好的结果，缺点是难以实现，很容易引入 bug，而且在第三次迭代加入双轿厢之后<strong>局部最优不一定推出全局最优</strong>。</li>
+<li><strong>调参电梯</strong>：通过某种方式给每种选择打分，选择分数最高的那个。笔者没有研究过，仅仅在研讨课上听同学分享提到，据说效果还可以？</li>
+</ul>
+<p>秉持着<strong>宁愿少性能分也不能有一个 bug</strong>的思想，笔者毅然决然选择了<strong>均匀分配</strong>。一句话就实现了：</p>
+<div class="code-container" data-rel="Java"><figure class="iseeu highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">preElevatorId = preElevatorId == <span class="number">6</span> ? <span class="number">1</span> : preElevatorId + <span class="number">1</span>;</span><br></pre></td></tr></table></figure></div>
+<h4 id="2-3-2-临时调度"><a href="#2-3-2-临时调度" class="headerlink" title="2.3.2 临时调度"></a>2.3.2 临时调度</h4><p>为了实现临时调度，在 <code>Action</code> 中新增了 <code>SCHE</code> 动作。电梯收到 sche 后，会执行完整的临时调度动作，包括 receive 取消，移动至目标楼层，开门，清空乘客，关门。</p>
+<div class="code-container" data-rel="Java"><figure class="iseeu highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title function_">sche</span><span class="params">()</span> {  </span><br><span class="line">    <span class="comment">// sche begin  </span></span><br><span class="line">    <span class="type">ScheRequest</span> <span class="variable">scheRequest</span> <span class="operator">=</span> requestQueue.handelSche();  </span><br><span class="line">    <span class="keyword">final</span> <span class="type">int</span> <span class="variable">scheFloor</span> <span class="operator">=</span> util.floor(scheRequest.getToFloor());  </span><br><span class="line">    <span class="keyword">final</span> <span class="type">int</span> <span class="variable">scheSpeed</span> <span class="operator">=</span> (<span class="type">int</span>) (Math.round(scheRequest.getSpeed() * <span class="number">10</span>) * <span class="number">100</span>);  </span><br><span class="line">    outputHandler.println(String.format(  </span><br><span class="line">        <span class="string">"SCHE-BEGIN-%d"</span>, id));  </span><br><span class="line">    preTime = System.currentTimeMillis();  </span><br><span class="line">    <span class="comment">// receive cancel  </span></span><br><span class="line">    ArrayList&lt;PersonRequest&gt; cancelList = requestQueue.cancel();  </span><br><span class="line">    <span class="keyword">for</span> (PersonRequest personRequest : cancelList) {  </span><br><span class="line">        waitQueue.addRequest(personRequest);  </span><br><span class="line">    }  </span><br><span class="line">    <span class="comment">// move  </span></span><br><span class="line">    <span class="comment">//...</span></span><br><span class="line">    <span class="comment">// open door  </span></span><br><span class="line">    outputHandler.println(String.format(  </span><br><span class="line">        <span class="string">"OPEN-%s-%d"</span>, util.floor(floor), id));  </span><br><span class="line">    preTime = System.currentTimeMillis();  </span><br><span class="line">    <span class="comment">// people out  </span></span><br><span class="line">    schePeopleOut();  </span><br><span class="line">    <span class="comment">// close door  </span></span><br><span class="line">    outputHandler.println(  </span><br><span class="line">        String.format(<span class="string">"CLOSE-%s-%d"</span>, util.floor(floor), id));  </span><br><span class="line">    preTime = System.currentTimeMillis();  </span><br><span class="line">    <span class="comment">// sche end  </span></span><br><span class="line">    requestQueue.scheEnd();  </span><br><span class="line">    outputHandler.println(  </span><br><span class="line">        String.format(<span class="string">"SCHE-END-%d"</span>, id));  </span><br><span class="line">    waitQueue.scheFinish();  </span><br><span class="line">}</span><br></pre></td></tr></table></figure></div>
+
+<p>关于 receive 取消，直接将电梯与主请求队列 <code>WaitQueue</code> 相连，把出来的乘客还回去就可以了。</p>
+<p>注意到电梯调度的一个细节是：如果电梯正在 sche，就跳过它给下一个分配。这么处理有一个很严重的弊端，考虑这种情景：5 个电梯都在 sche，此时涌入大量请求，那么所有请求都分给了 6 号电梯，导致电梯忙闲不均匀，超时！于是笔者给调度器 <code>Dispatcher</code> 加了一个等待的逻辑，如果在忙就等待一下，设计不当导致出现锁的嵌套，死锁了！在和室友交流思路后，痛心疾首地重构了：</p>
+<h4 id="2-3-3-receive-缓冲池"><a href="#2-3-3-receive-缓冲池" class="headerlink" title="2.3.3 receive 缓冲池"></a>2.3.3 receive 缓冲池</h4><p>在单位请求队列 <code>RequestQueue</code> 中，设置两个容器，一个是<strong>接收了但未 receive 的请求</strong>，一个是<strong>接收了且 receive 输出了的请求</strong>。也就是说，调度器可以无视电梯是否在 sche，直接无脑均匀分配到缓冲池 buffer 中，电梯也不急着输出 <code>RECEIVE</code> ，而是等电梯有空的时候（不在 sche，每两次动作之间）进行一次 receive，将所有缓冲池中的请求放到已 receive 的容器，且输出 <code>RECEIVE</code>。电梯获取运行策略时，<code>Strategy</code> 也只考虑已经 receive 了的容器。这样就完美解决上面提到的情景了。</p>
+<div class="code-container" data-rel="Java"><figure class="iseeu highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> Action <span class="title function_">look</span><span class="params">()</span> {  </span><br><span class="line">    <span class="comment">/* requestQueue has ScheRequest to be handel: */</span>  </span><br><span class="line">    <span class="keyword">if</span> (requestQueue.isSche()) {  </span><br><span class="line">        <span class="keyword">return</span> Action.SCHE;  </span><br><span class="line">    }  </span><br><span class="line">    elevator.receive();  </span><br><span class="line">    <span class="comment">/* need in or out:  </span></span><br><span class="line"><span class="comment">     * in: only the elevator is not full and person same direction     * out: person in elevator arrive */</span>    <span class="keyword">if</span> (elevator.needOut() || elevator.needIn()) {  </span><br><span class="line">        <span class="keyword">return</span> Action.OPEN;  </span><br><span class="line">    }  </span><br><span class="line">    <span class="comment">/* if elevator has person:  </span></span><br><span class="line"><span class="comment">     * direction changed when people in out */</span>    <span class="keyword">if</span> (!elevator.isEmpty()) {  </span><br><span class="line">        <span class="keyword">return</span> Action.MOVE;  </span><br><span class="line">    }  </span><br><span class="line">    <span class="comment">/* if elevator is empty: */</span>  </span><br><span class="line">    <span class="comment">/* if no person received: */</span>    <span class="keyword">if</span> (requestQueue.noReceive()) {  </span><br><span class="line">        <span class="comment">/* no more Request */</span>  </span><br><span class="line">        <span class="keyword">if</span> (requestQueue.isEnd()) {  </span><br><span class="line">            <span class="keyword">return</span> Action.OVER;  </span><br><span class="line">        } <span class="keyword">else</span> {  </span><br><span class="line">            <span class="keyword">return</span> Action.WAIT;  </span><br><span class="line">        }  </span><br><span class="line">    }  </span><br><span class="line">    <span class="comment">/* there is person received, go to get him! */</span>  </span><br><span class="line">    <span class="keyword">if</span> (elevator.requestSameDir()) {  </span><br><span class="line">        <span class="keyword">return</span> Action.MOVE;  </span><br><span class="line">    } <span class="keyword">else</span> {  </span><br><span class="line">        <span class="keyword">return</span> Action.REVERSE;  </span><br><span class="line">    }  </span><br><span class="line">}</span><br></pre></td></tr></table></figure></div>
+
+<p>在研讨课中，笔者分享了这种思路，老师指出这种 buffer 的思想在实际工程应用中很常用，并提出了另一种思路：如果 <code>requestQueue</code> 发现电梯此时条件不能接收请求，就不断地把调度器送来的请求“扔回去”。</p>
+<h4 id="2-3-4-加锁实现同步互斥"><a href="#2-3-4-加锁实现同步互斥" class="headerlink" title="2.3.4 加锁实现同步互斥"></a>2.3.4 加锁实现同步互斥</h4><p>第一次迭代中，笔者加锁混乱，导致第二次扩展出现嵌套锁导致了死锁。深入思考后，结合实验代码，总结了一个比较规范的加锁模型：</p>
+<ul>
+<li><strong>给共享对象的方法加锁</strong>：给且只给共享对象的所有方法加锁。共享对象指的是会被多个东西访问其属性的对象（也就是托盘），在我的 hw6 架构中，共享对象是 <code>WaitQueue</code> 和 <code>RequestQueue</code> ，我对它们的所有方法都加上了 <code>synchronized</code>。</li>
+<li><strong>什么时候需要 <code>notifyAll</code></strong>：<code>notifyAll</code> 只存在于同步块中，也就是只在共享对象的方法中出现。我们知道 <code>notifyAll</code> 的作用是唤醒这个对象，什么时候需要唤醒呢？就是你的状态发生改变后。简单来说，如果共享对象的某个方法<strong>只读</strong>其属性，不需要 <code>notifyAll</code> ；如果共享对象的某个方法<strong>写</strong>其属性，需要 <code>notifyAll</code>。</li>
+<li><strong>在哪里 wait</strong>：在共享对象的方法中 <code>wait</code> ，这样保证了 <code>wait</code> 等待的是该共享对象的改变，而 <code>notifyAll</code> 唤醒的是该共享对象的等待，两者对应了，不会出现线程饥饿。例如，调度器 <code>Dispatcher</code> 不停地使用 <code>WaitQueue</code> 的 <code>fetch</code> 方法获取一个请求，那么在 <code>fetch</code> 方法中就设置好 <code>wait</code> ，也即是 <code>fetch</code> 方法是阻塞读取的。</li>
+<li><strong>规避嵌套锁</strong>：嵌套锁容易导致死锁，因此将需要嵌套锁的情况展开为新的生产者-消费者模型，这部分在 hw7 中具体展开。</li>
+<li><strong>线程的行为</strong>：为避免轮询（不停执行 <code>while</code> 循环），需要设置阻塞读取的方法，也即是上面提到的 <code>wait</code> 。除此之外需要设置结束标志，在这里 <code>break</code>。这是每个线程需要有的两部分。</li>
+</ul>
+<p>以 <code>Dispatcher</code> 线程为例：</p>
+<div class="code-container" data-rel="Java"><figure class="iseeu highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Override</span>  </span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">run</span><span class="params">()</span> {  </span><br><span class="line">    <span class="keyword">while</span> (<span class="literal">true</span>) {  </span><br><span class="line">        <span class="keyword">if</span> (waitQueue.isEmpty() &amp;&amp; waitQueue.inputIsEnd() &amp;&amp; waitQueue.scheEnd()) {  </span><br><span class="line">            <span class="keyword">for</span> (RequestQueue requestQueue : requestQueues) {  </span><br><span class="line">                requestQueue.over();  </span><br><span class="line">            }  </span><br><span class="line">            util.debug(<span class="string">"Dispatcher exiting!"</span>);  </span><br><span class="line">            <span class="keyword">break</span>;        }  </span><br><span class="line">  </span><br><span class="line">        <span class="type">Request</span> <span class="variable">request</span> <span class="operator">=</span> waitQueue.fetch();  </span><br><span class="line">        <span class="keyword">if</span> (request == <span class="literal">null</span>) {  </span><br><span class="line">            <span class="keyword">continue</span>;  </span><br><span class="line">        }  </span><br><span class="line">        distribute(request);  </span><br><span class="line">        util.debug(<span class="string">"Dispatcher polling"</span>);  </span><br><span class="line">    }  </span><br><span class="line">}</span><br></pre></td></tr></table></figure></div>
+
+<p><code>WaitQueue</code> 的 <code>fetch</code> 方法：</p>
+<div class="code-container" data-rel="Java"><figure class="iseeu highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">synchronized</span> Request <span class="title function_">fetch</span><span class="params">()</span> {  </span><br><span class="line">    <span class="type">Request</span> <span class="variable">request</span> <span class="operator">=</span> <span class="literal">null</span>;  </span><br><span class="line">    <span class="keyword">if</span> (!scheRequestList.isEmpty()) {  </span><br><span class="line">        request = scheRequestList.remove(<span class="number">0</span>);  </span><br><span class="line">    } <span class="keyword">else</span> <span class="keyword">if</span> (!personRequestList.isEmpty()) {  </span><br><span class="line">        <span class="type">int</span> <span class="variable">maxPriority</span> <span class="operator">=</span> <span class="number">0</span>;  </span><br><span class="line">        <span class="type">int</span> <span class="variable">maxIndex</span> <span class="operator">=</span> <span class="number">0</span>;  </span><br><span class="line">        <span class="comment">// find max priority request</span></span><br><span class="line">        request = personRequestList.remove(maxIndex);  </span><br><span class="line">    } <span class="keyword">else</span> <span class="keyword">if</span> (!inputIsEnd || scheNum != <span class="number">0</span>) {  </span><br><span class="line">        <span class="comment">// util.debug(String.valueOf(scheNum));  </span></span><br><span class="line">        <span class="keyword">try</span> {  </span><br><span class="line">            util.debug(<span class="string">"WaitQueue waiting!"</span>);  </span><br><span class="line">            wait();  </span><br><span class="line">            util.debug(<span class="string">"WaitQueue wake up!"</span>);  </span><br><span class="line">        } <span class="keyword">catch</span> (InterruptedException e) {  </span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">RuntimeException</span>(e);  </span><br><span class="line">        }  </span><br><span class="line">    }  </span><br><span class="line">    notifyAll();  </span><br><span class="line">    <span class="keyword">return</span> request;  </span><br><span class="line">}</span><br></pre></td></tr></table></figure></div>
+
+<h4 id="2-3-5-架构的优缺点"><a href="#2-3-5-架构的优缺点" class="headerlink" title="2.3.5 架构的优缺点"></a>2.3.5 架构的优缺点</h4><p>你说的是重构之后的架构吗？好的，这个架构很不错。可扩展性很强，因为笔者此时已经悟出了怎么加锁，基本不会出现死锁问题了。只是线程结束标志容易出问题hhh。</p>
+<p>重构后 bug 修复一次过！</p>
+<h3 id="2-4-性能度量"><a href="#2-4-性能度量" class="headerlink" title="2.4 性能度量"></a>2.4 性能度量</h3><p><strong>代码规模</strong>：</p>
+<p><img lazyload="" src="/images/loading.svg" data-src="/images/oo/hw6_data.png" alt="hw6_data"></p>
+<p><strong>运行时间</strong>：均匀分配好！其次缓冲池的加入避免了那些高并发的点的 hack。</p>
+<h3 id="2-5-bug-分析"><a href="#2-5-bug-分析" class="headerlink" title="2.5 bug 分析"></a>2.5 bug 分析</h3><p>最大的 bug 就是上面提到的 5 个电梯 sche 的情景，这里不再赘述。</p>
+<h2 id="3-第七次作业"><a href="#3-第七次作业" class="headerlink" title="3 第七次作业"></a>3 第七次作业</h2><h3 id="3-1-需求说明"><a href="#3-1-需求说明" class="headerlink" title="3.1 需求说明"></a>3.1 需求说明</h3><p>在之前的基础上，新增<strong>双轿厢改造 <code>update</code></strong>，即将两个电梯合并到同一个电梯井，一个在上面一个在下面，规定换乘楼层 <code>transferFloor</code> ，两个电梯的共享区域就是换乘楼层，其他楼层不共享，需要避免两个电梯相撞。</p>
+<h3 id="3-2-项目结构"><a href="#3-2-项目结构" class="headerlink" title="3.2 项目结构"></a>3.2 项目结构</h3><h4 id="3-2-1-文件树"><a href="#3-2-1-文件树" class="headerlink" title="3.2.1 文件树"></a>3.2.1 文件树</h4><div class="code-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">│  MainClass.java</span><br><span class="line">│</span><br><span class="line">├─thread</span><br><span class="line">│  │  Dispatcher.java</span><br><span class="line">│  │  InputHandler.java</span><br><span class="line">│  │</span><br><span class="line">│  └─elevator</span><br><span class="line">│          Action.java</span><br><span class="line">│          Elevator.java</span><br><span class="line">│          Person.java</span><br><span class="line">│          Strategy.java</span><br><span class="line">│</span><br><span class="line">├─tray</span><br><span class="line">│      Communication.java</span><br><span class="line">│      RequestQueue.java</span><br><span class="line">│      Shaft.java</span><br><span class="line">│      WaitQueue.java</span><br><span class="line">│</span><br><span class="line">└─utils</span><br><span class="line">        OutputHandler.java</span><br><span class="line">        Util.java</span><br></pre></td></tr></table></figure></div>
+
+<h4 id="3-2-2-UML-类图"><a href="#3-2-2-UML-类图" class="headerlink" title="3.2.2 UML 类图"></a>3.2.2 UML 类图</h4><p><img lazyload="" src="/images/loading.svg" data-src="/images/oo/hw7.png" alt="hw7"></p>
+<h4 id="3-2-3-UML-时序图"><a href="#3-2-3-UML-时序图" class="headerlink" title="3.2.3 UML 时序图"></a>3.2.3 UML 时序图</h4><p><img lazyload="" src="/images/loading.svg" data-src="/images/oo/hw7_sequence.png" alt="hw7_sequence"></p>
+<h3 id="3-3-架构设计"><a href="#3-3-架构设计" class="headerlink" title="3.3 架构设计"></a>3.3 架构设计</h3><h4 id="3-3-1-双轿厢改造总览"><a href="#3-3-1-双轿厢改造总览" class="headerlink" title="3.3.1 双轿厢改造总览"></a>3.3.1 双轿厢改造总览</h4><p>与 <code>sche</code> 一样，新增一个 <code>Action</code> 为 <code>UPDATE</code> ，进行整体操作（就地停下，开门，赶人，等待一段时间，更新信息，关门）。新增共享对象 <code>Shaft</code> 电梯井，存储一个或两个电梯的信息。</p>
+<h4 id="3-3-2-改造时电梯之间的通讯"><a href="#3-3-2-改造时电梯之间的通讯" class="headerlink" title="3.3.2 改造时电梯之间的通讯"></a>3.3.2 改造时电梯之间的通讯</h4><p>题目要求，在两部电梯都停下后再输出 <code>UPDATE-BEGIN</code>，在两部电梯都完成改造后再输出 <code>UPDATE-END</code>。这涉及了两部电梯之间的通讯，是一个“哲学家进餐问题”，倘若设计不当会出现锁的嵌套导致死锁。</p>
+<p>这里笔者设计了一个通讯类 <code>Communication</code>，使用两个 <code>HashMap&lt;UpdateRequest, Integer&gt;</code>，一个是改造请求对应的两部电梯<strong>准备好的数量</strong>，一个是改造请求对应的两部电梯<strong>完成改造的数量</strong>。当 Value 到达 2 就可以进行相应的输出操作。这样处理后，两部电梯各自都<strong>既是读者也是写者</strong>，通讯类就是它们的共享对象。（这么说来这里可以用读写锁 <code>lock</code> 的！但我依然用的是 <code>synchronized</code>）。当一部电梯完成了对应操作但另外一个电梯没有完成，在共享对象中 <code>wait</code> 即可。</p>
+<h4 id="3-3-3-电梯井如何防撞"><a href="#3-3-3-电梯井如何防撞" class="headerlink" title="3.3.3 电梯井如何防撞"></a>3.3.3 电梯井如何防撞</h4><p>电梯井 <code>Shaft</code> 作为两个电梯的共享对象，存储了共享楼层的信息。当某个电梯位于共享楼层，其标记为“被占用”。如果电梯想进入共享楼层，需要检查是不是“被占用”再行动。</p>
+<p>对于已经位于共享楼层的电梯，采取“主动让出”策略。即如果这个电梯做完了事情，准备在 <code>transferFloor</code> 中 <code>WAIT</code> 了，那么用 <code>RELIEVE</code> “接触占用请求“替换之，电梯收到这个请求后就会移出共享楼层。</p>
+<h4 id="3-3-4-双轿厢电梯调度"><a href="#3-3-4-双轿厢电梯调度" class="headerlink" title="3.3.4 双轿厢电梯调度"></a>3.3.4 双轿厢电梯调度</h4><p>调度器的逻辑需要补充，针对双轿厢电梯：</p>
+<ul>
+<li>如果乘客的起始楼层在该电梯运行范围内，则放心分配给这个电梯。</li>
+<li>如果乘客的起始楼层不在该电梯运行范围内，则分配给它的”伙伴电梯“。</li>
+</ul>
+<p>电梯运行策略需要修改，针对双轿厢电梯：</p>
+<ul>
+<li>如果乘客的目标楼层在电梯运行范围内，照常下电梯。</li>
+<li>如果乘客的目标楼层不在电梯运行范围内，在换乘楼层处下电梯。</li>
+</ul>
+<p>于是结束了！均匀分配是很好的宝宝。</p>
+<h3 id="3-4-性能度量"><a href="#3-4-性能度量" class="headerlink" title="3.4 性能度量"></a>3.4 性能度量</h3><p><strong>代码规模</strong>：</p>
+<p><img lazyload="" src="/images/loading.svg" data-src="/images/oo/hw7_data.png" alt="hw7_data"></p>
+<p><strong>运行时间</strong>：至少不会因为非死锁或没能结束的原因超时。</p>
+<h3 id="3-5-bug-分析"><a href="#3-5-bug-分析" class="headerlink" title="3.5 bug 分析"></a>3.5 bug 分析</h3><p>本次强测结果较好（90+）果然不卷性能才是 OO 的真谛（x）。</p>
+<p>全随机评测机也能找到一两个 bug。</p>
+<h2 id="4-心得体会"><a href="#4-心得体会" class="headerlink" title="4 心得体会"></a>4 心得体会</h2><p>电梯月就这么结束了。好神奇好奇妙。</p>
+<p>这单元的表现其实比上个单元要好。唯一一次通宵改 bug 也是结果稀烂的第二次迭代。事实证明，<strong>选择大于努力</strong>，<strong>交流借鉴大于闭门造车</strong>。</p>
+<p>倘若在着手写第二次迭代的时候，先好好研究好了实验代码的加锁策略，或许这段体验会平淡不少。OO 课再一次让我体会到了优秀的设计思路的必要性。</p>
+<h2 id="致谢"><a href="#致谢" class="headerlink" title="致谢"></a>致谢</h2><ol>
+<li><a class="link" target="_blank" rel="noopener" href="https://mmmusel.github.io/">Musel’s blog<i class="fa-solid fa-arrow-up-right ml-[0.2em] font-light align-text-top text-[0.7em] link-icon"></i></a>（感谢提供第一次迭代思路和怎么画时序图）</li>
+<li><a class="link" target="_blank" rel="noopener" href="https://hyggge.github.io/">Hyggge’s Blog<i class="fa-solid fa-arrow-up-right ml-[0.2em] font-light align-text-top text-[0.7em] link-icon"></i></a>（感谢提供怎么把时序图画好看bushi）</li>
+</ol>
+
+		</div>
+
+		
+		<div class="post-copyright-info w-full my-8 px-2 sm:px-6 md:px-8">
+			<div class="article-copyright-info-container">
+    <ul>
+        <li><strong>Title:</strong> 面向对象设计与构造OO：Unit2-电梯调度</li>
+        <li><strong>Author:</strong> BaconToast</li>
+        <li><strong>Created at
+                :</strong> 2025-11-18 13:23:36</li>
+        
+            <li>
+                <strong>Updated at
+                    :</strong> 2025-11-18 15:17:44
+            </li>
+        
+        <li>
+            <strong>Link:</strong> https://bacontoast-pro.github.io/2025/11/18/oo/u2/
+        </li>
+        <li>
+            <strong>
+                License:
+            </strong>
+            
+
+            
+                This work is licensed under <a class="license" target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0">CC BY-NC-SA 4.0</a>.
+            
+        </li>
+    </ul>
+</div>
+
+		</div>
+		
+
+		
+		<ul class="post-tags-box text-lg mt-1.5 flex-wrap justify-center flex md:hidden">
+			
+			<li class="tag-item mx-0.5">
+				<a href="/tags/Java/">#Java</a>&nbsp;
+			</li>
+			
+			<li class="tag-item mx-0.5">
+				<a href="/tags/OO/">#OO</a>&nbsp;
+			</li>
+			
+		</ul>
+		
+
+		
+
+		
+		<div class="article-nav my-8 flex justify-between items-center px-2 sm:px-6 md:px-8">
+			
+			<div class="article-prev border-border-color shadow-redefine-flat shadow-shadow-color-2 rounded-medium px-4 py-2 hover:shadow-redefine-flat-hover hover:shadow-shadow-color-2">
+				<a class="prev" rel="prev" href="/2025/11/18/oo/u3/">
+					<span class="left arrow-icon flex justify-center items-center">
+						<i class="fa-solid fa-chevron-left"></i>
+					</span>
+					<span class="title flex justify-center items-center">
+						<span class="post-nav-title-item truncate max-w-48">面向对象设计与构造OO：Unit3-社交网络</span>
+						<span class="post-nav-item">Prev posts</span>
+					</span>
+				</a>
+			</div>
+			
+			
+			<div class="article-next border-border-color shadow-redefine-flat shadow-shadow-color-2 rounded-medium px-4 py-2 hover:shadow-redefine-flat-hover hover:shadow-shadow-color-2">
+				<a class="next" rel="next" href="/2025/11/18/oo/u1/">
+					<span class="title flex justify-center items-center">
+						<span class="post-nav-title-item truncate max-w-48">面向对象设计与构造OO：Unit1-表达式展开</span>
+						<span class="post-nav-item">Next posts</span>
+					</span>
+					<span class="right arrow-icon flex justify-center items-center">
+						<i class="fa-solid fa-chevron-right"></i>
+					</span>
+				</a>
+			</div>
+			
+		</div>
+		
+
+
+		
+		<div class="comment-container px-2 sm:px-6 md:px-8 pb-8">
+			<div class="comments-container mt-10 w-full ">
+    <div id="comment-anchor" class="w-full h-2.5"></div>
+    <div class="comment-area-title w-full my-1.5 md:my-2.5 text-xl md:text-3xl font-bold">
+        Comments
+    </div>
+    
+
+        
+            
+    <div id="waline"></div>
+    <script type="module" data-swup-reload-script>
+      import { init } from '/js/libs/waline.mjs';
+
+      function loadWaline() {
+        init({
+          el: '#waline',
+          serverURL: 'https://example.example.com',
+          dark: 'body[class~="dark-mode"]',
+          reaction: false,
+          requiredMeta: ['nick', 'mail'],
+          emoji: [],
+                    lang: 'zh-CN',
+        });
+      }
+
+      if (typeof swup !== 'undefined') {
+        loadWaline();
+      } else {
+        window.addEventListener('DOMContentLoaded', loadWaline);
+      }
+    </script>
+
+
+
+        
+    
+</div>
+
+		</div>
+		
+	</div>
+
+	
+	<div class="toc-content-container">
+		<div class="post-toc-wrap">
+	<div class="post-toc">
+		<div class="toc-title">On this page</div>
+		<div class="page-title">面向对象设计与构造OO：Unit2-电梯调度</div>
+		<ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#0-%E5%89%8D%E8%A8%80"><span class="nav-text">0 前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-%E7%AC%AC%E4%BA%94%E6%AC%A1%E4%BD%9C%E4%B8%9A"><span class="nav-text">1 第五次作业</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-1-%E9%9C%80%E6%B1%82%E8%AF%B4%E6%98%8E"><span class="nav-text">1.1 需求说明</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-2-%E9%A1%B9%E7%9B%AE%E7%BB%93%E6%9E%84"><span class="nav-text">1.2 项目结构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-3-%E6%9E%B6%E6%9E%84%E8%AE%BE%E8%AE%A1"><span class="nav-text">1.3 架构设计</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-4-%E6%80%A7%E8%83%BD%E5%BA%A6%E9%87%8F"><span class="nav-text">1.4 性能度量</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-5-bug-%E5%88%86%E6%9E%90"><span class="nav-text">1.5 bug 分析</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-%E7%AC%AC%E5%85%AD%E6%AC%A1%E4%BD%9C%E4%B8%9A"><span class="nav-text">2 第六次作业</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1-%E9%9C%80%E6%B1%82%E8%AF%B4%E6%98%8E"><span class="nav-text">2.1 需求说明</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2-%E9%A1%B9%E7%9B%AE%E7%BB%93%E6%9E%84"><span class="nav-text">2.2 项目结构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-3-%E6%9E%B6%E6%9E%84%E8%AE%BE%E8%AE%A1"><span class="nav-text">2.3 架构设计</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-4-%E6%80%A7%E8%83%BD%E5%BA%A6%E9%87%8F"><span class="nav-text">2.4 性能度量</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-5-bug-%E5%88%86%E6%9E%90"><span class="nav-text">2.5 bug 分析</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-%E7%AC%AC%E4%B8%83%E6%AC%A1%E4%BD%9C%E4%B8%9A"><span class="nav-text">3 第七次作业</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#3-1-%E9%9C%80%E6%B1%82%E8%AF%B4%E6%98%8E"><span class="nav-text">3.1 需求说明</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-2-%E9%A1%B9%E7%9B%AE%E7%BB%93%E6%9E%84"><span class="nav-text">3.2 项目结构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-3-%E6%9E%B6%E6%9E%84%E8%AE%BE%E8%AE%A1"><span class="nav-text">3.3 架构设计</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-4-%E6%80%A7%E8%83%BD%E5%BA%A6%E9%87%8F"><span class="nav-text">3.4 性能度量</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-5-bug-%E5%88%86%E6%9E%90"><span class="nav-text">3.5 bug 分析</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-%E5%BF%83%E5%BE%97%E4%BD%93%E4%BC%9A"><span class="nav-text">4 心得体会</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%87%B4%E8%B0%A2"><span class="nav-text">致谢</span></a></li></ol>
+
+	</div>
+</div>
+	</div>
+	
+</div>
+			</div>
+
+			
+		</div>
+
+		<div class="main-content-footer">
+			<footer class="footer mt-5 py-5 h-auto text-base text-third-text-color relative border-t-2 border-t-border-color">
+    <div class="info-container py-3 text-center">
+        
+        <div class="text-center">
+            &copy;
+            
+              <span>2025</span>
+              -
+            
+            2025&nbsp;&nbsp;<i class="fa-solid fa-heart fa-beat" style="--fa-animation-duration: 0.5s; color: #f54545"></i>&nbsp;&nbsp;<a href="/">BaconToast</a>
+            
+                
+                <p class="post-count space-x-0.5">
+                    <span>
+                        14 posts in total
+                    </span>
+                    
+                </p>
+            
+        </div>
+        
+            <script data-swup-reload-script src="https://cn.vercount.one/js"></script>
+            <div class="relative text-center lg:absolute lg:right-[20px] lg:top-1/2 lg:-translate-y-1/2 lg:text-right">
+                
+                    <span id="busuanzi_container_site_uv" class="lg:!block">
+                        <span class="text-sm">VISITOR COUNT</span>
+                        <span id="busuanzi_value_site_uv"></span>
+                    </span>
+                
+                
+                    <span id="busuanzi_container_site_pv" class="lg:!block">
+                        <span class="text-sm">TOTAL PAGE VIEWS</span>
+                        <span id="busuanzi_value_site_pv"></span>
+                    </span>
+                
+            </div>
+        
+        <div class="relative text-center lg:absolute lg:left-[20px] lg:top-1/2 lg:-translate-y-1/2 lg:text-left">
+            <span class="lg:block text-sm">POWERED BY <?xml version="1.0" encoding="utf-8"?><!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"><svg class="relative top-[2px] inline-block align-baseline" version="1.1" id="圖層_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="1rem" height="1rem" viewBox="0 0 512 512" enable-background="new 0 0 512 512" xml:space="preserve"><path fill="#0E83CD" d="M256.4,25.8l-200,115.5L56,371.5l199.6,114.7l200-115.5l0.4-230.2L256.4,25.8z M349,354.6l-18.4,10.7l-18.6-11V275H200v79.6l-18.4,10.7l-18.6-11v-197l18.5-10.6l18.5,10.8V237h112v-79.6l18.5-10.6l18.5,10.8V354.6z"/></svg><a target="_blank" class="text-base" href="https://hexo.io">Hexo</a></span>
+            <span class="text-sm lg:block">THEME&nbsp;<a class="text-base" target="_blank" href="https://github.com/EvanNotFound/hexo-theme-redefine">Redefine v2.8.5</a></span>
+        </div>
+        
+        
+            <div>
+                Blog up for <span class="odometer" id="runtime_days" ></span> days <span class="odometer" id="runtime_hours"></span> hrs <span class="odometer" id="runtime_minutes"></span> Min <span class="odometer" id="runtime_seconds"></span> Sec
+            </div>
+        
+        
+            <script data-swup-reload-script>
+                try {
+                    function odometer_init() {
+                    const elements = document.querySelectorAll('.odometer');
+                    elements.forEach(el => {
+                        new Odometer({
+                            el,
+                            format: '( ddd).dd',
+                            duration: 200
+                        });
+                    });
+                    }
+                    odometer_init();
+                } catch (error) {}
+            </script>
+        
+        
+        
+    </div>  
+</footer>
+		</div>
+	</div>
+
+	
+	<div class="post-tools">
+		<div class="post-tools-container">
+	<ul class="article-tools-list">
+		<!-- TOC aside toggle -->
+		
+		<li class="right-bottom-tools page-aside-toggle">
+			<i class="fa-regular fa-outdent"></i>
+		</li>
+		
+
+		<!-- go comment -->
+		
+		<li class="go-comment">
+			<i class="fa-regular fa-comments"></i>
+		</li>
+		
+	</ul>
+</div>
+	</div>
+	
+
+	<div class="right-side-tools-container">
+		<div class="side-tools-container">
+	<ul class="hidden-tools-list">
+		<li class="right-bottom-tools tool-font-adjust-plus flex justify-center items-center">
+			<i class="fa-regular fa-magnifying-glass-plus"></i>
+		</li>
+
+		<li class="right-bottom-tools tool-font-adjust-minus flex justify-center items-center">
+			<i class="fa-regular fa-magnifying-glass-minus"></i>
+		</li>
+
+		<li class="right-bottom-tools tool-dark-light-toggle flex justify-center items-center">
+			<i class="fa-regular fa-moon"></i>
+		</li>
+
+		<!-- rss -->
+		
+
+		
+
+		<li class="right-bottom-tools tool-scroll-to-bottom flex justify-center items-center">
+			<i class="fa-regular fa-arrow-down"></i>
+		</li>
+	</ul>
+
+	<ul class="visible-tools-list">
+		<li class="right-bottom-tools toggle-tools-list flex justify-center items-center">
+			<i class="fa-regular fa-cog fa-spin"></i>
+		</li>
+		
+		<li class="right-bottom-tools tool-scroll-to-top flex justify-center items-center">
+			<i class="arrow-up fas fa-arrow-up"></i>
+			<span class="percent"></span>
+		</li>
+		
+		
+	</ul>
+</div>
+	</div>
+
+	<div class="image-viewer-container">
+	<img src="">
+</div>
+
+	
+
+</main>
+
+
+
+<script src="/js/build/libs/Swup.min.js"></script>
+
+<script src="/js/build/libs/SwupSlideTheme.min.js"></script>
+
+<script src="/js/build/libs/SwupScriptsPlugin.min.js"></script>
+
+<script src="/js/build/libs/SwupProgressPlugin.min.js"></script>
+
+<script src="/js/build/libs/SwupScrollPlugin.min.js"></script>
+
+<script src="/js/build/libs/SwupPreloadPlugin.min.js"></script>
+
+<script>
+    const swup = new Swup({
+        plugins: [
+            new SwupScriptsPlugin({
+                optin: true,
+            }),
+            new SwupProgressPlugin(),
+            new SwupScrollPlugin({
+                offset: 80,
+            }),
+            new SwupSlideTheme({
+                mainElement: ".main-content-body",
+            }),
+            new SwupPreloadPlugin(),
+        ],
+        containers: ["#swup"],
+    });
+</script>
+
+
+
+
+	
+<script src="/js/build/tools/imageViewer.js" type="module"></script>
+
+<script src="/js/build/utils.js" type="module"></script>
+
+<script src="/js/build/main.js" type="module"></script>
+
+<script src="/js/build/layouts/navbarShrink.js" type="module"></script>
+
+<script src="/js/build/tools/scrollTopBottom.js" type="module"></script>
+
+<script src="/js/build/tools/lightDarkSwitch.js" type="module"></script>
+
+<script src="/js/build/layouts/categoryList.js" type="module"></script>
+
+
+
+
+
+    
+<script src="/js/build/tools/codeBlock.js" type="module"></script>
+
+
+
+
+    
+<script src="/js/build/layouts/lazyload.js" type="module"></script>
+
+
+
+
+    
+<script src="/js/build/tools/runtime.js"></script>
+
+    
+<script src="/js/build/libs/odometer.min.js"></script>
+
+    
+<link rel="stylesheet" href="/assets/odometer-theme-minimal.css">
+
+
+
+
+  
+<script src="/js/build/libs/Typed.min.js"></script>
+
+  
+<script src="/js/build/plugins/typed.js" type="module"></script>
+
+
+
+
+
+
+    
+<script src="/js/build/libs/minimasonry.min.js"></script>
+
+    
+<script src="/js/build/plugins/masonry.js" type="module"></script>
+
+
+
+
+
+
+
+    
+<script src="/js/build/tools/tocToggle.js" type="module" data-swup-reload-script=""></script>
+
+<script src="/js/build/layouts/toc.js" type="module" data-swup-reload-script=""></script>
+
+<script src="/js/build/plugins/tabs.js" type="module" data-swup-reload-script=""></script>
+
+
+
+
+<script src="/js/build/libs/moment-with-locales.min.js" data-swup-reload-script=""></script>
+
+
+<script src="/js/build/layouts/essays.js" type="module" data-swup-reload-script=""></script>
+
+
+
+
+
+    
+<script src="/js/build/layouts/bookmarkNav.js" type="module"></script>
+
+
+	
+</body>
+
+</html>
