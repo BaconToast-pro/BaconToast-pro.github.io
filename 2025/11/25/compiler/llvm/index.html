@@ -1,0 +1,1306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="keywords" content="Hexo Theme Redefine">
+    
+    <meta name="author" content="BaconToast">
+    
+    <!-- Completely eliminate flash of wrong theme -->
+    <script>
+        (function() {
+            const THEME_KEY = "REDEFINE-THEME-STATUS";
+            const DARK = "dark", LIGHT = "light";
+            
+            // Get preferred theme
+            function getTheme() {
+                try {
+                    const saved = localStorage.getItem(THEME_KEY);
+                    if (saved) {
+                        const { isDark } = JSON.parse(saved);
+                        return isDark ? DARK : LIGHT;
+                    }
+                } catch (e) {}
+                
+                return matchMedia("(prefers-color-scheme: dark)").matches ? DARK : LIGHT;
+            }
+            
+            // Apply theme to document
+            function applyTheme(theme) {
+                const isDark = theme === DARK;
+                const root = document.documentElement;
+                
+                // Set data attribute for CSS variables
+                root.setAttribute("data-theme", theme);
+                
+                // Set classes for compatibility
+                root.classList.add(theme);
+                root.classList.remove(isDark ? LIGHT : DARK);
+                root.style.colorScheme = theme;
+            }
+            
+            // Initial application
+            const theme = getTheme();
+            applyTheme(theme);
+            
+            // Listen for system preference changes
+            matchMedia("(prefers-color-scheme: dark)").addEventListener("change", ({ matches }) => {
+                // Only update if using system preference (no localStorage entry)
+                if (!localStorage.getItem(THEME_KEY)) {
+                    applyTheme(matches ? DARK : LIGHT);
+                }
+            });
+            
+            // Set body classes once DOM is ready
+            if (document.readyState !== "loading") {
+                document.body.classList.add(theme + "-mode");
+            } else {
+                document.addEventListener("DOMContentLoaded", () => {
+                    document.body.classList.add(theme + "-mode");
+                    document.body.classList.remove((theme === DARK ? LIGHT : DARK) + "-mode");
+                });
+            }
+        })();
+    </script>
+    
+    <!-- Critical CSS to prevent flash -->
+    <style>
+        :root[data-theme="dark"] {
+            --background-color: #202124;
+            --background-color-transparent: rgba(32, 33, 36, 0.6);
+            --second-background-color: #2d2e32;
+            --third-background-color: #34353a;
+            --third-background-color-transparent: rgba(32, 33, 36, 0.6);
+            --primary-color: #0066CC;
+            --first-text-color: #ffffff;
+            --second-text-color: #eeeeee;
+            --third-text-color: #bebec6;
+            --fourth-text-color: #999999;
+            --default-text-color: #bebec6;
+            --invert-text-color: #373D3F;
+            --border-color: rgba(255, 255, 255, 0.08);
+            --selection-color: #0066CC;
+            --shadow-color-1: rgba(255, 255, 255, 0.08);
+            --shadow-color-2: rgba(255, 255, 255, 0.05);
+        }
+        
+        :root[data-theme="light"] {
+            --background-color: #fff;
+            --background-color-transparent: rgba(255, 255, 255, 0.6);
+            --second-background-color: #f8f8f8;
+            --third-background-color: #f2f2f2;
+            --third-background-color-transparent: rgba(241, 241, 241, 0.6);
+            --primary-color: #0066CC;
+            --first-text-color: #16171a;
+            --second-text-color: #2f3037;
+            --third-text-color: #5e5e5e;
+            --fourth-text-color: #eeeeee;
+            --default-text-color: #373D3F;
+            --invert-text-color: #bebec6;
+            --border-color: rgba(0, 0, 0, 0.08);
+            --selection-color: #0066CC;
+            --shadow-color-1: rgba(0, 0, 0, 0.08);
+            --shadow-color-2: rgba(0, 0, 0, 0.05);
+        }
+        
+        body {
+            background-color: var(--background-color);
+            color: var(--default-text-color);
+        }
+        
+        /* Apply body classes as soon as DOM is ready */
+        :root[data-theme="dark"] body {
+            background-color: var(--background-color);
+            color: var(--default-text-color);
+        }
+    </style>
+    
+    <!-- preconnect -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    
+    <!--- Seo Part-->
+    
+    <link rel="canonical" href="https://BaconToast-pro.github.io/2025/11/25/compiler/llvm/"/>
+    <meta name="robots" content="index,follow">
+    <meta name="googlebot" content="index,follow">
+    <meta name="revisit-after" content="1 days">
+    
+    
+    
+        
+        <meta name="description" content="Hexo Theme Redefine, Redefine Your Hexo Journey.">
+<meta property="og:type" content="article">
+<meta property="og:title" content="编译技术：中间代码生成">
+<meta property="og:url" content="https://bacontoast-pro.github.io/2025/11/25/compiler/llvm/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="Hexo Theme Redefine, Redefine Your Hexo Journey.">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://bacontoast-pro.github.io/images/redefine-og.webp">
+<meta property="article:published_time" content="2025-11-25T03:57:18.368Z">
+<meta property="article:modified_time" content="2025-11-25T03:59:29.754Z">
+<meta property="article:author" content="BaconToast">
+<meta property="article:tag" content="Compiler">
+<meta property="article:tag" content="Java">
+<meta property="article:tag" content="LLVM IR">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://bacontoast-pro.github.io/images/redefine-og.webp">
+    
+    
+    <!--- Icon Part-->
+    <link rel="icon" type="image/png" href="/images/public/toast.svg" sizes="192x192">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/public/toast.svg">
+    <meta name="theme-color" content="#A31F34">
+    <link rel="shortcut icon" href="/images/public/toast.svg">
+    <!--- Page Info-->
+    
+    <title>
+        
+            编译技术：中间代码生成 | BaconToast&#39;s Shop
+        
+    </title>
+
+    
+<link rel="stylesheet" href="/fonts/Chillax/chillax.css">
+
+
+    <!--- Inject Part-->
+    
+
+    
+<link rel="stylesheet" href="/css/style.css">
+
+
+    
+        
+<link rel="stylesheet" href="/css/build/tailwind.css">
+
+    
+
+    
+<link rel="stylesheet" href="/fonts/GeistMono/geist-mono.css">
+
+    
+<link rel="stylesheet" href="/fonts/Geist/geist.css">
+
+    <!--- Font Part-->
+    
+    
+    
+    
+    
+    
+        
+<script src="/js/build/libs/anime.min.js"></script>
+
+    
+
+    <script id="hexo-configurations">
+    window.config = {"hostname":"bacontoast-pro.github.io","root":"/","language":"en"};
+    window.theme = {"articles":{"style":{"font_size":"16px","line_height":1.5,"image_border_radius":"14px","image_alignment":"center","image_caption":false,"link_icon":true,"delete_mask":false,"title_alignment":"left","headings_top_spacing":{"h1":"3.2rem","h2":"2.4rem","h3":"1.9rem","h4":"1.6rem","h5":"1.4rem","h6":"1.3rem"}},"word_count":{"enable":true,"count":true,"min2read":true},"author_label":{"enable":true,"auto":false,"list":[]},"code_block":{"copy":true,"style":"mac","highlight_theme":{"light":"github","dark":"vs2015"},"font":{"enable":false,"family":null,"url":null}},"toc":{"enable":true,"max_depth":3,"number":false,"expand":true,"init_open":true},"copyright":{"enable":true,"default":"cc_by_nc_sa"},"lazyload":true,"pangu_js":false,"recommendation":{"enable":false,"title":"推荐阅读","limit":3,"mobile_limit":2,"placeholder":"/images/wallhaven-wqery6-light.webp","skip_dirs":[]}},"colors":{"primary":"#A31F34","secondary":null,"default_mode":"light"},"global":{"fonts":{"chinese":{"enable":false,"family":null,"url":null},"english":{"enable":false,"family":null,"url":null},"title":{"enable":false,"family":null,"url":null}},"content_max_width":"1000px","sidebar_width":"210px","hover":{"shadow":true,"scale":true},"scroll_progress":{"bar":false,"percentage":true},"website_counter":{"url":"https://cn.vercount.one/js","enable":true,"site_pv":true,"site_uv":true,"post_pv":true},"single_page":true,"preloader":{"enable":true,"custom_message":null},"side_tools":{"gear_rotation":true,"auto_expand":true},"open_graph":{"enable":true,"image":"/images/redefine-og.webp","description":"Hexo Theme Redefine, Redefine Your Hexo Journey."},"google_analytics":{"enable":false,"id":null}},"home_banner":{"enable":true,"style":"fixed","image":{"light":"/images/wallhaven-wqery6-light.webp","dark":"/images/wallhaven-wqery6-dark.webp"},"title":"BaconToast Blog","subtitle":{"text":["欢迎来到BaconToast小商店~","We can be the light upon the day."],"hitokoto":{"enable":false,"show_author":false,"api":"https://v1.hitokoto.cn"},"typing_speed":100,"backing_speed":80,"starting_delay":500,"backing_delay":1500,"loop":true,"smart_backspace":true},"text_color":{"light":"#fff","dark":"#d1d1b6"},"text_style":{"title_size":"2.8rem","subtitle_size":"1.5rem","line_height":1.2},"custom_font":{"enable":false,"family":null,"url":null},"social_links":{"enable":true,"style":"default","links":{"github":"https://github.com/BaconToast-pro","instagram":null,"zhihu":null,"twitter":null,"email":"zhouzq@buaa.edu.cn"},"qrs":{"weixin":"images/public/wechat.jpg"}}},"plugins":{"feed":{"enable":false},"aplayer":{"enable":false,"type":"fixed","audios":[{"name":null,"artist":null,"url":null,"cover":null,"lrc":null}]},"mermaid":{"enable":false,"version":"11.4.1"}},"version":"2.8.5","navbar":{"auto_hide":true,"color":{"left":"#f78736","right":"#367df7","transparency":35},"width":{"home":"1200px","pages":"1000px"},"links":{"Home":{"path":"/","icon":"fa-regular fa-house"},"Archives":{"path":"/archives","icon":"fa-regular fa-archive"},"Friends":{"icon":"fa-solid fa-link","path":"/links/"},"About":{"icon":"fa-regular fa-user","submenus":{"Github":"https://github.com/BaconToast-pro","Friends":"/links/"}}},"search":{"enable":false,"preload":true}},"page_templates":{"friends_column":2,"tags_style":"blur"},"home":{"sidebar":{"enable":true,"position":"left","first_item":"menu","announcement":"~o(^_^)o~","show_on_mobile":true,"links":{"Archives":{"path":"/archives","icon":"fa-regular fa-archive"},"Tags":{"path":"/tags","icon":"fa-regular fa-tags"},"Categories":{"path":"/categories","icon":"fa-regular fa-folder"}}},"article_date_format":"auto","excerpt_length":200,"categories":{"enable":true,"limit":3},"tags":{"enable":true,"limit":3}},"footerStart":"2025/11/11 17:20:00"};
+    window.lang_ago = {"second":"%s seconds ago","minute":"%s minutes ago","hour":"%s hours ago","day":"%s days ago","week":"%s weeks ago","month":"%s months ago","year":"%s years ago"};
+    window.data = {"masonry":true};
+  </script>
+    
+    <!--- Fontawesome Part-->
+    
+<link rel="stylesheet" href="/fontawesome/fontawesome.min.css">
+
+    
+<link rel="stylesheet" href="/fontawesome/brands.min.css">
+
+    
+<link rel="stylesheet" href="/fontawesome/solid.min.css">
+
+    
+<link rel="stylesheet" href="/fontawesome/regular.min.css">
+
+    
+    
+    
+    
+<meta name="generator" content="Hexo 8.1.1"></head>
+
+
+
+<body>
+	<div class="progress-bar-container">
+	
+
+	
+	<span class="pjax-progress-bar"></span>
+	<!--        <span class="swup-progress-icon">-->
+	<!--            <i class="fa-solid fa-circle-notch fa-spin"></i>-->
+	<!--        </span>-->
+	
+</div>
+
+<style>
+    :root {
+        --preloader-background-color: #fff;
+        --preloader-text-color: #000;
+    }
+
+    @media (prefers-color-scheme: dark) {
+        :root {
+            --preloader-background-color: #202124;
+            --preloader-text-color: #fff;
+        }
+    }
+
+    @media (prefers-color-scheme: light) {
+        :root {
+            --preloader-background-color: #fff;
+            --preloader-text-color: #000;
+        }
+    }
+
+    @media (max-width: 600px) {
+        .ml13 {
+            font-size: 2.6rem !important; /* Adjust this value as needed */
+        }
+    }
+
+    .preloader {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem; /* Tailwind 'gap-4' is 1rem */
+        align-items: center;
+        justify-content: center;
+        position: fixed;
+        padding: 12px;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh; /* 'h-screen' is 100% of the viewport height */
+        background-color: var(--preloader-background-color);
+        z-index: 1100; /* 'z-[1100]' sets the z-index */
+        transition: opacity 0.2s ease-in-out;
+    }
+
+    .ml13 {
+        font-size: 3.2rem;
+        /* text-transform: uppercase; */
+        color: var(--preloader-text-color);
+        letter-spacing: -1px;
+        font-weight: 500;
+        font-family: 'Chillax-Variable', sans-serif;
+        text-align: center;
+    }
+
+    .ml13 .word {
+        display: inline-flex;
+        flex-wrap: wrap;
+        white-space: nowrap;
+    }
+
+    .ml13 .letter {
+        display: inline-block;
+        line-height: 1em;
+    }
+</style>
+
+<div class="preloader">
+    <h2 class="ml13">
+        BaconToast&#39;s Shop
+    </h2>
+    <script>
+        var textWrapper = document.querySelector('.ml13');
+        // Split text into words
+        var words = textWrapper.textContent.trim().split(' ');
+
+        // Clear the existing content
+        textWrapper.innerHTML = '';
+
+        // Wrap each word and its letters in spans
+        words.forEach(function(word) {
+            var wordSpan = document.createElement('span');
+            wordSpan.classList.add('word');
+            wordSpan.innerHTML = word.replace(/\S/g, "<span class='letter'>$&</span>");
+            textWrapper.appendChild(wordSpan);
+            textWrapper.appendChild(document.createTextNode(' ')); // Add space between words
+        });
+
+        var animation = anime.timeline({ loop: true })
+            .add({
+                targets: '.ml13 .letter',
+                translateY: [20, 0],
+                translateZ: 0,
+                opacity: [0, 1],
+                filter: ['blur(5px)', 'blur(0px)'],
+                easing: "easeOutExpo",
+                duration: 1200,
+                delay: (el, i) => 300 + 20 * i,
+            })
+            .add({
+                targets: '.ml13 .letter',
+                translateY: [0, -20],
+                opacity: [1, 0],
+                filter: ['blur(0px)', 'blur(5px)'],
+                easing: "easeInExpo",
+                duration: 1000,
+                delay: (el, i) => 15 * i,
+                complete: function() {
+                    hidePreloader();
+                }
+            }, '-=700');
+
+
+        let themeStatus = JSON.parse(localStorage.getItem('REDEFINE-THEME-STATUS'))?.isDark;
+
+        // If the theme status is not found in local storage, check the preferred color scheme
+        if (themeStatus === undefined || themeStatus === null) {
+            if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                themeStatus = 'dark';
+            } else {
+                themeStatus = 'light';
+            }
+        }
+
+        // Now you can use the themeStatus variable in your code
+        if (themeStatus) {
+            document.documentElement.style.setProperty('--preloader-background-color', '#202124');
+            document.documentElement.style.setProperty('--preloader-text-color', '#fff');
+        } else {
+            document.documentElement.style.setProperty('--preloader-background-color', '#fff');
+            document.documentElement.style.setProperty('--preloader-text-color', '#000');
+        }
+
+        window.addEventListener('load', function () {
+            setTimeout(hidePreloader, 5000); // Call hidePreloader after 5000 milliseconds if not already called by animation
+        });
+
+        function hidePreloader() {
+            var preloader = document.querySelector('.preloader');
+            preloader.style.opacity = '0';
+            setTimeout(function () {
+                preloader.style.display = 'none';
+            }, 200);
+        }
+    </script>
+</div>
+
+<main class="page-container" id="swup">
+
+	
+
+	<div class="main-content-container flex flex-col justify-between min-h-dvh">
+		<div class="main-content-header">
+			<header class="navbar-container px-6 md:px-12">
+    <div class="navbar-content transition-navbar ">
+        <div class="left">
+            
+            <a class="logo-title" href="/">
+                
+                BaconToast&#39;s Shop
+                
+            </a>
+        </div>
+
+        <div class="right">
+            <!-- PC -->
+            <div class="desktop">
+                <ul class="navbar-list">
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/"
+                                        >
+                                    <i class="fa-regular fa-house fa-fw"></i>
+                                    HOME
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/archives"
+                                        >
+                                    <i class="fa-regular fa-archive fa-fw"></i>
+                                    ARCHIVES
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/links/"
+                                        >
+                                    <i class="fa-solid fa-link fa-fw"></i>
+                                    FRIENDS
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class="has-dropdown"
+                                   href="#"
+                                        onClick=&#34;return false;&#34;>
+                                    <i class="fa-regular fa-user fa-fw"></i>
+                                    ABOUT
+                                    <i class="fa-solid fa-chevron-down fa-fw"></i>
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                                    <ul class="sub-menu">
+                                        
+                                            <li>
+                                                <a target="_blank" rel="noopener" href="https://github.com/BaconToast-pro">
+                                                    GITHUB
+                                                </a>
+                                            </li>
+                                        
+                                            <li>
+                                                <a href="/links/">
+                                                    FRIENDS
+                                                </a>
+                                            </li>
+                                        
+                                    </ul>
+                                
+                            </li>
+                    
+                    
+                </ul>
+            </div>
+            <!-- Mobile -->
+            <div class="mobile">
+                
+                <div class="icon-item navbar-bar">
+                    <div class="navbar-bar-middle"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mobile sheet -->
+    <div class="navbar-drawer h-dvh w-full absolute top-0 left-0 bg-background-color flex flex-col justify-between">
+        <ul class="drawer-navbar-list flex flex-col px-4 justify-center items-start">
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/"
+                        >
+                            <span>
+                                HOME
+                            </span>
+                            
+                                <i class="fa-regular fa-house fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/archives"
+                        >
+                            <span>
+                                ARCHIVES
+                            </span>
+                            
+                                <i class="fa-regular fa-archive fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/links/"
+                        >
+                            <span>
+                                FRIENDS
+                            </span>
+                            
+                                <i class="fa-solid fa-link fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+                
+                    
+
+                    <li class="drawer-navbar-item-sub text-base my-1.5 flex flex-col w-full">
+                        
+                        <div class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary cursor-pointer text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                             navbar-data-toggle="submenu-About"
+                        >
+                            <span>
+                                ABOUT
+                            </span>
+                            
+                                <i class="fa-solid fa-chevron-right fa-sm fa-fw transition-all"></i>
+                            
+                        </div>
+                        
+
+                        
+                            <div class="flex-col items-start px-2 py-2 hidden" data-target="submenu-About">
+                                
+                                    <div class="drawer-navbar-item text-base flex flex-col justify-center items-start hover:underline active:underline hover:underline-offset-1 rounded-3xl">
+                                        <a class=" text-third-text-color text-xl"
+                                           target="_blank" rel="noopener" href="https://github.com/BaconToast-pro">GITHUB</a>
+                                    </div>
+                                
+                                    <div class="drawer-navbar-item text-base flex flex-col justify-center items-start hover:underline active:underline hover:underline-offset-1 rounded-3xl">
+                                        <a class=" text-third-text-color text-xl"
+                                           href="/links/">FRIENDS</a>
+                                    </div>
+                                
+                            </div>
+                        
+                    </li>
+            
+
+            
+            
+                
+                    
+                    
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full active"
+                           href="/tags"
+                        >
+                            <span>Tags</span>
+                            <i class="fa-regular fa-tags fa-sm fa-fw"></i>
+                        </a>
+                    </li>
+                
+                    
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full active"
+                           href="/categories"
+                        >
+                            <span>Categories</span>
+                            <i class="fa-regular fa-folder fa-sm fa-fw"></i>
+                        </a>
+                    </li>
+                
+            
+        </ul>
+
+        <div class="statistics flex justify-around my-2.5">
+    <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/tags">
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">15</div>
+        <div class="label text-third-text-color text-sm">Tags</div>
+    </a>
+    <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/categories">
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">6</div>
+        <div class="label text-third-text-color text-sm">Categories</div>
+    </a>
+    <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/archives">
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">26</div>
+        <div class="label text-third-text-color text-sm">Posts</div>
+    </a>
+</div>
+    </div>
+
+    <div class="window-mask"></div>
+
+</header>
+
+
+		</div>
+
+		<div class="main-content-body transition-fade-up">
+			
+
+			<div class="main-content">
+				<div class="post-page-container flex relative justify-between box-border w-full h-full">
+	<div class="article-content-container">
+
+		<div class="article-title relative w-full">
+			
+			
+			
+			<img src="/images/public/city.jpg" alt="编译技术：中间代码生成" class="w-full h-60 sm:h-72 md:h-80 object-cover sm:rounded-t-large dark:brightness-75" />
+			
+			<div class="w-full flex items-center absolute bottom-0 justify-start">
+				<h1 class="article-title-cover text-center mx-6 my-6 text-second-text-color bg-background-color-transparent px-4 py-3 text-3xl sm:text-4xl md:text-5xl font-semibold backdrop-blur-lg rounded-xl border border-border-color ">编译技术：中间代码生成</h1>
+			</div>
+			
+		</div>
+
+		
+		<div class="article-header flex flex-row gap-2 items-center px-2 sm:px-6 md:px-8">
+			<div class="avatar w-[46px] h-[46px] flex-shrink-0 rounded-medium border border-border-color p-[1px]">
+				<img src="/images/public/avatar.jpg">
+			</div>
+			<div class="info flex flex-col justify-between">
+				<div class="author flex items-center">
+					<span class="name text-default-text-color text-lg font-semibold">BaconToast</span>
+					
+					<span class="author-label ml-1.5 text-xs px-2 py-0.5 rounded-small text-third-text-color border border-shadow-color-1">Lv3</span>
+					
+				</div>
+				<div class="meta-info">
+					<div class="article-meta-info">
+    <span class="article-date article-meta-item">
+        <i class="fa-regular fa-pen-fancy"></i>&nbsp;
+        <span class="desktop">2025-11-25 11:57:18</span>
+        <span class="mobile">2025-11-25 11:57:18</span>
+        <span class="hover-info">Created</span>
+    </span>
+    
+        <span class="article-date article-meta-item">
+            <i class="fa-regular fa-wrench"></i>&nbsp;
+            <span class="desktop">2025-11-25 11:59:29</span>
+            <span class="mobile">2025-11-25 11:59:29</span>
+            <span class="hover-info">Updated</span>
+        </span>
+    
+
+    
+        <span class="article-categories article-meta-item">
+            <i class="fa-regular fa-folders"></i>&nbsp;
+            <ul>
+                
+                
+                    
+                        
+                        <li>
+                            <a href="/categories/Compiler/">Compiler</a>&nbsp;
+                        </li>
+                    
+                    
+                
+            </ul>
+        </span>
+    
+    
+        <span class="article-tags article-meta-item">
+            <i class="fa-regular fa-tags"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/tags/Compiler/">Compiler</a>&nbsp;
+                    </li>
+                
+                    <li>
+                        | <a href="/tags/Java/">Java</a>&nbsp;
+                    </li>
+                
+                    <li>
+                        | <a href="/tags/LLVM-IR/">LLVM IR</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+
+    
+    
+    
+    
+        <span class="article-pv article-meta-item">
+            <i class="fa-regular fa-eye"></i>&nbsp;<span id="busuanzi_value_page_pv"></span>
+        </span>
+    
+</div>
+
+				</div>
+			</div>
+		</div>
+		
+
+		
+
+
+		<div class="article-content markdown-body px-2 sm:px-6 md:px-8 pb-8">
+			<h2 id="中间代码生成设计"><a href="#中间代码生成设计" class="headerlink" title="中间代码生成设计"></a>中间代码生成设计</h2><h3 id="编码前的设计"><a href="#编码前的设计" class="headerlink" title="编码前的设计"></a>编码前的设计</h3><h4 id="需求分析"><a href="#需求分析" class="headerlink" title="需求分析"></a>需求分析</h4><p>读取语法分析构建的 AST 以及语义分析构建的符号表，生成中间代码结构并以 LLVM IR 形式给出表示，输出至 <code>llvm_ir.txt</code>。</p>
+<h4 id="文件组织"><a href="#文件组织" class="headerlink" title="文件组织"></a>文件组织</h4><p>新建目录 <code>src\midend\llvm</code>，该部分存储 LLVM IR 的数据结构，其中包含若干类：</p>
+<ul>
+<li><strong>Builder</strong>：该模块“主函数”，完成中间代码的构建。</li>
+</ul>
+<p>新建目录 <code>src\midend\visit</code>，该部分定义节点遍历方法。</p>
+<h4 id="中间代码数据结构"><a href="#中间代码数据结构" class="headerlink" title="中间代码数据结构"></a>中间代码数据结构</h4><p>这一部分个人认为是最难以理解的，各大资料对此说法不一且囿于理论，大家都是全局层面的高度抽象，想直接全部把握确实很难。</p>
+<p>从全局言之，LLVM IR 数据结构如下图：</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/compiler/llvm.png"
+                      alt="llvm.png"
+                ></p>
+<p><strong>Value</strong>：是所有数据结构的父类，它拥有<strong>valueType、name、useList</strong>三个属性：</p>
+<ul>
+<li>valueType：这个数据结构的数据类型，类比高级程序语言的 int, void 等。</li>
+<li>name：这个数据结构 toString 时输出的名称，类比高级程序语言的 identifier。</li>
+<li>useList：Use 的数组，指出这个 Value 有哪些使用关系。</li>
+</ul>
+<p><strong>Module</strong>：顶层模块，拥有多个 <strong>GlobalValue</strong>，表示一个 <code>.c</code> 程序文件。因为我们的文法只允许单文件，因此也只有一个 module。</p>
+<p><strong>GlobalValue</strong>：全局量，有全局变量和函数，它们不在任何一个基本块，而是直接在模块内定义，在所有基本块中都可以被使用。</p>
+<ul>
+<li><strong>GlobalVariable</strong>：全局变量。</li>
+<li><strong>Function</strong>：函数定义，包括若干普通函数和一个主函数。</li>
+</ul>
+<p><strong>BasicBlock</strong>：基本块，基本块的定义可以看编译理论，就是一整个可以顺序执行的语句块，直到跳转指令和返回指令为止。一个基本块包含若干指令。</p>
+<p><strong>Instruction</strong>：指令，它又分为很多种具体的指令类型。同时继承于 User 类。</p>
+<p><strong>User</strong>：使用者，使用者可以使用其他 value。举例理解为：<code>%21 = add nsw i32 %15, %20</code>，这个语句的意思是 <code>%21=%15+%20</code>，这里的 use 关系是“%21 使用了 %15 和 %20，而这个 %21 其实是一个 add 指令”。这也是为什么只有指令是 user。</p>
+<h4 id="构建中间代码结构"><a href="#构建中间代码结构" class="headerlink" title="构建中间代码结构"></a>构建中间代码结构</h4><p>在 Builder 静态类中提供了构建中间代码的所有方法，Builder 类是连接 llvm 数据结构和 ast 结点的桥梁。因此 Builder 有一个具体的 module。</p>
+<p><strong>public static GlobalVariable createGlobalVariable(…)</strong>：创建一个新的全局变量，在 Visitor 读到新的全局变量定义时触发。</p>
+<p><strong>public static Function createFunction(…)</strong>：创建一个新的函数，给函数初始化一个基本块，并记录当前属于哪个函数和哪个基本块（这样后续添加指令才不会放错），在 Visitor 读到新的函数定义时触发。</p>
+<p><strong>public static BasicBlock createBasicBlock()</strong>：创建一个新的基本块，但更新当前基本块，在创建函数和 Visitor 读到跳转相关语句时触发。</p>
+<p><strong>public static void setCurBasicBlock(…)</strong>：设置当前基本块，在确定了如何跳转时触发，创建函数时也会被使用。</p>
+<p><strong>public static void addInst(Instruction instruction)</strong>：添加指令，把指令加到当前基本块内。</p>
+<h3 id="编码完成后的修改"><a href="#编码完成后的修改" class="headerlink" title="编码完成后的修改"></a>编码完成后的修改</h3><h4 id="完整文件组织"><a href="#完整文件组织" class="headerlink" title="完整文件组织"></a>完整文件组织</h4><div class="code-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line">midend</span><br><span class="line">├── Midend.java</span><br><span class="line">├── llvm</span><br><span class="line">│   ├── Builder.java</span><br><span class="line">│   ├── Module.java</span><br><span class="line">│   └── value</span><br><span class="line">│       ├── BasicBlock.java</span><br><span class="line">│       ├── Inst</span><br><span class="line">│       │   ├── AllocateInst.java</span><br><span class="line">│       │   ├── AluInst.java</span><br><span class="line">│       │   ├── BranchInst.java</span><br><span class="line">│       │   ├── CallInst.java</span><br><span class="line">│       │   ├── CompareInst.java</span><br><span class="line">│       │   ├── ExtendInst.java</span><br><span class="line">│       │   ├── GepInst.java</span><br><span class="line">│       │   ├── Instruction.java</span><br><span class="line">│       │   ├── JumpInst.java</span><br><span class="line">│       │   ├── LoadInst.java</span><br><span class="line">│       │   ├── PrintIntInst.java</span><br><span class="line">│       │   ├── PrintStrInst.java</span><br><span class="line">│       │   ├── ReturnInst.java</span><br><span class="line">│       │   └── StoreInst.java</span><br><span class="line">│       ├── Loop.java</span><br><span class="line">│       ├── Parameter.java</span><br><span class="line">│       ├── Use.java</span><br><span class="line">│       ├── User.java</span><br><span class="line">│       ├── Value.java</span><br><span class="line">│       ├── ValueType.java</span><br><span class="line">│       ├── constant</span><br><span class="line">│       │   ├── Constant.java</span><br><span class="line">│       │   ├── IntConst.java</span><br><span class="line">│       │   └── StringConst.java</span><br><span class="line">│       └── globalValue</span><br><span class="line">│           ├── Function.java</span><br><span class="line">│           ├── GlobalValue.java</span><br><span class="line">│           ├── GlobalVariable.java</span><br><span class="line">│           ├── LibFunc.java</span><br><span class="line">│           └── StringLiteral.java</span><br><span class="line">├── symbol</span><br><span class="line">└── visit</span><br><span class="line">    ├── BlockVisitor.java</span><br><span class="line">    ├── DeclVisitor.java</span><br><span class="line">    ├── ExpVisitor.java</span><br><span class="line">    ├── FuncDefVisitor.java</span><br><span class="line">    ├── LValVisitor.java</span><br><span class="line">    ├── StmtVisitor.java</span><br><span class="line">    └── Visitor.java</span><br></pre></td></tr></table></figure></div>
+
+<h4 id="新的-Value-类型"><a href="#新的-Value-类型" class="headerlink" title="新的 Value 类型"></a>新的 Value 类型</h4><p>之前仅有 GlobalVariable，Function，BasicBlock，Instruction 几个主要类型，编码过程中发现为了方便需要定义新的类型。</p>
+<p><strong>LibFunc</strong>：库函数声明，是一个全局量，调用 IO 相关库函数时需要这些声明。</p>
+<div class="code-container" data-rel="Llvm"><figure class="iseeu highlight llvm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">declare</span> <span class="type">i32</span> <span class="title">@getint</span>()  </span><br><span class="line"><span class="keyword">declare</span> <span class="type">void</span> <span class="title">@putint</span>(<span class="type">i32</span>)  </span><br><span class="line"><span class="keyword">declare</span> <span class="type">void</span> <span class="title">@putch</span>(<span class="type">i32</span>)  </span><br><span class="line"><span class="keyword">declare</span> <span class="type">void</span> <span class="title">@putstr</span>(<span class="type">i8</span>*)</span><br></pre></td></tr></table></figure></div>
+
+<p><strong>StringLiteral</strong>：字符串字面量，也是一个全局量，处理字符串。</p>
+<div class="code-container" data-rel="Llvm"><figure class="iseeu highlight llvm"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="title">@.str</span> <span class="operator">=</span> <span class="keyword">private</span> <span class="keyword">unnamed_addr</span> <span class="keyword">constant</span> [<span class="number">10</span> <span class="keyword">x</span> <span class="type">i8</span>] <span class="keyword">c</span><span class="string">&quot;23373179\0A<span class="char escape_">\00</span>&quot;</span></span><br></pre></td></tr></table></figure></div>
+
+<p><strong>Loop</strong>：存储循环信息，用于处理嵌套循环的跳转问题。</p>
+<p><strong>Parameter</strong>：函数参数信息。</p>
+<p><strong>Constant</strong>：常量信息。</p>
+<ul>
+<li>IntConst：整数常量。</li>
+<li>StringConst：字符串常量。</li>
+</ul>
+<h4 id="指令生成"><a href="#指令生成" class="headerlink" title="指令生成"></a>指令生成</h4><p>具体的生成步骤在实验教程的相关部分已经介绍得非常详细，这里不再赘述。</p>
+<h5 id="ReturnInst"><a href="#ReturnInst" class="headerlink" title="ReturnInst"></a>ReturnInst</h5><p>返回指令，ValueType 是 void，名称是 null。使用返回值。</p>
+<p>返回整数常量的情况：</p>
+<div class="code-container" data-rel="Llvm"><figure class="iseeu highlight llvm"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">ret</span> <span class="type">i32</span> <span class="number">0</span></span><br></pre></td></tr></table></figure></div>
+
+<p>返回寄存器的情况：</p>
+<div class="code-container" data-rel="Llvm"><figure class="iseeu highlight llvm"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">ret</span> <span class="type">i32</span> <span class="variable">%21</span></span><br></pre></td></tr></table></figure></div>
+
+<p>无返回值的情况：</p>
+<div class="code-container" data-rel="Llvm"><figure class="iseeu highlight llvm"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">ret</span> <span class="type">void</span></span><br></pre></td></tr></table></figure></div>
+
+<h5 id="AllocateInst"><a href="#AllocateInst" class="headerlink" title="AllocateInst"></a>AllocateInst</h5><p>寄存器分配指令，ValueType 是待分配数据的指针类型，名称按编号规则赋予。不使用其他值。<br>分配一个 i32 类型的寄存器，命名为 %5，类型为 i32*：</p>
+<div class="code-container" data-rel="Llvm"><figure class="iseeu highlight llvm"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">%5</span> <span class="operator">=</span> <span class="keyword">alloca</span> <span class="type">i32</span></span><br></pre></td></tr></table></figure></div>
+
+<h5 id="AluInst"><a href="#AluInst" class="headerlink" title="AluInst"></a>AluInst</h5><p>算数指令，ValueType 是 i32，名称按编号规则赋予。使用两个值，分别是两个操作数。</p>
+<p>加法：</p>
+<div class="code-container" data-rel="Llvm"><figure class="iseeu highlight llvm"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">%21</span> <span class="operator">=</span> <span class="keyword">add</span> <span class="keyword">nsw</span> <span class="type">i32</span> <span class="variable">%15</span><span class="punctuation">,</span> <span class="variable">%20</span></span><br></pre></td></tr></table></figure></div>
+
+<p>乘法：</p>
+<div class="code-container" data-rel="Llvm"><figure class="iseeu highlight llvm"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">%18</span> <span class="operator">=</span> <span class="keyword">mul</span> <span class="keyword">nsw</span> <span class="type">i32</span> <span class="variable">%16</span><span class="punctuation">,</span> <span class="variable">%17</span></span><br></pre></td></tr></table></figure></div>
+
+<p>另外还有除法和取模，不再赘述。</p>
+<h5 id="StoreInst"><a href="#StoreInst" class="headerlink" title="StoreInst"></a>StoreInst</h5><p>存数指令，ValueType 是 void，没有名称。使用两个值，一个是待存数据，一个是寄存器地址。</p>
+<div class="code-container" data-rel="Llvm"><figure class="iseeu highlight llvm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">%4</span> <span class="operator">=</span> <span class="keyword">alloca</span> <span class="type">i32</span></span><br><span class="line"><span class="keyword">store</span> <span class="type">i32</span> <span class="variable">%16</span><span class="punctuation">,</span> <span class="type">i32</span>* <span class="variable">%4</span></span><br></pre></td></tr></table></figure></div>
+
+<p>该指令前必有寄存器分配指令，这也解释了为什么寄存器分配指令的类型是指针。</p>
+<h5 id="LoadInst"><a href="#LoadInst" class="headerlink" title="LoadInst"></a>LoadInst</h5><p>取数指令，ValueType 是待取寄存器的基础类型，名称按编号规则赋予。使用一个值，即待取寄存器的指针。</p>
+<div class="code-container" data-rel="Llvm"><figure class="iseeu highlight llvm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">%4</span> <span class="operator">=</span> <span class="keyword">alloca</span> <span class="type">i32</span></span><br><span class="line"><span class="variable">%28</span> <span class="operator">=</span> <span class="keyword">load</span> <span class="type">i32</span><span class="punctuation">,</span> <span class="type">i32</span>* <span class="variable">%4</span></span><br></pre></td></tr></table></figure></div>
+
+<p>该指令前必有寄存器分配指令。</p>
+<h5 id="CallInst"><a href="#CallInst" class="headerlink" title="CallInst"></a>CallInst</h5><p>函数调用指令，ValueType 是函数的返回类型，名称若有返回值则按编号规则赋予，否则没有名称。使用若干值，即函数形参。</p>
+<p>有返回值的函数调用：</p>
+<div class="code-container" data-rel="Llvm"><figure class="iseeu highlight llvm"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">%32</span> <span class="operator">=</span> <span class="keyword">call</span> <span class="type">i32</span> <span class="title">@coordinate_calculater</span>(<span class="type">i32</span> <span class="variable">%28</span><span class="punctuation">,</span> <span class="type">i32</span> <span class="variable">%29</span><span class="punctuation">,</span> <span class="type">i32</span> <span class="variable">%30</span><span class="punctuation">,</span> <span class="type">i32</span> <span class="variable">%31</span>)</span><br></pre></td></tr></table></figure></div>
+
+<p>没有返回值的函数调用：</p>
+<div class="code-container" data-rel="Llvm"><figure class="iseeu highlight llvm"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">call</span> <span class="type">void</span> <span class="title">@putstr</span>(<span class="type">i8</span>* <span class="keyword">getelementptr</span> <span class="keyword">inbounds</span> ([<span class="number">2</span> <span class="keyword">x</span> <span class="type">i8</span>]<span class="punctuation">,</span> [<span class="number">2</span> <span class="keyword">x</span> <span class="type">i8</span>]* <span class="title">@.str.1</span><span class="punctuation">,</span> <span class="type">i64</span> <span class="number">0</span><span class="punctuation">,</span> <span class="type">i64</span> <span class="number">0</span>))</span><br></pre></td></tr></table></figure></div>
+
+<h5 id="CompareInst"><a href="#CompareInst" class="headerlink" title="CompareInst"></a>CompareInst</h5><p>比较指令，ValueType 是 i1，名称按编号规则赋予。使用两个值，分别是两个比较数。</p>
+<p>判断相等：</p>
+<div class="code-container" data-rel="Llvm"><figure class="iseeu highlight llvm"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">%72</span> <span class="operator">=</span> <span class="keyword">icmp</span> <span class="keyword">eq</span> <span class="type">i32</span> <span class="variable">%71</span><span class="punctuation">,</span> <span class="number">0</span></span><br></pre></td></tr></table></figure></div>
+
+<h5 id="ExtendInst"><a href="#ExtendInst" class="headerlink" title="ExtendInst"></a>ExtendInst</h5><p>零扩展指令，ValueType 是要扩展到的数据类型（i32），名称按编号规则赋予。使用一个值，即待扩展的数据。</p>
+<p>引入该指令是为了处理 compare 指令返回值 i1 判断是 0 还是 1 的情况，因为 compare 指令使用的两个值都是 i32，因此需要扩展。</p>
+<h5 id="BranchInst"><a href="#BranchInst" class="headerlink" title="BranchInst"></a>BranchInst</h5><p>有条件跳转指令，ValueType 是 void，没有名称。使用三个值，第一个是条件，第二个是条件为真跳转到的基本块，第三个是条件为假跳转到的基本块。</p>
+<div class="code-container" data-rel="Llvm"><figure class="iseeu highlight llvm"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">br</span> <span class="type">i1</span> <span class="variable">%4</span><span class="punctuation">,</span> <span class="type">label</span> <span class="variable">%5</span><span class="punctuation">,</span> <span class="type">label</span> <span class="variable">%9</span></span><br></pre></td></tr></table></figure></div>
+
+<p>基本块的数据类型是 label，命名规则与寄存器、数据共用一套。</p>
+<h4 id="JumpInst"><a href="#JumpInst" class="headerlink" title="JumpInst"></a>JumpInst</h4><p>无条件跳转指令，ValueType 是 void，没有名称。使用一个值，即跳转到的基本块。</p>
+<div class="code-container" data-rel="Llvm"><figure class="iseeu highlight llvm"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">br</span> <span class="type">label</span> <span class="variable">%9</span></span><br></pre></td></tr></table></figure></div>
+
+<h5 id="GepInst"><a href="#GepInst" class="headerlink" title="GepInst"></a>GepInst</h5><p>指针获取指令，ValueType 是 i32*，名称按编号规则赋予。使用两个值，指针起始地址和偏移量。</p>
+<div class="code-container" data-rel="Llvm"><figure class="iseeu highlight llvm"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">%17</span> <span class="operator">=</span> <span class="keyword">getelementptr</span> <span class="keyword">inbounds</span> [<span class="number">10</span> <span class="keyword">x</span> <span class="type">i32</span>]<span class="punctuation">,</span> [<span class="number">10</span> <span class="keyword">x</span> <span class="type">i32</span>]* <span class="variable">%16</span><span class="punctuation">,</span> <span class="type">i32</span> <span class="number">0</span><span class="punctuation">,</span> <span class="type">i32</span> <span class="number">5</span></span><br></pre></td></tr></table></figure></div>
+
+<p>上面这个指令起始指针是 %16，偏移量是 5。</p>
+<h5 id="IO-相关指令"><a href="#IO-相关指令" class="headerlink" title="IO 相关指令"></a>IO 相关指令</h5><p>其实是一种特殊的 CallInst，调用相关 IO 函数。</p>
+<h4 id="重难点"><a href="#重难点" class="headerlink" title="重难点"></a>重难点</h4><p>该部分汇总一些仅看教程容易遗漏的 bug 处理。</p>
+<h5 id="static-变量"><a href="#static-变量" class="headerlink" title="static 变量"></a>static 变量</h5><p>static 变量应该视为全局变量（llvm 需要把它提到外面去并命名加上对应的函数前缀），在同一种作用域内 static 变量不能重名，但不同作用域内可以。</p>
+<div class="code-container" data-rel="C"><figure class="iseeu highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">static</span> <span class="type">int</span> x = <span class="number">0</span>;  </span><br><span class="line"><span class="type">int</span> <span class="title function_">func</span><span class="params">()</span> &#123;  </span><br><span class="line">    <span class="type">static</span> <span class="type">int</span> x = <span class="number">1</span>;  </span><br><span class="line">    &#123;  </span><br><span class="line">        <span class="type">static</span> <span class="type">int</span> x = <span class="number">2</span>;  </span><br><span class="line">    &#125;  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<p>这样的代码生成的 llvm 如下：</p>
+<div class="code-container" data-rel="Llvm"><figure class="iseeu highlight llvm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="title">@x</span> <span class="operator">=</span> <span class="keyword">internal</span> <span class="keyword">global</span> <span class="type">i32</span> <span class="number">0</span>  </span><br><span class="line"><span class="title">@func.x</span> <span class="operator">=</span> <span class="keyword">internal</span> <span class="keyword">global</span> <span class="type">i32</span> <span class="number">1</span>  </span><br><span class="line"><span class="title">@func.x.1</span> <span class="operator">=</span> <span class="keyword">internal</span> <span class="keyword">global</span> <span class="type">i32</span> <span class="number">2</span>  </span><br><span class="line">  </span><br><span class="line"><span class="keyword">define</span> dso_local <span class="type">i32</span> <span class="title">@func</span>()&#123;  </span><br><span class="line">  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<p>同一函数内重名的 static 变量在后面加上数字用以区分。同时需要 internal 标志内部链接。</p>
+<h5 id="函数传参"><a href="#函数传参" class="headerlink" title="函数传参"></a>函数传参</h5><p>普通 i32 参数：</p>
+<div class="code-container" data-rel="C"><figure class="iseeu highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> <span class="title function_">func2</span><span class="params">(<span class="type">int</span> a)</span>  </span><br><span class="line">&#123;  </span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;%d&quot;</span>, a);  </span><br><span class="line">    <span class="keyword">return</span> a;  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<p>传递的是 i32 数值，一般会无脑分配一个寄存器 i32*，但该部分可以优化掉。</p>
+<div class="code-container" data-rel="Llvm"><figure class="iseeu highlight llvm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">define</span> dso_local <span class="type">i32</span> <span class="title">@func2</span>(<span class="type">i32</span> <span class="variable">%0</span>)&#123;  </span><br><span class="line"><span class="number">1</span>:  </span><br><span class="line">    <span class="variable">%2</span> <span class="operator">=</span> <span class="keyword">alloca</span> <span class="type">i32</span>  </span><br><span class="line">    <span class="keyword">store</span> <span class="type">i32</span> <span class="variable">%0</span><span class="punctuation">,</span> <span class="type">i32</span>* <span class="variable">%2</span>  </span><br><span class="line">    <span class="variable">%3</span> <span class="operator">=</span> <span class="keyword">load</span> <span class="type">i32</span><span class="punctuation">,</span> <span class="type">i32</span>* <span class="variable">%2</span>  </span><br><span class="line">    <span class="keyword">call</span> <span class="type">void</span> <span class="title">@putint</span>(<span class="type">i32</span> <span class="variable">%3</span>)  </span><br><span class="line">    <span class="variable">%4</span> <span class="operator">=</span> <span class="keyword">load</span> <span class="type">i32</span><span class="punctuation">,</span> <span class="type">i32</span>* <span class="variable">%2</span>  </span><br><span class="line">    <span class="keyword">ret</span> <span class="type">i32</span> <span class="variable">%4</span>  </span><br><span class="line">  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<p>数组 i32* 参数：</p>
+<div class="code-container" data-rel="C"><figure class="iseeu highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">void</span> <span class="title function_">func3</span><span class="params">(<span class="type">int</span> a[])</span>  </span><br><span class="line">&#123;  </span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;%d&quot;</span>, a[<span class="number">0</span>]);  </span><br><span class="line">    <span class="keyword">return</span>;  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<p>依然无脑给数组指针分配了一个寄存器，但没有必要。</p>
+<div class="code-container" data-rel="Llvm"><figure class="iseeu highlight llvm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">define</span> dso_local <span class="type">void</span> <span class="title">@func3</span>(<span class="type">i32</span>* <span class="variable">%0</span>)&#123;  </span><br><span class="line"><span class="number">1</span>:  </span><br><span class="line">    <span class="variable">%2</span> <span class="operator">=</span> <span class="keyword">alloca</span> <span class="type">i32</span>*  </span><br><span class="line">    <span class="keyword">store</span> <span class="type">i32</span>* <span class="variable">%0</span><span class="punctuation">,</span> <span class="type">i32</span>** <span class="variable">%2</span>  </span><br><span class="line">    <span class="variable">%3</span> <span class="operator">=</span> <span class="keyword">load</span> <span class="type">i32</span>*<span class="punctuation">,</span> <span class="type">i32</span>** <span class="variable">%2</span>  </span><br><span class="line">    <span class="variable">%4</span> <span class="operator">=</span> <span class="keyword">getelementptr</span> <span class="keyword">inbounds</span> <span class="type">i32</span><span class="punctuation">,</span> <span class="type">i32</span>* <span class="variable">%3</span><span class="punctuation">,</span> <span class="type">i32</span> <span class="number">0</span>  </span><br><span class="line">    <span class="variable">%5</span> <span class="operator">=</span> <span class="keyword">load</span> <span class="type">i32</span><span class="punctuation">,</span> <span class="type">i32</span>* <span class="variable">%4</span>  </span><br><span class="line">    <span class="keyword">call</span> <span class="type">void</span> <span class="title">@putint</span>(<span class="type">i32</span> <span class="variable">%5</span>)  </span><br><span class="line">    <span class="keyword">ret</span> <span class="type">void</span>  </span><br><span class="line">  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<h5 id="无-return-语句的函数"><a href="#无-return-语句的函数" class="headerlink" title="无 return 语句的函数"></a>无 return 语句的函数</h5><p>需要自动加一个 <code>ret void</code>。</p>
+<h5 id="空基本块"><a href="#空基本块" class="headerlink" title="空基本块"></a>空基本块</h5><p>空基本块如果输出，是不符合 llvm 语法的，因此要么不输出，要么给他加一个跳转到下一个基本块的指令。空基本块的产生原因是 for 语句的空语句。</p>
+<h5 id="常量的求值"><a href="#常量的求值" class="headerlink" title="常量的求值"></a>常量的求值</h5><p>这里的求值指的是 evaluate，因为数组初始化列表中必须是已经能够确定的值，所以是可以出现常量的。</p>
+<div class="code-container" data-rel="C"><figure class="iseeu highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">const</span> <span class="type">int</span> G_CON1 = <span class="number">10</span> * <span class="number">20</span> + <span class="number">1</span> * <span class="number">3</span> / <span class="number">1</span>;  </span><br><span class="line"><span class="type">const</span> <span class="type">int</span> G_CON2 = <span class="number">1</span>, G_CON3 = <span class="number">2</span>, G_CON4 = <span class="number">3</span>;  </span><br><span class="line"><span class="type">const</span> <span class="type">int</span> G_CON_ARR[<span class="number">5</span><span class="number">-1</span>] = &#123;<span class="number">4</span> , <span class="number">3</span>, <span class="number">2</span>, <span class="number">0</span> + G_CON3 - <span class="number">1</span>&#125;;</span><br></pre></td></tr></table></figure></div>
+
+<p>常量在定义的那一刻就应该直接 evaluate 了。</p>
+<div class="code-container" data-rel="Llvm"><figure class="iseeu highlight llvm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="title">@G_CON1</span> <span class="operator">=</span> dso_local <span class="keyword">constant</span> <span class="type">i32</span> <span class="number">203</span>  </span><br><span class="line"><span class="title">@G_CON2</span> <span class="operator">=</span> dso_local <span class="keyword">constant</span> <span class="type">i32</span> <span class="number">1</span>  </span><br><span class="line"><span class="title">@G_CON3</span> <span class="operator">=</span> dso_local <span class="keyword">constant</span> <span class="type">i32</span> <span class="number">2</span>  </span><br><span class="line"><span class="title">@G_CON4</span> <span class="operator">=</span> dso_local <span class="keyword">constant</span> <span class="type">i32</span> <span class="number">3</span>  </span><br><span class="line"><span class="title">@G_CON_ARR</span> <span class="operator">=</span> dso_local <span class="keyword">constant</span> [<span class="number">4</span> <span class="keyword">x</span> <span class="type">i32</span>] [<span class="type">i32</span> <span class="number">4</span><span class="punctuation">,</span> <span class="type">i32</span> <span class="number">3</span><span class="punctuation">,</span> <span class="type">i32</span> <span class="number">2</span><span class="punctuation">,</span> <span class="type">i32</span> <span class="number">1</span>]</span><br></pre></td></tr></table></figure></div>
+
+<h5 id="数组初始化列表"><a href="#数组初始化列表" class="headerlink" title="数组初始化列表"></a>数组初始化列表</h5><div class="code-container" data-rel="C"><figure class="iseeu highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">void</span> <span class="title function_">func</span><span class="params">()</span> &#123;  </span><br><span class="line">    <span class="type">int</span> c[<span class="number">3</span>] = &#123;<span class="number">1</span>, getint()&#125;;  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<p>数组初始化列表很有多样性，居然是可以放 getint 的？</p>
+<div class="code-container" data-rel="Llvm"><figure class="iseeu highlight llvm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">define</span> dso_local <span class="type">void</span> <span class="title">@func</span>()&#123;  </span><br><span class="line">    <span class="variable">%1</span> <span class="operator">=</span> <span class="keyword">alloca</span> [<span class="number">3</span> <span class="keyword">x</span> <span class="type">i32</span>]  </span><br><span class="line">    <span class="variable">%2</span> <span class="operator">=</span> <span class="keyword">getelementptr</span> <span class="keyword">inbounds</span> [<span class="number">3</span> <span class="keyword">x</span> <span class="type">i32</span>]<span class="punctuation">,</span> [<span class="number">3</span> <span class="keyword">x</span> <span class="type">i32</span>]* <span class="variable">%1</span><span class="punctuation">,</span> <span class="type">i32</span> <span class="number">0</span><span class="punctuation">,</span> <span class="type">i32</span> <span class="number">0</span>  </span><br><span class="line">    <span class="keyword">store</span> <span class="type">i32</span> <span class="number">1</span><span class="punctuation">,</span> <span class="type">i32</span>* <span class="variable">%2</span>  </span><br><span class="line">    <span class="variable">%3</span> <span class="operator">=</span> <span class="keyword">getelementptr</span> <span class="keyword">inbounds</span> <span class="type">i32</span><span class="punctuation">,</span> <span class="type">i32</span>* <span class="variable">%2</span><span class="punctuation">,</span> <span class="type">i32</span> <span class="number">1</span>  </span><br><span class="line">    <span class="variable">%4</span> <span class="operator">=</span> <span class="keyword">call</span> <span class="type">i32</span> <span class="title">@getint</span>()  </span><br><span class="line">    <span class="keyword">store</span> <span class="type">i32</span> <span class="variable">%4</span><span class="punctuation">,</span> <span class="type">i32</span>* <span class="variable">%3</span>  </span><br><span class="line">    <span class="variable">%5</span> <span class="operator">=</span> <span class="keyword">getelementptr</span> <span class="keyword">inbounds</span> <span class="type">i32</span><span class="punctuation">,</span> <span class="type">i32</span>* <span class="variable">%3</span><span class="punctuation">,</span> <span class="type">i32</span> <span class="number">1</span>  </span><br><span class="line">    <span class="keyword">store</span> <span class="type">i32</span> <span class="number">0</span><span class="punctuation">,</span> <span class="type">i32</span>* <span class="variable">%5</span>  </span><br><span class="line">    <span class="keyword">ret</span> <span class="type">void</span>  </span><br><span class="line">  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+		</div>
+
+		
+		<div class="post-copyright-info w-full my-8 px-2 sm:px-6 md:px-8">
+			<div class="article-copyright-info-container">
+    <ul>
+        <li><strong>Title:</strong> 编译技术：中间代码生成</li>
+        <li><strong>Author:</strong> BaconToast</li>
+        <li><strong>Created at
+                :</strong> 2025-11-25 11:57:18</li>
+        
+            <li>
+                <strong>Updated at
+                    :</strong> 2025-11-25 11:59:29
+            </li>
+        
+        <li>
+            <strong>Link:</strong> https://bacontoast-pro.github.io/2025/11/25/compiler/llvm/
+        </li>
+        <li>
+            <strong>
+                License:
+            </strong>
+            
+
+            
+                This work is licensed under <a class="license" target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0">CC BY-NC-SA 4.0</a>.
+            
+        </li>
+    </ul>
+</div>
+
+		</div>
+		
+
+		
+		<ul class="post-tags-box text-lg mt-1.5 flex-wrap justify-center flex md:hidden">
+			
+			<li class="tag-item mx-0.5">
+				<a href="/tags/Compiler/">#Compiler</a>&nbsp;
+			</li>
+			
+			<li class="tag-item mx-0.5">
+				<a href="/tags/Java/">#Java</a>&nbsp;
+			</li>
+			
+			<li class="tag-item mx-0.5">
+				<a href="/tags/LLVM-IR/">#LLVM IR</a>&nbsp;
+			</li>
+			
+		</ul>
+		
+
+		
+
+		
+		<div class="article-nav my-8 flex justify-between items-center px-2 sm:px-6 md:px-8">
+			
+			
+			<div class="article-next border-border-color shadow-redefine-flat shadow-shadow-color-2 rounded-medium px-4 py-2 hover:shadow-redefine-flat-hover hover:shadow-shadow-color-2">
+				<a class="next" rel="next" href="/2025/11/18/ml/exp4/">
+					<span class="title flex justify-center items-center">
+						<span class="post-nav-title-item truncate max-w-48">机器学习ML：Exp4-cluster-dr-el</span>
+						<span class="post-nav-item">Next posts</span>
+					</span>
+					<span class="right arrow-icon flex justify-center items-center">
+						<i class="fa-solid fa-chevron-right"></i>
+					</span>
+				</a>
+			</div>
+			
+		</div>
+		
+
+
+		
+		<div class="comment-container px-2 sm:px-6 md:px-8 pb-8">
+			<div class="comments-container mt-10 w-full ">
+    <div id="comment-anchor" class="w-full h-2.5"></div>
+    <div class="comment-area-title w-full my-1.5 md:my-2.5 text-xl md:text-3xl font-bold">
+        Comments
+    </div>
+    
+
+        
+            
+    <div id="waline"></div>
+    <script type="module" data-swup-reload-script>
+      import { init } from '/js/libs/waline.mjs';
+
+      function loadWaline() {
+        init({
+          el: '#waline',
+          serverURL: 'https://example.example.com',
+          dark: 'body[class~="dark-mode"]',
+          reaction: false,
+          requiredMeta: ['nick', 'mail'],
+          emoji: [],
+                    lang: 'zh-CN',
+        });
+      }
+
+      if (typeof swup !== 'undefined') {
+        loadWaline();
+      } else {
+        window.addEventListener('DOMContentLoaded', loadWaline);
+      }
+    </script>
+
+
+
+        
+    
+</div>
+
+		</div>
+		
+	</div>
+
+	
+	<div class="toc-content-container">
+		<div class="post-toc-wrap">
+	<div class="post-toc">
+		<div class="toc-title">On this page</div>
+		<div class="page-title">编译技术：中间代码生成</div>
+		<ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%AD%E9%97%B4%E4%BB%A3%E7%A0%81%E7%94%9F%E6%88%90%E8%AE%BE%E8%AE%A1"><span class="nav-text">中间代码生成设计</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BC%96%E7%A0%81%E5%89%8D%E7%9A%84%E8%AE%BE%E8%AE%A1"><span class="nav-text">编码前的设计</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BC%96%E7%A0%81%E5%AE%8C%E6%88%90%E5%90%8E%E7%9A%84%E4%BF%AE%E6%94%B9"><span class="nav-text">编码完成后的修改</span></a></li></ol></li></ol>
+
+	</div>
+</div>
+	</div>
+	
+</div>
+			</div>
+
+			
+		</div>
+
+		<div class="main-content-footer">
+			<footer class="footer mt-5 py-5 h-auto text-base text-third-text-color relative border-t-2 border-t-border-color">
+    <div class="info-container py-3 text-center">
+        
+        <div class="text-center">
+            &copy;
+            
+              <span>2025</span>
+              -
+            
+            2025&nbsp;&nbsp;<i class="fa-solid fa-heart fa-beat" style="--fa-animation-duration: 0.5s; color: #f54545"></i>&nbsp;&nbsp;<a href="/">BaconToast</a>
+            
+                
+                <p class="post-count space-x-0.5">
+                    <span>
+                        26 posts in total
+                    </span>
+                    
+                </p>
+            
+        </div>
+        
+            <script data-swup-reload-script src="https://cn.vercount.one/js"></script>
+            <div class="relative text-center lg:absolute lg:right-[20px] lg:top-1/2 lg:-translate-y-1/2 lg:text-right">
+                
+                    <span id="busuanzi_container_site_uv" class="lg:!block">
+                        <span class="text-sm">VISITOR COUNT</span>
+                        <span id="busuanzi_value_site_uv"></span>
+                    </span>
+                
+                
+                    <span id="busuanzi_container_site_pv" class="lg:!block">
+                        <span class="text-sm">TOTAL PAGE VIEWS</span>
+                        <span id="busuanzi_value_site_pv"></span>
+                    </span>
+                
+            </div>
+        
+        <div class="relative text-center lg:absolute lg:left-[20px] lg:top-1/2 lg:-translate-y-1/2 lg:text-left">
+            <span class="lg:block text-sm">POWERED BY <?xml version="1.0" encoding="utf-8"?><!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"><svg class="relative top-[2px] inline-block align-baseline" version="1.1" id="圖層_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="1rem" height="1rem" viewBox="0 0 512 512" enable-background="new 0 0 512 512" xml:space="preserve"><path fill="#0E83CD" d="M256.4,25.8l-200,115.5L56,371.5l199.6,114.7l200-115.5l0.4-230.2L256.4,25.8z M349,354.6l-18.4,10.7l-18.6-11V275H200v79.6l-18.4,10.7l-18.6-11v-197l18.5-10.6l18.5,10.8V237h112v-79.6l18.5-10.6l18.5,10.8V354.6z"/></svg><a target="_blank" class="text-base" href="https://hexo.io">Hexo</a></span>
+            <span class="text-sm lg:block">THEME&nbsp;<a class="text-base" target="_blank" href="https://github.com/EvanNotFound/hexo-theme-redefine">Redefine v2.8.5</a></span>
+        </div>
+        
+        
+            <div>
+                Blog up for <span class="odometer" id="runtime_days" ></span> days <span class="odometer" id="runtime_hours"></span> hrs <span class="odometer" id="runtime_minutes"></span> Min <span class="odometer" id="runtime_seconds"></span> Sec
+            </div>
+        
+        
+            <script data-swup-reload-script>
+                try {
+                    function odometer_init() {
+                    const elements = document.querySelectorAll('.odometer');
+                    elements.forEach(el => {
+                        new Odometer({
+                            el,
+                            format: '( ddd).dd',
+                            duration: 200
+                        });
+                    });
+                    }
+                    odometer_init();
+                } catch (error) {}
+            </script>
+        
+        
+        
+    </div>  
+</footer>
+		</div>
+	</div>
+
+	
+	<div class="post-tools">
+		<div class="post-tools-container">
+	<ul class="article-tools-list">
+		<!-- TOC aside toggle -->
+		
+		<li class="right-bottom-tools page-aside-toggle">
+			<i class="fa-regular fa-outdent"></i>
+		</li>
+		
+
+		<!-- go comment -->
+		
+		<li class="go-comment">
+			<i class="fa-regular fa-comments"></i>
+		</li>
+		
+	</ul>
+</div>
+	</div>
+	
+
+	<div class="right-side-tools-container">
+		<div class="side-tools-container">
+	<ul class="hidden-tools-list">
+		<li class="right-bottom-tools tool-font-adjust-plus flex justify-center items-center">
+			<i class="fa-regular fa-magnifying-glass-plus"></i>
+		</li>
+
+		<li class="right-bottom-tools tool-font-adjust-minus flex justify-center items-center">
+			<i class="fa-regular fa-magnifying-glass-minus"></i>
+		</li>
+
+		<li class="right-bottom-tools tool-dark-light-toggle flex justify-center items-center">
+			<i class="fa-regular fa-moon"></i>
+		</li>
+
+		<!-- rss -->
+		
+
+		
+
+		<li class="right-bottom-tools tool-scroll-to-bottom flex justify-center items-center">
+			<i class="fa-regular fa-arrow-down"></i>
+		</li>
+	</ul>
+
+	<ul class="visible-tools-list">
+		<li class="right-bottom-tools toggle-tools-list flex justify-center items-center">
+			<i class="fa-regular fa-cog fa-spin"></i>
+		</li>
+		
+		<li class="right-bottom-tools tool-scroll-to-top flex justify-center items-center">
+			<i class="arrow-up fas fa-arrow-up"></i>
+			<span class="percent"></span>
+		</li>
+		
+		
+	</ul>
+</div>
+	</div>
+
+	<div class="image-viewer-container">
+	<img src="">
+</div>
+
+	
+
+</main>
+
+
+
+<script src="/js/build/libs/Swup.min.js"></script>
+
+<script src="/js/build/libs/SwupSlideTheme.min.js"></script>
+
+<script src="/js/build/libs/SwupScriptsPlugin.min.js"></script>
+
+<script src="/js/build/libs/SwupProgressPlugin.min.js"></script>
+
+<script src="/js/build/libs/SwupScrollPlugin.min.js"></script>
+
+<script src="/js/build/libs/SwupPreloadPlugin.min.js"></script>
+
+<script>
+    const swup = new Swup({
+        plugins: [
+            new SwupScriptsPlugin({
+                optin: true,
+            }),
+            new SwupProgressPlugin(),
+            new SwupScrollPlugin({
+                offset: 80,
+            }),
+            new SwupSlideTheme({
+                mainElement: ".main-content-body",
+            }),
+            new SwupPreloadPlugin(),
+        ],
+        containers: ["#swup"],
+    });
+</script>
+
+
+
+
+	
+<script src="/js/build/tools/imageViewer.js" type="module"></script>
+
+<script src="/js/build/utils.js" type="module"></script>
+
+<script src="/js/build/main.js" type="module"></script>
+
+<script src="/js/build/layouts/navbarShrink.js" type="module"></script>
+
+<script src="/js/build/tools/scrollTopBottom.js" type="module"></script>
+
+<script src="/js/build/tools/lightDarkSwitch.js" type="module"></script>
+
+<script src="/js/build/layouts/categoryList.js" type="module"></script>
+
+
+
+
+
+    
+<script src="/js/build/tools/codeBlock.js" type="module"></script>
+
+
+
+
+    
+<script src="/js/build/layouts/lazyload.js" type="module"></script>
+
+
+
+
+    
+<script src="/js/build/tools/runtime.js"></script>
+
+    
+<script src="/js/build/libs/odometer.min.js"></script>
+
+    
+<link rel="stylesheet" href="/assets/odometer-theme-minimal.css">
+
+
+
+
+  
+<script src="/js/build/libs/Typed.min.js"></script>
+
+  
+<script src="/js/build/plugins/typed.js" type="module"></script>
+
+
+
+
+
+
+    
+<script src="/js/build/libs/minimasonry.min.js"></script>
+
+    
+<script src="/js/build/plugins/masonry.js" type="module"></script>
+
+
+
+
+
+
+
+    
+<script src="/js/build/tools/tocToggle.js" type="module" data-swup-reload-script=""></script>
+
+<script src="/js/build/layouts/toc.js" type="module" data-swup-reload-script=""></script>
+
+<script src="/js/build/plugins/tabs.js" type="module" data-swup-reload-script=""></script>
+
+
+
+
+<script src="/js/build/libs/moment-with-locales.min.js" data-swup-reload-script=""></script>
+
+
+<script src="/js/build/layouts/essays.js" type="module" data-swup-reload-script=""></script>
+
+
+
+
+
+    
+<script src="/js/build/layouts/bookmarkNav.js" type="module"></script>
+
+
+	
+</body>
+
+</html>
